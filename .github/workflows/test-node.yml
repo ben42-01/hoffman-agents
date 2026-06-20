@@ -23,4 +23,4 @@ jobs:
         with:
           node-version: 18
       - run: npm pack --dry-run
-        working-directory: ./hoffman-agents-node
+        working-directory: hoffman-agents-node
