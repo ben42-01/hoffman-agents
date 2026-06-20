@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LEM — Large Experience Model Dashboard</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0d1117; color: #c9d1d9; padding: 16px; }
+  h1 { font-size: 1.3rem; color: #f0f6fc; }
+  .sub { color: #8b949e; font-size: 0.8rem; margin-bottom: 12px; }
+
+  .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
+  .top-right { display: flex; gap: 16px; font-size: 0.85rem; flex-wrap: wrap; }
+
+  .quad-badge { display: inline-block; padding: 4px 16px; border-radius: 16px; font-weight: 700; font-size: 1rem; letter-spacing: 2px; color: #fff; }
+
+  .layout { display: flex; gap: 14px; flex-wrap: wrap; }
+  .left { flex: 0 0 300px; display: flex; flex-direction: column; gap: 12px; }
+  .right { flex: 1; min-width: 400px; display: flex; flex-direction: column; gap: 12px; }
+
+  .card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 14px; }
+  .card-title { font-size: 0.75rem; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+
+  .stat-r { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #21262d; font-size: 0.8rem; }
+  .stat-r:last-child { border: none; }
+  .stat-l { color: #8b949e; }
+  .stat-v { color: #f0f6fc; font-weight: 600; }
+
+  /* Quadrant bars */
+  .qrow { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+  .qdot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .qlbl { width: 60px; font-size: 0.8rem; }
+  .qbg { flex: 1; height: 8px; background: #21262d; border-radius: 4px; overflow: hidden; }
+  .qfill { height: 100%; border-radius: 4px; transition: width 0.3s; }
+
+  /* Route bar */
+  .route { display: flex; height: 10px; border-radius: 5px; overflow: hidden; margin-top: 4px; }
+  .rseg { transition: width 0.3s; }
+
+  /* Agent grid */
+  .agrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+  .acard { background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 10px; font-size: 0.8rem; }
+  .acard.locked { border-color: #3fb950; }
+  .aname { color: #8b949e; font-size: 0.7rem; }
+  .aout { color: #f0f6fc; font-style: italic; margin: 3px 0; font-size: 0.85rem; }
+  .astat { display: flex; justify-content: space-between; color: #8b949e; font-size: 0.7rem; }
+
+  .pbar { height: 3px; background: #21262d; border-radius: 2px; margin-top: 4px; overflow: hidden; }
+  .pfill { height: 100%; border-radius: 2px; transition: width 0.3s; }
+  .pfill.low { background: #3fb950; }
+  .pfill.med { background: #d29922; }
+  .pfill.high { background: #da3633; }
+
+  /* Topology canvas */
+  #topoCanvas { width: 100%; height: 200px; border-radius: 6px; }
+
+  /* Collapse log */
+  .clog { max-height: 100px; overflow-y: auto; font-size: 0.75rem; }
+  .cent { padding: 2px 0; border-bottom: 1px solid #21262d; }
+  .cent:last-child { border: none; }
+  .cbadge { display: inline-block; background: #da3633; color: #fff; padding: 1px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: 600; margin-right: 4px; }
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <div>
+    <h1>LEM — Large Experience Model</h1>
+    <div class="sub">5 ConsciousAgents in an emotional VAD mesh network</div>
+  </div>
+  <div class="top-right">
+    <span>Step <strong id="sStep">0</strong></span>
+    <span>⊕ <strong id="sCollapse" style="color:#da3633;">0</strong></span>
+    <span>Locked <strong id="sLocked">0/5</strong></span>
+    <span><span class="quad-badge" id="sQuad" style="background:#3fb950;">JOY</span></span>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="left">
+
+    <div class="card">
+      <div class="card-title">Quadrant Resonance</div>
+      <div id="quadBars"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Route Distribution</div>
+      <div class="route" id="routeBar"></div>
+      <div id="routeLabels" style="font-size:0.7rem; color:#8b949e; margin-top:4px;"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Collective Metrics</div>
+      <div id="metrics"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⊕ Collapse Events</div>
+      <div class="clog" id="collapseLog"><div style="color:#8b949e;">Waiting...</div></div>
+    </div>
+
+  </div>
+  <div class="right">
+
+    <div class="card">
+      <div class="card-title">Agent Topology (Mesh Network)</div>
+      <canvas id="topoCanvas"></canvas>
+      <div style="font-size:0.7rem; color:#8b949e; margin-top:4px; text-align:center;">Thicker edge = lower prediction error = stronger bond</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Agent Mesh (5 ConsciousAgents)</div>
+      <div class="agrid" id="agentGrid"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── Topology Graph ────────────────────────────────────────────
+const topoCanvas = document.getElementById('topoCanvas');
+const tctx = topoCanvas.getContext('2d');
+const topoNodes = {};
+const ACOLORS = ['#58a6ff','#79c0ff','#1f6feb','#58a6ff','#79c0ff'];
+const ANAMES = ['seer','sage','anchor','scout','mirror'];
+const COLORS = { fear:'#da3633', desire:'#d29922', fatigue:'#6e7681', joy:'#3fb950' };
+
+function resizeTopo() {
+  topoCanvas.width = topoCanvas.clientWidth * (window.devicePixelRatio||1);
+  topoCanvas.height = topoCanvas.clientHeight * (window.devicePixelRatio||1);
+  const w=topoCanvas.width, h=topoCanvas.height, cx=w/2, cy=h/2, r=Math.min(w,h)*0.3;
+  ANAMES.forEach((n,i)=>{const a=i/5*Math.PI*2-Math.PI/2; topoNodes[n]={x:cx+r*Math.cos(a),y:cy+r*Math.sin(a),vx:0,vy:0};});
+}
+resizeTopo();
+window.addEventListener('resize', resizeTopo);
+
+function renderTopo(edges) {
+  const w=topoCanvas.width, h=topoCanvas.height;
+  const ns=topoNodes;
+  ANAMES.forEach(n=>{const o=ns[n]; o.vx+=(w/2-o.x)*0.001; o.vy+=(h/2-o.y)*0.001;});
+  for(let i=0;i<ANAMES.length;i++) for(let j=i+1;j<ANAMES.length;j++){
+    const a=ns[ANAMES[i]],b=ns[ANAMES[j]]; let dx=b.x-a.x,dy=b.y-a.y;
+    const d=Math.sqrt(dx*dx+dy*dy)||1,f=400/(d*d);
+    a.vx-=f*dx/d;a.vy-=f*dy/d;b.vx+=f*dx/d;b.vy+=f*dy/d;
+  }
+  if(edges) for(const e of edges){
+    const a=ns[e.source],b=ns[e.target]; if(!a||!b)continue;
+    const dx=b.x-a.x,dy=b.y-a.y,dist=Math.sqrt(dx*dx+dy*dy)||1,s=e.strength*0.02;
+    a.vx+=s*dx/dist;a.vy+=s*dy/dist;b.vx-=s*dx/dist;b.vy-=s*dy/dist;
+  }
+  ANAMES.forEach(n=>{const o=ns[n];o.x+=o.vx;o.y+=o.vy;o.vx*=0.9;o.vy*=0.9;
+    o.x=Math.max(20,Math.min(w-20,o.x));o.y=Math.max(20,Math.min(h-20,o.y));});
+  tctx.clearRect(0,0,w,h);
+  if(edges) for(const e of edges){
+    const a=ns[e.source],b=ns[e.target]; if(!a||!b)continue;
+    tctx.strokeStyle=`rgba(88,166,255,${Math.max(0.1,Math.min(1,e.strength))})`;
+    tctx.lineWidth=Math.max(1,e.strength*4);
+    tctx.beginPath();tctx.moveTo(a.x,a.y);tctx.lineTo(b.x,b.y);tctx.stroke();
+  }
+  ANAMES.forEach((n,i)=>{const o=ns[n];tctx.beginPath();tctx.arc(o.x,o.y,7,0,Math.PI*2);
+    tctx.fillStyle=ACOLORS[i];tctx.fill();
+    tctx.strokeStyle='#0d1117';tctx.lineWidth=2;tctx.stroke();
+    tctx.fillStyle='#f0f6fc';tctx.font='10px monospace';tctx.textAlign='center';tctx.fillText(n,o.x,o.y+18);});
+}
+
+// ── Update Loop ───────────────────────────────────────────────
+function update(data) {
+  renderTopo(data.topology||[]);
+  document.getElementById('sStep').textContent=data.step;
+  document.getElementById('sCollapse').textContent=data.collapse_count;
+  document.getElementById('sLocked').textContent=`${data.locked_count}/5`;
+  const sq=document.getElementById('sQuad');
+  sq.textContent=data.quadrant.toUpperCase();
+  sq.style.background=data.color;
+
+  // Quadrant bars
+  const preds=data.predictions||{};
+  const total=Object.values(preds).reduce((a,b)=>a+b,0)||1;
+  document.getElementById('quadBars').innerHTML=Object.entries(preds).map(([q,c])=>`
+    <div class="qrow"><div class="qdot" style="background:${COLORS[q]}"></div>
+    <div class="qlbl">${q}</div>
+    <div class="qbg"><div class="qfill" style="width:${(c/total*100).toFixed(0)}%;background:${COLORS[q]}"></div></div>
+    <span style="font-size:0.75rem;color:#8b949e;width:30px;text-align:right;">${c}</span></div>
+  `).join('');
+
+  // Route bar
+  const rl=data.route_log||{};
+  const rt=Object.values(rl).reduce((a,b)=>a+b,0)||1;
+  document.getElementById('routeBar').innerHTML=Object.entries(rl).map(([q,c])=>
+    `<div class="rseg" style="flex:${c/rt};background:${COLORS[q]}"></div>`
+  ).join('');
+  document.getElementById('routeLabels').textContent=
+    Object.entries(rl).sort((a,b)=>b[1]-a[1]).map(([q,c])=>`${q}: ${c}`).join('  ·  ');
+
+  // Metrics
+  const ags=Object.values(data.agents||{});
+  const avgPe=ags.reduce((s,a)=>s+a.prediction_error,0)/ags.length||0;
+  const avgLp=ags.reduce((s,a)=>s+a.loop_depth,0)/ags.length||0;
+  document.getElementById('metrics').innerHTML=`
+    <div class="stat-r"><span class="stat-l">Consensus</span><span class="stat-v">${(data.consensus*100).toFixed(0)}%</span></div>
+    <div class="stat-r"><span class="stat-l">Locked Ratio</span><span class="stat-v">${(data.locked_ratio*100).toFixed(0)}%</span></div>
+    <div class="stat-r"><span class="stat-l">Avg Pred Error</span><span class="stat-v">${avgPe.toFixed(3)}</span></div>
+    <div class="stat-r"><span class="stat-l">Avg Loop Depth</span><span class="stat-v">${avgLp.toFixed(2)}</span></div>
+    <div class="stat-r"><span class="stat-l">⊕ Collapses</span><span class="stat-v" style="color:#da3633;">${data.collapse_count}</span></div>
+  `;
+
+  // Agent cards
+  const grid=document.getElementById('agentGrid');
+  if(grid.children.length===0){
+    for(const[aid,info]of Object.entries(data.agents||{})){
+      const c=document.createElement('div');
+      c.className=`acard ${info.i_locked?'locked':''}`;c.id=`ac-${aid}`;
+      c.innerHTML=`<div class="aname">${aid}</div>
+        <div class="aout" id="ao-${aid}">${(info.last_output||['wait']).join(' ')}</div>
+        <div class="astat"><span>pred err</span><span id="ape-${aid}">${info.prediction_error}</span></div>
+        <div class="astat"><span>loop</span><span id="alp-${aid}">${info.loop_depth}</span></div>
+        <div class="astat"><span>I-lock</span><span>${info.i_locked?'✓':'✗'}</span></div>
+        <div class="pbar"><div class="pfill ${peClass(info.prediction_error)}" id="apb-${aid}" style="width:${info.prediction_error*100}%"></div></div>`;
+      grid.appendChild(c);
+    }
+  } else {
+    for(const[aid,info]of Object.entries(data.agents||{})){
+      const c=document.getElementById(`ac-${aid}`);if(!c)continue;
+      c.className=`acard ${info.i_locked?'locked':''}`;
+      document.getElementById(`ao-${aid}`).textContent=(info.last_output||['wait']).join(' ');
+      document.getElementById(`ape-${aid}`).textContent=info.prediction_error;
+      document.getElementById(`alp-${aid}`).textContent=info.loop_depth;
+      const b=document.getElementById(`apb-${aid}`);
+      if(b){b.style.width=`${info.prediction_error*100}%`;b.className=`pfill ${peClass(info.prediction_error)}`;}
+    }
+  }
+
+  // Collapse log
+  if(data.collapse){
+    const log=document.getElementById('collapseLog');
+    const e=document.createElement('div');e.className='cent';
+    e.innerHTML=`<span class="cbadge">⊕</span> step ${data.collapse.step}: expected ${data.collapse.expected} got ${data.collapse.actual}`;
+    log.prepend(e);if(log.children.length>15)log.removeChild(log.lastChild);
+  }
+}
+
+function peClass(e){return e<0.3?'low':e<0.6?'med':'high';}
+
+const src=new EventSource('/stream');
+src.onmessage=e=>{try{update(JSON.parse(e.data))}catch(_){}};
+src.onerror=()=>{document.getElementById('sQuad').textContent='OFF';document.getElementById('sQuad').style.background='#da3633';};
+</script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stop Lights — Conscious Agent Dashboard</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0d1117; color: #c9d1d9; padding: 20px; }
+  h1 { font-size: 1.5rem; margin-bottom: 4px; color: #f0f6fc; }
+  .subtitle { color: #8b949e; font-size: 0.85rem; margin-bottom: 20px; }
+  .layout { display: flex; gap: 20px; flex-wrap: wrap; }
+  .left-panel { flex: 0 0 280px; }
+  .right-panel { flex: 1; min-width: 500px; }
+
+  .traffic-light { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 24px; text-align: center; margin-bottom: 16px; }
+  .light-circle { width: 80px; height: 80px; border-radius: 50%; margin: 8px auto; transition: background 0.3s, box-shadow 0.3s; }
+  .light-circle.red { background: #da3633; box-shadow: 0 0 30px rgba(218,54,51,0.5); }
+  .light-circle.green { background: #3fb950; box-shadow: 0 0 30px rgba(63,185,80,0.5); }
+  .light-circle.yellow { background: #d29922; box-shadow: 0 0 30px rgba(210,153,34,0.5); }
+  .light-circle.off { background: #21262d; box-shadow: none; }
+  .light-label { font-size: 1.2rem; font-weight: 600; margin-top: 12px; text-transform: uppercase; letter-spacing: 2px; }
+  .light-tick { color: #8b949e; font-size: 0.8rem; margin-top: 4px; }
+
+  .stats-panel { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+  .stat-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #21262d; font-size: 0.85rem; }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-label { color: #8b949e; }
+  .stat-value { color: #f0f6fc; font-weight: 600; }
+  .stat-value.locked { color: #3fb950; }
+  .stat-value.unlocked { color: #da3633; }
+
+  .shared-vocab { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+  .vocab-tag { display: inline-block; background: #21262d; color: #c9d1d9; padding: 3px 10px; border-radius: 20px; font-size: 0.8rem; margin: 3px; border: 1px solid #30363d; }
+
+  .agent-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+  .agent-card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 12px; transition: border-color 0.3s; }
+  .agent-card.locked { border-color: #3fb950; }
+  .agent-card.unlocked { border-color: #da3633; }
+  .agent-id { font-size: 0.8rem; color: #8b949e; margin-bottom: 4px; }
+  .agent-output { font-size: 1rem; font-weight: 500; color: #f0f6fc; margin-bottom: 8px; font-style: italic; }
+  .agent-stats { font-size: 0.75rem; color: #8b949e; display: flex; gap: 12px; }
+  .agent-status { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
+  .agent-status.locked { background: #3fb950; }
+  .agent-status.unlocked { background: #da3633; }
+
+  .pred-error-bar { height: 3px; background: #21262d; border-radius: 2px; margin-top: 6px; overflow: hidden; }
+  .pred-error-fill { height: 100%; border-radius: 2px; transition: width 0.3s; }
+  .pred-error-fill.low { background: #3fb950; }
+  .pred-error-fill.med { background: #d29922; }
+  .pred-error-fill.high { background: #da3633; }
+</style>
+</head>
+<body>
+  <h1>🚦 Stop Lights — Conscious Agent Dashboard</h1>
+  <p class="subtitle">10 agents experiencing a Markovian RED → GREEN → YELLOW light cycle. Each builds their own internal model.</p>
+
+  <div class="layout">
+    <div class="left-panel">
+      <div class="traffic-light" id="trafficLight">
+        <div class="light-circle off" id="lightRed"></div>
+        <div class="light-circle off" id="lightYellow"></div>
+        <div class="light-circle off" id="lightGreen"></div>
+        <div class="light-label" id="lightLabel">WAITING</div>
+        <div class="light-tick" id="lightTick">tick 0</div>
+      </div>
+
+      <div class="stats-panel">
+        <div class="stat-row"><span class="stat-label">Generation</span><span class="stat-value" id="statGen">0</span></div>
+        <div class="stat-row"><span class="stat-label">Agents</span><span class="stat-value" id="statAgents">10</span></div>
+        <div class="stat-row"><span class="stat-label">I-Locked</span><span class="stat-value" id="statLocked">0/10</span></div>
+        <div class="stat-row"><span class="stat-label">Avg Pred Error</span><span class="stat-value" id="statPredErr">0.000</span></div>
+        <div class="stat-row"><span class="stat-label">Avg Loop Depth</span><span class="stat-value" id="statLoop">0.000</span></div>
+        <div class="stat-row"><span class="stat-label">Unique Tokens</span><span class="stat-value" id="statTokens">0</span></div>
+      </div>
+
+      <div class="shared-vocab">
+        <div style="font-size:0.85rem; color:#8b949e; margin-bottom:8px;">Shared Vocabulary</div>
+        <div id="sharedVocab"><span class="vocab-tag">waiting...</span></div>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="agent-grid" id="agentGrid"></div>
+    </div>
+  </div>
+
+<script>
+const LIGHT_COLORS = { red: 0, green: 2, yellow: 1 };
+
+let prevLight = -1;
+
+function updateDashboard(data) {
+  const light = data.light;
+  
+  // Traffic light
+  const redEl = document.getElementById('lightRed');
+  const yellowEl = document.getElementById('lightYellow');
+  const greenEl = document.getElementById('lightGreen');
+  
+  redEl.className = 'light-circle off';
+  yellowEl.className = 'light-circle off';
+  greenEl.className = 'light-circle off';
+  
+  if (light.color === 'red') redEl.className = 'light-circle red';
+  else if (light.color === 'yellow') yellowEl.className = 'light-circle yellow';
+  else if (light.color === 'green') greenEl.className = 'light-circle green';
+  
+  document.getElementById('lightLabel').textContent = light.label || light.color.toUpperCase();
+  document.getElementById('lightTick').textContent = `tick ${light.tick}`;
+
+  // Stats
+  document.getElementById('statGen').textContent = data.generation;
+  const agents = Object.values(data.agents);
+  const locked = agents.filter(a => a.i_locked).length;
+  document.getElementById('statLocked').textContent = `${locked}/${agents.length}`;
+  document.getElementById('statPredErr').textContent = data.avg_pred_error.toFixed(3);
+  document.getElementById('statLoop').textContent = (agents.reduce((s, a) => s + a.loop_depth, 0) / agents.length).toFixed(3);
+  document.getElementById('statTokens').textContent = data.shared_vocab.length;
+
+  // Shared vocab
+  const vocabEl = document.getElementById('sharedVocab');
+  vocabEl.innerHTML = data.shared_vocab.map(t => `<span class="vocab-tag">${t}</span>`).join('');
+
+  // Agent cards
+  const grid = document.getElementById('agentGrid');
+  if (grid.children.length === 0) {
+    for (const [aid, info] of Object.entries(data.agents)) {
+      const card = document.createElement('div');
+      card.className = `agent-card ${info.i_locked ? 'locked' : 'unlocked'}`;
+      card.id = `card-${aid}`;
+      card.innerHTML = `
+        <div class="agent-id"><span class="agent-status ${info.i_locked ? 'locked' : 'unlocked'}"></span>${aid}</div>
+        <div class="agent-output" id="out-${aid}">${info.output}</div>
+        <div class="agent-stats">
+          <span>err: <span id="err-${aid}">${info.pred_error}</span></span>
+          <span>loop: <span id="loop-${aid}">${info.loop_depth}</span></span>
+          <span>vocab: <span id="vocab-${aid}">${info.vocab_size}</span></span>
+        </div>
+        <div class="pred-error-bar">
+          <div class="pred-error-fill ${errClass(info.pred_error)}" id="bar-${aid}" style="width:${info.pred_error * 100}%"></div>
+        </div>
+      `;
+      grid.appendChild(card);
+    }
+  } else {
+    for (const [aid, info] of Object.entries(data.agents)) {
+      const card = document.getElementById(`card-${aid}`);
+      if (card) {
+        card.className = `agent-card ${info.i_locked ? 'locked' : 'unlocked'}`;
+        document.getElementById(`out-${aid}`).textContent = info.output;
+        document.getElementById(`err-${aid}`).textContent = info.pred_error;
+        document.getElementById(`loop-${aid}`).textContent = info.loop_depth;
+        document.getElementById(`vocab-${aid}`).textContent = info.vocab_size;
+        const bar = document.getElementById(`bar-${aid}`);
+        bar.style.width = `${info.pred_error * 100}%`;
+        bar.className = `pred-error-fill ${errClass(info.pred_error)}`;
+      }
+    }
+  }
+}
+
+function errClass(e) {
+  if (e < 0.3) return 'low';
+  if (e < 0.6) return 'med';
+  return 'high';
+}
+
+// Connect to SSE stream
+const evtSource = new EventSource('/stream');
+evtSource.onmessage = (event) => {
+  try {
+    const data = JSON.parse(event.data);
+    updateDashboard(data);
+  } catch (e) {
+    console.error('Parse error:', e);
+  }
+};
+evtSource.onerror = () => {
+  document.getElementById('lightLabel').textContent = 'DISCONNECTED';
+  setTimeout(() => location.reload(), 3000);
+};
+</script>
+</body>
+</html>
