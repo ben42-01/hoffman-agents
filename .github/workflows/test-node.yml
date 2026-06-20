@@ -22,4 +22,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-      - run: cd hoffman-agents-node && npm pack --dry-run
+      - run: npm pack --dry-run
+        working-directory: ./hoffman-agents-node
