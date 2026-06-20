@@ -1,4 +1,4 @@
-name: Tests & Pack Check
+name: Tests & Pack Nodejs Check
 on: [push, pull_request]
 jobs:
   test:

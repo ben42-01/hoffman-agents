@@ -1,4 +1,4 @@
-name: Tests & Build Check
+name: Tests & Build Python Check
 on: [push, pull_request]
 jobs:
   test:
