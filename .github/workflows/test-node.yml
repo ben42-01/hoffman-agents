@@ -17,13 +17,12 @@ jobs:
 
   pack-check:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hoffman-agents-node
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-      - name: Check structure
-        run: ls -la 
-      - name: Pack check
-        run: npm pack --dry-run
-        working-directory: hoffman-agents-node
+      - run: pwd && ls -la && npm pack --dry-run
