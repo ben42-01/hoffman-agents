@@ -8,13 +8,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install -e .[dev]
-      - run: python -m pytest tests/ -v
+      - run: cd hoffman-agents-python && pip install -e .[dev]
+      - run: cd hoffman-agents-python && python -m pytest tests/ -v
       - name: Smoke-test examples
         run: |
-          python examples/01_fitness_beats_truth/fitness_beats_truth.py
-          python examples/02_quantum_signature/quantum_signature.py
-          python examples/05_self_ref_ablation/self_ref_ablation.py
+          cd hoffman-agents-python && python examples/01_fitness_beats_truth/fitness_beats_truth.py
+          cd hoffman-agents-python && python examples/02_quantum_signature/quantum_signature.py
+          cd hoffman-agents-python && python examples/05_self_ref_ablation/self_ref_ablation.py
 
   build-check:
     runs-on: ubuntu-latest
@@ -23,6 +23,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install build twine
-      - run: python -m build
-      - run: python -m twine check dist/*
+      - run: cd hoffman-agents-python && pip install build twine
+      - run: cd hoffman-agents-python && python -m build
+      - run: cd hoffman-agents-python && python -m twine check dist/*
