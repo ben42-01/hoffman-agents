@@ -100,9 +100,11 @@ dist/
 # data/
 # results/
 
-# Large files
-*.csv
-*.json
+
+
+# Large files (customize as needed)
+# *.json  # Uncomment only for generated JSON files, not package.json
+# *.csv   # Uncomment only for large data files, not examples
 *.pkl
 *.pickle
 *.h5

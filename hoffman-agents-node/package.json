@@ -1,0 +1,40 @@
+{
+  "name": "conscious-agent",
+  "version": "1.0.0",
+  "description": "Self-referential structure-learning system — agents that learn by inhabiting worlds",
+  "main": "src/index.js",
+  "files": ["src/"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ben42-01/hoffman-agents.git",
+    "directory": "hoffman-agents-node"
+  },
+  "bugs": {
+    "url": "https://github.com/ben42-01/hoffman-agents/issues"
+  },
+  "homepage": "https://github.com/ben42-01/hoffman-agents",
+  "author": "Benjamin Keil team.agora.hub@gmail.com",
+  "scripts": {
+    "examples:fbt": "node examples/01_fitness_beats_truth/fitness_beats_truth.js",
+    "examples:qs": "node examples/02_quantum_signature/quantum_signature.js",
+    "examples:weather": "node examples/03_weather_benchmark/weather_benchmark.js",
+    "examples:trafficLights": "node examples/04_stop_lights/stop_lights.js",
+    "examples:selfRefAblation":"node examples/05_self_ref_ablation/self_ref_ablation.js",
+    "build:dryRun":"npm pack --dry-run",
+    "build:pack":"npm pack --pack-destination ../.dist",
+    "test": "node test/core.test.js"
+  },
+  "license": "MIT",
+  "keywords": [
+    "consciousness",
+    "emergent-language",
+    "self-reference",
+    "structure-learning",
+    "hoffman",
+    "conscious-realism"
+  ],
+  "dependencies": {},
+  "engines": {
+    "node": ">=18"
+  }
+}
