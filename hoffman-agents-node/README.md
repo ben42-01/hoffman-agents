@@ -20,6 +20,12 @@ console.log(`"I" locked: ${agent.isILocked}`);
 npm install conscious-agent   # once published
 ```
 
+or directly From Git 
+
+```bash
+npm install github:ben42-01/hoffman-agents
+```
+
 Or from source:
 ```bash
 cd hoffman-agents-node

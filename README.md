@@ -27,6 +27,11 @@ cd hoffman-agents-python
 pip install -e .
 ```
 
+Or install directly from GitHub without publishing to PyPI:
+```bash
+pip install git+https://github.com/ben42-01/hoffman-agents.git@main#subdirectory=hoffman-agents-python
+```
+
 ## Quick Start
 
 ### Single agent in a coin-toss world
