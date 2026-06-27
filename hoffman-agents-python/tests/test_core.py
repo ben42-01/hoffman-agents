@@ -47,6 +47,34 @@ def test_trace_buffer():
     assert len(buf) == 5
 
 
+def test_trace_buffer_resize_grow():
+    buf = TraceBuffer(maxlen=3)
+    for i in range(5):
+        buf.append(TraceEvent(from_state=i, to_state=i, timestamp=i, prediction=i, prediction_correct=True, prediction_error=0.0))
+    assert len(buf) == 3
+    buf.resize(10)
+    assert buf.maxlen == 10
+    assert len(buf) == 3
+
+
+def test_trace_buffer_resize_shrink():
+    buf = TraceBuffer(maxlen=10)
+    for i in range(10):
+        buf.append(TraceEvent(from_state=i, to_state=i, timestamp=i, prediction=i, prediction_correct=True, prediction_error=0.0))
+    assert len(buf) == 10
+    buf.resize(3)
+    assert buf.maxlen == 3
+    assert len(buf) == 3
+    assert buf.as_state_sequence() == [7, 8, 9]
+
+
+def test_trace_buffer_resize_invalid():
+    buf = TraceBuffer(maxlen=5)
+    import pytest
+    with pytest.raises(ValueError, match=">= 1"):
+        buf.resize(0)
+
+
 def test_experience_trie():
     trie = ExperienceTrie(max_depth=5)
     trie.insert([1, 2, 3], prediction_error=0.1)
@@ -75,6 +103,20 @@ def test_combine():
     assert combined.cycle_level == 1
 
 
+def test_combine_nary():
+    a1 = ConsciousAgent(agent_id="nary_1")
+    a2 = ConsciousAgent(agent_id="nary_2")
+    a3 = ConsciousAgent(agent_id="nary_3")
+    combined = combine(a1, a2, a3)
+    assert combined.cycle_level == 2
+
+
+def test_combine_nary_5():
+    agents = [ConsciousAgent(agent_id=f"N_{i}") for i in range(5)]
+    combined = combine(*agents)
+    assert combined.cycle_level >= 2
+
+
 def test_simple_world_step():
     world = SimpleWorld(n_states=5, seed=42)
     state = world.step()
@@ -98,6 +140,107 @@ def test_agent_run():
     agent.set_world(world)
     outputs = agent.run(n_steps=100)
     assert len(outputs) == 100
+
+
+def test_action_distribution():
+    agent = ConsciousAgent(agent_id="action_dist_test")
+    world = SimpleWorld(n_states=5, seed=42)
+    output = agent.step(world.step())
+    assert hasattr(output, 'action_distribution')
+    assert isinstance(output.action_distribution, dict)
+
+
+def test_allowable_tokens():
+    agent = ConsciousAgent(agent_id="allowable_test")
+    agent.set_allowable_tokens({"I", "notice"})
+    world = SimpleWorld(n_states=5, seed=42)
+    for _ in range(10):
+        output = agent.step(world.step())
+        for token in output.sequence:
+            assert token in ("I", "notice"), f"Unexpected token: {token}"
+
+
+def test_agent_metrics():
+    agent = ConsciousAgent(agent_id="metrics_test")
+    m = agent.metrics
+    assert "prediction_error" in m
+    assert "i_locked" in m
+    assert "loop_depth" in m
+    assert "output_tokens" in m
+
+
+def test_network_get_metrics():
+    network = AgentNetwork(n_agents=4, seed=42)
+    m = network.get_metrics()
+    assert m["agent_count"] == 4
+
+
+def test_network_get_agent_metrics():
+    network = AgentNetwork(n_agents=4, seed=42)
+    m = network.get_agent_metrics("CA_000")
+    assert m is not None
+    assert "prediction_error" in m
+    assert network.get_agent_metrics("nonexistent") is None
+
+
+def test_clear_memory():
+    agent = ConsciousAgent(agent_id="clear_mem_test")
+    agent.step(SimpleWorld(n_states=5, seed=42).step())
+    agent.clear_memory()
+    assert agent.step_count == 0
+    assert agent.generation == 0
+    assert len(agent.experience.trace_buffer) == 0
+
+
+def test_clear_memory_preserves_structure():
+    agent = ConsciousAgent(agent_id="clear_struct_test")
+    world = SimpleWorld(n_states=5, seed=42)
+    for _ in range(10):
+        agent.step(world.step())
+    trie_before = agent.experience.trie.size()
+    assert trie_before > 0
+    agent.clear_memory()
+    assert agent.experience.trie.size() == trie_before
+
+
+def test_set_mode_frozen():
+    agent = ConsciousAgent(agent_id="frozen_test")
+    agent.set_mode("frozen")
+    assert agent.mode == "frozen"
+    world = SimpleWorld(n_states=5, seed=42)
+    size_before = agent.experience.trie.size()
+    for _ in range(10):
+        agent.step(world.step())
+    assert agent.experience.trie.size() == size_before
+    assert len(agent.experience.trace_buffer) == 10
+
+
+def test_set_mode_invalid():
+    agent = ConsciousAgent(agent_id="bad_mode")
+    import pytest
+    with pytest.raises(ValueError, match="Invalid mode"):
+        agent.set_mode("invalid")
+
+
+def test_thaw():
+    agent = ConsciousAgent(agent_id="thaw_test")
+    agent.set_mode("frozen")
+    assert agent.mode == "frozen"
+    agent.thaw()
+    assert agent.mode == "learning"
+    world = SimpleWorld(n_states=5, seed=42)
+    size_before = agent.experience.trie.size()
+    for _ in range(10):
+        agent.step(world.step())
+    assert agent.experience.trie.size() > size_before
+
+
+def test_refreeze():
+    agent = ConsciousAgent(agent_id="refreeze_test")
+    agent.thaw()
+    assert agent.mode == "learning"
+    agent.refreeze()
+    assert agent.mode == "frozen"
 
 
 def test_world_builder():
@@ -124,6 +267,22 @@ def test_agent_network():
     state = network.step()
     assert "generation" in state
     assert state["generation"] == 0
+
+
+def test_agent_network_step_all():
+    network = AgentNetwork(n_agents=4, seed=42)
+    world = SimpleWorld(n_states=5, seed=42).step()
+    results = network.step_all(world)
+    assert len(results) == 4
+    for r in results:
+        assert r.sequence is not None
+
+
+def test_agent_network_agent_list():
+    network = AgentNetwork(n_agents=4, seed=42)
+    assert len(network.agent_list) == 4
+    for a in network.agent_list:
+        assert a.agent_id is not None
 
 
 def test_serialization(tmp_path):

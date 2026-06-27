@@ -76,6 +76,17 @@ class TraceBuffer:
     def maxlen(self) -> int:
         return self._maxlen
 
+    def resize(self, new_maxlen: int) -> None:
+        if new_maxlen < 1:
+            raise ValueError(f"maxlen must be >= 1, got {new_maxlen}")
+        ordered = list(self)
+        self._maxlen = new_maxlen
+        if len(ordered) > new_maxlen:
+            self._events = ordered[-new_maxlen:]
+        else:
+            self._events = ordered
+        self._cursor = 0
+
     def clear(self) -> None:
         self._events.clear()
         self._cursor = 0
