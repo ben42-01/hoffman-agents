@@ -3,7 +3,7 @@ from __future__ import annotations
 import random
 from dataclasses import dataclass, field
 
-from ..agent import ConsciousAgent, WorldState
+from ..agent import ConsciousAgent, StepOutput, WorldState
 
 
 @dataclass
@@ -229,12 +229,20 @@ class AgentNetwork:
         return dict(self._agents)
 
     @property
+    def agent_list(self) -> list[ConsciousAgent]:
+        return [self._agents[aid] for aid in self._agent_ids if aid in self._agents]
+
+    @property
     def agent_ids(self) -> list[str]:
         return list(self._agent_ids)
 
     @property
     def generation(self) -> int:
         return self._generation
+
+    def step_all(self, world_state: WorldState) -> list[StepOutput]:
+        return [self._agents[aid].step(world_state)
+                for aid in self._agent_ids if aid in self._agents]
 
     def avg_prediction_error(self) -> float:
         if not self._agent_ids:
@@ -245,3 +253,36 @@ class AgentNetwork:
             if ag is not None:
                 errors.append(ag.experience.trace_buffer.prediction_error_mean(window=10))
         return sum(errors) / len(errors) if errors else 0.0
+
+    def get_metrics(self) -> dict:
+        step_results = [a.metrics for a in self.agent_list]
+        if not step_results:
+            return {
+                "agent_count": 0, "mean_prediction_error": 0.0,
+                "prediction_error_variance": 0.0, "i_lock_rate": 0.0,
+                "mean_loop_depth": 0.0, "dominant_token_ratio": 0.0,
+            }
+        errors = [r["prediction_error"] for r in step_results]
+        mean_pe = sum(errors) / len(errors)
+        var_pe = sum((e - mean_pe) ** 2 for e in errors) / len(errors)
+        i_lock_rate = sum(1 for r in step_results if r["i_locked"]) / len(step_results)
+        mean_loop_depth = sum(r["loop_depth"] for r in step_results) / len(step_results)
+        token_counts: dict[str, int] = {}
+        for r in step_results:
+            for t in r["output_tokens"]:
+                token_counts[t] = token_counts.get(t, 0) + 1
+        max_count = max(token_counts.values()) if token_counts else 0
+        total_tokens = sum(token_counts.values()) if token_counts else 0
+        dominant_token_ratio = max_count / total_tokens if total_tokens > 0 else 0.0
+        return {
+            "agent_count": len(step_results),
+            "mean_prediction_error": mean_pe,
+            "prediction_error_variance": var_pe,
+            "i_lock_rate": i_lock_rate,
+            "mean_loop_depth": mean_loop_depth,
+            "dominant_token_ratio": dominant_token_ratio,
+        }
+
+    def get_agent_metrics(self, agent_id: str) -> dict | None:
+        agent = self._agents.get(agent_id)
+        return agent.metrics if agent is not None else None

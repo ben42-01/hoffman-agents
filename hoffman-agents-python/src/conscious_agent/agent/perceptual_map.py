@@ -12,6 +12,7 @@ def perceive(
     experience: ExperienceSpace,
     step: int = 0,
     meta_observation_interval: int = 20,
+    frozen: bool = False,
 ) -> ExperienceSpace:
     if not world:
         return experience
@@ -39,18 +40,20 @@ def perceive(
     )
 
     experience.trace_buffer.append(event)
-    experience.trie.insert([event.to_state], prediction_error)
-    if event.from_state >= 0:
-        experience.trie.insert([event.from_state, event.to_state], prediction_error)
 
-    _update_lexicon(experience, world, world_state_id, prediction_error, step)
+    if not frozen:
+        experience.trie.insert([event.to_state], prediction_error)
+        if event.from_state >= 0:
+            experience.trie.insert([event.from_state, event.to_state], prediction_error)
 
-    if step > 0 and step % meta_observation_interval == 0:
-        meta_id = experience.meta_trie.observe_self(experience.trace_buffer, timestamp=step)
-        experience.self_token.update(experience.meta_trie, generation=step)
+        _update_lexicon(experience, world, world_state_id, prediction_error, step)
 
-    if step > 0 and step % (meta_observation_interval * 3) == 0:
-        _check_bind_proto_word(experience, world_state_id, step)
+        if step > 0 and step % meta_observation_interval == 0:
+            meta_id = experience.meta_trie.observe_self(experience.trace_buffer, timestamp=step)
+            experience.self_token.update(experience.meta_trie, generation=step)
+
+        if step > 0 and step % (meta_observation_interval * 3) == 0:
+            _check_bind_proto_word(experience, world_state_id, step)
 
     experience.last_world_state_id = world_state_id
     return experience

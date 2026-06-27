@@ -30,7 +30,8 @@ def _build_transition_signature(
     return sig
 
 
-def _sample_lexicon_label(experience: ExperienceSpace, vocab_size: int = 5) -> str | None:
+def _sample_lexicon_label(experience: ExperienceSpace, vocab_size: int = 5,
+                          rng: random.Random = random._inst) -> str | None:
     entries = experience.lexicon.sorted_by_integration()
     if not entries:
         return None
@@ -71,7 +72,7 @@ def _sample_lexicon_label(experience: ExperienceSpace, vocab_size: int = 5) -> s
     top_n = weighted[:vocab_size]
     weights = [w for w, _ in top_n]
     total = sum(weights)
-    r = random.random() * total
+    r = rng.random() * total
     cumulative = 0.0
     for w, entry in top_n:
         cumulative += w
@@ -81,8 +82,9 @@ def _sample_lexicon_label(experience: ExperienceSpace, vocab_size: int = 5) -> s
 
 
 def _next_state(current: OutputState, p_stable: float, p_lexicon: float,
-                p_explore: float) -> OutputState:
-    r = random.random()
+                p_explore: float,
+                rng: random.Random = random._inst) -> OutputState:
+    r = rng.random()
     if current == "lexicon":
         if r < 0.70:
             return "core"

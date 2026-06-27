@@ -118,6 +118,18 @@ from conscious_agent import (
     TraceBuffer, TraceEvent, ExperienceTrie, MetaTrie,
     SelfTokenState, ExperienceLexicon, strange_loop_score,
 )
+
+# v2.0 — New APIs
+# Agent mode control: agent.set_mode("frozen"), agent.thaw(), agent.refreeze()
+# Memory control: agent.clear_memory()
+# Metrics: agent.metrics, network.get_metrics(), network.get_agent_metrics(id)
+# Batch stepping: network.step_all(world_state), network.agent_list
+# Action distribution: output.action_distribution
+# Token constraints: agent.set_allowable_tokens({...})
+# Incremental injection: agent.inject_observation(world_state)
+# N-ary combine: combine(a1, a2, a3)
+# Trie introspection: trie.get_stats(), trie.export_nodes(3), trie.get_dominant_paths(5)
+# Trace buffer: trace_buffer.resize(new_size)
 ```
 
 ## How It Works

@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
+import random as _random
+
 import numpy as np
 
 from ..core import (
@@ -16,6 +18,8 @@ from .world_state import WorldState
 from .experience_space import ExperienceSpace
 from .perceptual_map import perceive
 from .decision_map import decide, OutputState
+
+_VALID_MODES = frozenset({"learning", "frozen", "debug"})
 
 
 @dataclass
@@ -31,6 +35,7 @@ class StepOutput:
     i_locked: bool
     i_stability: float
     interrupt: Any = None
+    action_distribution: dict[str, float] = field(default_factory=dict)
 
 
 @dataclass
@@ -48,6 +53,9 @@ class ConsciousAgent:
     p_stable: float = 0.80
     p_lexicon: float = 0.10
     p_explore: float = 0.05
+    _mode: str = "learning"
+    _rng: Any = field(default_factory=_random.Random)
+    _allowable_tokens: set[str] | None = None
     _combined: bool = False
     _ergodic_state: OutputState = "idle"
     _last_output: list[str] = field(default_factory=lambda: ["wait"])
@@ -76,34 +84,52 @@ class ConsciousAgent:
             if hasattr(self.world, 'step'):
                 world = self.world.step()
 
+        is_frozen = self._mode in ("frozen", "debug")
+
         if world is not None:
             self.experience = perceive(
                 world,
                 self.experience,
                 step=self.step_count,
                 meta_observation_interval=self.meta_observation_interval,
+                frozen=is_frozen,
             )
+
+        p_stable = 1.0 if is_frozen else self.p_stable
+        p_lexicon = 0.0 if is_frozen else self.p_lexicon
+        p_explore = 0.0 if is_frozen else self.p_explore
 
         output, self._ergodic_state = decide(
             self.experience,
-            p_stable=self.p_stable,
-            p_lexicon=self.p_lexicon,
-            p_explore=self.p_explore,
+            p_stable=p_stable,
+            p_lexicon=p_lexicon,
+            p_explore=p_explore,
             ergodic_state=self._ergodic_state,
         )
 
-        for token in output:
-            if self.experience.meta_trie.last_meta_state is not None:
-                self.experience.meta_trie.record_token(
-                    self.experience.meta_trie.last_meta_state, token
-                )
+        if self._allowable_tokens is not None:
+            filtered = [t for t in output if t in self._allowable_tokens]
+            if filtered:
+                output = filtered
+            else:
+                output = [next(iter(self._allowable_tokens))]
+
+        if not is_frozen:
+            for token in output:
+                if self.experience.meta_trie.last_meta_state is not None:
+                    self.experience.meta_trie.record_token(
+                        self.experience.meta_trie.last_meta_state, token
+                    )
 
         self._last_output = output
         self.step_count += 1
         if self.step_count > 0 and self.step_count % self.meta_observation_interval == 0:
             self.generation += 1
 
+        action_distribution = self._compute_action_distribution(output)
+
         return StepOutput(
+            action_distribution=action_distribution,
             step=self.step_count,
             generation=self.generation,
             state=self.experience.last_world_state_id or -1,
@@ -125,11 +151,39 @@ class ConsciousAgent:
     def observe(self, output_sequence: list[str], source_id: str) -> StepOutput:
         return self.step(WorldState.from_sequence(source_id, output_sequence))
 
+    def inject_observation(self, world_state: WorldState) -> StepOutput:
+        return self.step(world_state)
+
     def get_output(self) -> list[str]:
         return list(self._last_output)
 
     def set_world(self, world: Any) -> None:
         self.world = world
+
+    def set_mode(self, mode: str) -> None:
+        if mode not in _VALID_MODES:
+            raise ValueError(f"Invalid mode '{mode}'. Use: {', '.join(sorted(_VALID_MODES))}")
+        self._mode = mode
+
+    def thaw(self) -> None:
+        self._mode = "learning"
+
+    def refreeze(self) -> None:
+        self._mode = "frozen"
+
+    @property
+    def mode(self) -> str:
+        return self._mode
+
+    @property
+    def metrics(self) -> dict:
+        return {
+            "prediction_error": self.experience.trace_buffer.prediction_error_mean(window=5),
+            "i_locked": self.experience.self_token.locked,
+            "i_stability": self.experience.self_token.stationary_variance(),
+            "loop_depth": float(_compute_self_reference_score(self._last_output)),
+            "output_tokens": list(self._last_output),
+        }
 
     @property
     def loop_score(self) -> float:
@@ -149,14 +203,31 @@ class ConsciousAgent:
 
     is_ripe = is_identity_stable
 
-    def clear(self) -> None:
+    def set_allowable_tokens(self, tokens: set[str]) -> None:
+        self._allowable_tokens = tokens
+
+    @staticmethod
+    def _compute_action_distribution(output: list[str]) -> dict[str, float]:
+        if not output:
+            return {}
+        counts: dict[str, int] = {}
+        for token in output:
+            counts[token] = counts.get(token, 0) + 1
+        total = len(output)
+        return {token: count / total for token, count in counts.items()}
+
+    def clear_memory(self) -> None:
         self.experience.trace_buffer.clear()
-        self.experience.trie.clear()
-        self.experience.meta_trie.clear()
-        self.experience.lexicon.clear()
         self.step_count = 0
         self.generation = 0
         self._last_output = ["wait"]
+        self._ergodic_state = "idle"
+
+    def clear(self) -> None:
+        self.clear_memory()
+        self.experience.trie.clear()
+        self.experience.meta_trie.clear()
+        self.experience.lexicon.clear()
 
 
 ConsciousAgent.__init__.__doc__ = """Create a ConsciousAgent.

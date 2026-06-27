@@ -13,7 +13,18 @@ from ..core import (
 from ..agent import ConsciousAgent, ExperienceSpace, WorldState
 
 
-def combine(agent1: ConsciousAgent, agent2: ConsciousAgent) -> ConsciousAgent:
+def combine(*agents: ConsciousAgent) -> ConsciousAgent:
+    if not agents:
+        return trivial_agent()
+    if len(agents) == 1:
+        return agents[0]
+    if len(agents) == 2:
+        return _binary_combine(agents[0], agents[1])
+    mid = len(agents) // 2
+    return combine(combine(*agents[:mid]), combine(*agents[mid:]))
+
+
+def _binary_combine(agent1: ConsciousAgent, agent2: ConsciousAgent) -> ConsciousAgent:
     if agent1.agent_id == "CA_0":
         return agent2
     if agent2.agent_id == "CA_0":
