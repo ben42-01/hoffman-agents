@@ -16,7 +16,7 @@ Quick start:
 __version__ = "2.0.0"
 
 from .agent import ConsciousAgent, SimpleWorld, WorldState, StepOutput, ExperienceSpace
-from .world import World, WorldBuilder, CoinTossWorld, build_world_from_dataframe
+from .world import World, WorldBuilder, SelfWorld, CoinTossWorld, build_world_from_dataframe
 from .network import AgentNetwork
 from .combination import combine, trivial_agent, experience_space_distance
 from .io import serialize, deserialize, clone, clone_agent, fingerprint, save_agent, load_agent, load_latest
@@ -46,6 +46,7 @@ __all__ = [
     "ExperienceSpace",
     "World",
     "WorldBuilder",
+    "SelfWorld",
     "CoinTossWorld",
     "build_world_from_dataframe",
     "AgentNetwork",

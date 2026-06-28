@@ -13,6 +13,7 @@ from conscious_agent import (
     World,
     WorldBuilder,
     CoinTossWorld,
+    SelfWorld,
 )
 
 import numpy as np
@@ -292,6 +293,29 @@ def test_serialization(tmp_path):
     serialize(agent, path)
     loaded = deserialize(path)
     assert loaded.agent_id == "save_test"
+
+
+def test_self_world():
+    inner = SimpleWorld(n_states=5, seed=42)
+    agent = ConsciousAgent(agent_id="sw_test")
+    sw = SelfWorld(inner, agent)
+    ws = sw.step()
+    assert "self" in ws.sequences
+    assert len(ws.sequences["self"]) > 0
+
+
+def test_self_world_custom_fn():
+    inner = SimpleWorld(n_states=5, seed=42)
+    agent = ConsciousAgent(agent_id="sw_custom")
+    sw = SelfWorld(inner, agent, get_state_fn=lambda a: {"custom": 42.0})
+    ws = sw.step()
+    assert any(t.startswith("custom:") for t in ws.sequences["self"])
+
+
+def test_self_world_no_step():
+    import pytest
+    with pytest.raises(ValueError, match="step"):
+        SelfWorld({}, None)
 
 
 def test_lexicon():

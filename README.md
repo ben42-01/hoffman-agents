@@ -14,7 +14,7 @@ outputs = agent.run(n_steps=1000)
 print(f'"I" locked: {agent.is_i_locked}')
 ```
 
-## Installation
+## Installation  Python
 
 ```bash
 pip install numpy scipy       # core dependencies
@@ -102,6 +102,160 @@ loaded = load_agent(path)
 cloned = clone_agent(agent, "experiment_clone")
 ```
 
+
+
+
+## Installation
+
+```bash
+npm install conscious-agent   # once published
+```
+
+or directly From Git 
+
+```bash
+npm install github:ben42-01/hoffman-agents
+```
+
+Or from source:
+```bash
+cd hoffman-agents-node
+npm link                     # or copy src/ into your project
+```
+
+## Quick Start
+
+```javascript
+const { ConsciousAgent } = require('conscious-agent');
+const { CoinTossWorld } = require('conscious-agent/worlds');
+
+const world = new CoinTossWorld(4);
+const agent = new ConsciousAgent({ agentId: 'my_agent', world });
+const outputs = agent.run(1000);
+console.log(`"I" locked: ${agent.isILocked}`);
+```
+
+### Single agent in a coin-toss world
+
+```javascript
+const { ConsciousAgent } = require('conscious-agent');
+const { CoinTossWorld } = require('conscious-agent/worlds');
+
+const world = new CoinTossWorld(3);
+const agent = new ConsciousAgent({ agentId: 'coin_agent', world });
+
+for (let i = 0; i < 500; i++) {
+  const output = agent.step();
+  if (output.iLocked) {
+    console.log(`I locked at step ${output.step}`);
+    break;
+  }
+}
+```
+
+### Custom Markov world
+
+```javascript
+const { ConsciousAgent, WorldBuilder } = require('conscious-agent');
+
+const data = Array.from({ length: 500 }, () => [Math.random(), Math.random(), Math.random()]);
+const world = new WorldBuilder()
+  .addFeature('temp', 'minmax', 4)
+  .addFeature('humidity', 'minmax', 4)
+  .addFeature('pressure', 'minmax', 4)
+  .build(data);
+
+const agent = new ConsciousAgent({ agentId: 'weather_agent', world });
+const outputs = agent.run(1000);
+```
+
+### Combine two agents
+
+```javascript
+const { combine } = require('conscious-agent');
+
+const a = new ConsciousAgent({ agentId: 'agent_a', world });
+const b = new ConsciousAgent({ agentId: 'agent_b', world });
+a.run(500);
+b.run(500);
+
+const combined = combine(a, b);
+console.log(`Combined agent: ${combined.agentId}, level: ${combined.cycleLevel}`);
+```
+
+### Multi-agent network
+
+```javascript
+const { AgentNetwork } = require('conscious-agent');
+
+const network = new AgentNetwork({ nAgents: 10, seed: 42 });
+const states = network.run(100);
+console.log(`Avg prediction error: ${network.avgPredictionError().toFixed(3)}`);
+```
+
+### Save and load
+
+```javascript
+const { saveAgent, loadAgent, cloneAgent } = require('conscious-agent/io');
+
+const path = saveAgent(agent, './souls');
+const loaded = loadAgent(path);
+
+const cloned = cloneAgent(agent, 'experiment_clone');
+```
+
+## Public API
+
+```javascript
+// Core classes
+const { ConsciousAgent, World, WorldBuilder } = require('conscious-agent');
+const { SimpleWorld, ExperienceSpace } = require('conscious-agent');
+
+// World factories
+const { CoinTossWorld } = require('conscious-agent/worlds');
+
+// IO
+const { saveAgent, loadAgent, cloneAgent, loadLatest } = require('conscious-agent/io');
+
+// Multi-agent
+const { AgentNetwork, combine } = require('conscious-agent');
+
+// Core components
+const { TraceBuffer, ExperienceTrie, MetaTrie, SelfTokenState, ExperienceLexicon } = require('conscious-agent');
+
+// v2.0 — Agent mode
+agent.setMode('frozen');       // deterministic projection, no learning
+agent.thaw();                  // back to learning
+agent.refreeze();              // back to frozen
+
+// v2.0 — Memory & lifecycle
+agent.clearMemory();           // reset short-term, preserve long-term
+agent.injectObservation(worldState); // push data mid-run
+
+// v2.0 — Metrics & introspection
+agent.metrics;                 // { predictionError, iLocked, loopDepth, ... }
+network.getMetrics();          // aggregate across all agents
+network.getAgentMetrics(id);   // per-agent snapshot
+trie.getStats();               // { nodeCount, maxDepth, meanVisitCount, ... }
+trie.exportNodes(3);           // export paths with visitCount >= 3
+trie.getDominantPaths(5);      // top 5 most-visited
+
+// v2.0 — Batch stepping
+network.stepAll(worldState);   // same world for all agents
+network.agentList;             // agents as array
+
+// v2.0 — Action space
+output.actionDistribution;     // { token: probability, ... }
+agent.setAllowableTokens(['I', 'notice']);  // constrain output
+new ConsciousAgent({ allowableTokens: [...] }); // at construction
+
+// v2.0 — Composition
+combine(a, b, c);              // n-ary (3+ agents)
+
+// v2.0 — TraceBuffer
+traceBuffer.resize(100);
+```
+
 ## Public API
 
 ```python
@@ -123,6 +277,37 @@ from conscious_agent import (
     TraceBuffer, TraceEvent, ExperienceTrie, MetaTrie,
     SelfTokenState, ExperienceLexicon, strange_loop_score,
 )
+
+# v2.0 — Agent mode
+agent.set_mode("frozen")        # deterministic projection, no learning
+agent.thaw()                    # back to learning
+agent.refreeze()                # back to frozen
+
+# v2.0 — Memory & lifecycle
+agent.clear_memory()            # reset short-term, preserve long-term
+agent.inject_observation(world_state)  # push data mid-run
+
+# v2.0 — Metrics & introspection
+agent.metrics                   # { prediction_error, i_locked, loop_depth, ... }
+network.get_metrics()           # aggregate across all agents
+network.get_agent_metrics(id)   # per-agent snapshot
+trie.get_stats()                # { node_count, max_depth, mean_visit_count, ... }
+trie.export_nodes(3)            # export paths with visit_count >= 3
+trie.get_dominant_paths(5)      # top 5 most-visited
+
+# v2.0 — Batch stepping
+network.step_all(world_state)   # same world for all agents
+network.agent_list              # agents as list
+
+# v2.0 — Action space
+output.action_distribution      # { token: probability, ... }
+agent.set_allowable_tokens({"I", "notice"})  # constrain output
+
+# v2.0 — Composition
+combine(a1, a2, a3)             # n-ary (3+ agents)
+
+# v2.0 — TraceBuffer
+trace_buffer.resize(100)
 ```
 
 ## How It Works

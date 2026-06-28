@@ -1,0 +1,36 @@
+{
+  "name": "conscious-agent-react-native",
+  "version": "1.0.0",
+  "description": "React Native adapter for conscious-agent — self-referential structure-learning agents",
+  "main": "src/index.js",
+  "react-native": "src/index.js",
+  "files": ["src/", "README.md"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ben42-01/hoffman-agents.git",
+    "directory": "hoffman-agents-react-native"
+  },
+  "bugs": {
+    "url": "https://github.com/ben42-01/hoffman-agents/issues"
+  },
+  "homepage": "https://github.com/ben42-01/hoffman-agents",
+  "author": "Benjamin Keil team.agora.hub@gmail.com",
+  "scripts": {
+    "test": "node test/core.test.js"
+  },
+  "license": "MIT",
+  "keywords": [
+    "react-native",
+    "expo",
+    "consciousness",
+    "emergent-language",
+    "self-reference",
+    "structure-learning",
+    "hoffman",
+    "conscious-realism"
+  ],
+  "dependencies": {},
+  "peerDependencies": {
+    "react-native": ">=0.60"
+  }
+}

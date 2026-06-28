@@ -1,0 +1,76 @@
+name: RN Compatibility
+
+on:
+  push:
+    branches: [release/*, develop, feature/*, hotfix/*]
+    paths:
+      - 'hoffman-agents-react-native/**'
+  pull_request:
+    paths:
+      - 'hoffman-agents-react-native/**'
+  workflow_dispatch:
+
+jobs:
+  rn-compat:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hoffman-agents-react-native
+
+    strategy:
+      matrix:
+        node-version: [18, 20, 22]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Check for RN-incompatible Node APIs
+        run: node --test --test-name-pattern="source files" test/rn-compat.test.js
+
+      - name: Run RN compatibility tests
+        run: node --test test/rn-compat.test.js
+
+      - name: Verify core agent operations
+        run: |
+          node -e "
+          const { ConsciousAgent, SimpleWorld } = require('./src/index');
+          const { serializeToJson, deserializeFromJson, clone } = require('./src/io/index');
+
+          // Full lifecycle test
+          const world = new SimpleWorld({ nStates: 5, seed: 42 });
+          const agent = new ConsciousAgent({ agentId: 'ci_test', world });
+          const outputs = agent.run(50);
+          console.log('✓ Agent ran 50 steps');
+          console.log('✓ Final output:', outputs[outputs.length-1].sequence.join(' '));
+
+          // Serialization round-trip
+          const json = serializeToJson(agent);
+          const restored = deserializeFromJson(json);
+          console.log('✓ Serialization round-trip: ID=' + restored.agentId);
+
+          // Clone
+          const cloned = clone(agent, 'ci_clone');
+          console.log('✓ Clone: ID=' + cloned.agentId);
+
+          // v2.0 features
+          agent.setMode('frozen');
+          console.log('✓ Frozen mode: ' + agent.mode);
+          console.log('✓ Metrics:', JSON.stringify(agent.metrics));
+
+          const { combine } = require('./src/index');
+          const a = new ConsciousAgent({ agentId: 'A' });
+          const b = new ConsciousAgent({ agentId: 'B' });
+          const c = new ConsciousAgent({ agentId: 'C' });
+          const com = combine(a, b, c);
+          console.log('✓ N-ary combine: level=' + com.cycleLevel);
+
+          agent.clearMemory();
+          console.log('✓ clearMemory: stepCount=' + agent.stepCount);
+
+          console.log('=== ALL CHECKS PASSED ===');
+          "

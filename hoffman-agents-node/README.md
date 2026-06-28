@@ -4,6 +4,8 @@
 
 Build self-referential agents that learn by *inhabiting* worlds. Zero external dependencies.
 
+> **For AI coding assistants**: A `SKILL.md` file lives in `.context/SKILL.md` with patterns for complex use cases (multi-agent networks, crystal projection, live data feeding, debugging). opencode and compatible tools load it automatically.
+
 ```javascript
 const { ConsciousAgent } = require('conscious-agent');
 const { CoinTossWorld } = require('conscious-agent/worlds');
@@ -121,7 +123,71 @@ const { AgentNetwork, combine } = require('conscious-agent');
 
 // Core components
 const { TraceBuffer, ExperienceTrie, MetaTrie, SelfTokenState, ExperienceLexicon } = require('conscious-agent');
+
+// v2.0 — Agent mode control
+const { setMode } = agent;   // 'learning', 'frozen', 'debug'
+agent.setMode('frozen');     // deterministic projection, no trie/meta updates
+agent.thaw();                // back to learning mode
+agent.refreeze();            // back to frozen
+
+// v2.0 — Memory & lifecycle
+agent.clearMemory();         // reset trace buffer + counters, preserve trie/lexicon
+agent.injectObservation(worldState);  // push new data mid-run without reset
+
+// v2.0 — Metrics & introspection
+agent.metrics;               // { predictionError, iLocked, loopDepth, outputTokens }
+network.getMetrics();        // { agentCount, meanPredictionError, iLockRate, ... }
+network.getAgentMetrics(id); // individual agent's metrics snapshot
+trie.getStats();             // { nodeCount, maxDepth, meanVisitCount, depthDistribution }
+trie.exportNodes(3);         // all paths with visitCount >= 3
+trie.getDominantPaths(5);    // top 5 most-visited paths
+
+// v2.0 — Batch stepping
+network.stepAll(worldState); // step all agents with same world state
+network.agentList;           // agents as an ordered array
+
+// v2.0 — Action space
+output.actionDistribution;   // { token: probability, ... } — full distribution
+new ConsciousAgent({ allowableTokens: ['I', 'notice'] });  // constrain output
+agent.setAllowableTokens(['I', 'notice', 'familiar']);
+
+// v2.0 — Composition
+combine(a, b, c);            // n-ary combination (3+ agents)
+
+// v2.0 — TraceBuffer
+traceBuffer.resize(100);     // dynamic window resizing
 ```
+
+## Self-Awareness
+
+This library provides **four self-awareness mechanisms**, three built-in and one optional:
+
+| Mechanism | Type | What it does |
+|-----------|------|-------------|
+| **MetaTrie** | Built-in (implicit) | Models the agent's own trace buffer patterns — a hidden self-model |
+| **SelfTokenState ("I")** | Built-in (implicit) | Tracks identity stability; locks on meta-trie convergence |
+| **strangeLoopScore** | Built-in (explicit) | Measures self-referential depth in output tokens |
+| **SelfWorld** | Optional wrapper | Injects agent's internal metrics into its perception stream |
+
+### SelfWorld
+
+`SelfWorld` is a world wrapper that lets the agent perceive its own internal state alongside external data. The agent's trie learns transitions over composite states of `(world + self)`.
+
+```javascript
+const inner = new SimpleWorld({ nStates: 10 });
+const agent = new ConsciousAgent({
+  agentId: 'self_aware',
+  world: new SelfWorld(inner, (self) => ({
+    sp: self.experience.selfToken.stationaryProb,
+    pe: self.meanPredictionError,
+  })),
+});
+agent.run(1000);
+```
+
+Each step, the agent's WorldState contains both `'world'` and `'self'` sequences. The agent discovers patterns like "when my prediction error is high and the world shows pattern X, the next state tends to be Y."
+
+→ Full philosophical architecture: `docs/SELF_AWARENESS.md`
 
 ## How It Works
 

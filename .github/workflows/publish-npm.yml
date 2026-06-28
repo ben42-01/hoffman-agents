@@ -3,8 +3,26 @@ on:
   release:
     types: [published]
 jobs:
-  publish:
+  publish-node:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hoffman-agents-node
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          registry-url: https://registry.npmjs.org
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-react-native:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hoffman-agents-react-native
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

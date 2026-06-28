@@ -51,5 +51,5 @@ include = ["conscious_agent*"]
 version = {attr = "conscious_agent.__version__"}
 
 [project.urls]
-Homepage = "https://github.com/anomalyco/conscious-agents"
-Repository = "https://github.com/anomalyco/conscious-agents"
+Homepage = "https://github.com/ben42-01/hoffman-agents"
+Repository = "https://github.com/ben42-01/hoffman-agents"
