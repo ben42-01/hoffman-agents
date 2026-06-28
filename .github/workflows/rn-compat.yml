@@ -30,24 +30,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Check for RN-incompatible Node APIs
-        run: |
-          echo "Scanning source files for RN-incompatible patterns..."
-          violations=0
-          for file in $(find src -name '*.js' -not -name 'crypto.js'); do
-            if grep -nE "require\('(fs|path|http|net|child_process)'\)" "$file" | grep -v "try"; then
-              echo "VIOLATION: $file has bare Node import"
-              violations=$((violations+1))
-            fi
-            if grep -nE "Buffer\.(from|alloc|isBuffer)" "$file"; then
-              echo "VIOLATION: $file uses Buffer"
-              violations=$((violations+1))
-            fi
-          done
-          if [ "$violations" -gt 0 ]; then
-            echo "Found $violations RN-incompatible pattern(s)"
-            exit 1
-          fi
-          echo "✓ No RN-incompatible patterns found"
+        run: node --test test/rn-compat.test.js --test-name-pattern="source files"
 
       - name: Run RN compatibility tests
         run: node --test test/rn-compat.test.js
