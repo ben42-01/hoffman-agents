@@ -10,8 +10,14 @@ jobs:
           python-version: '3.12'
       - run: pip install -e .[dev]
         working-directory: ./hoffman-agents-python
-      - run: python -m pytest tests/ -v
+      - run: python -m pytest tests/ -v --junitxml=pytest-results.xml
         working-directory: ./hoffman-agents-python
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-test-report
+          path: hoffman-agents-python/pytest-results.xml
       - name: Smoke-test examples
         run: |
           python examples/01_fitness_beats_truth/fitness_beats_truth.py
