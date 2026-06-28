@@ -7,49 +7,83 @@ const { ExperienceLexicon } = require('../core/experience-lexicon');
 const { ConsciousAgent } = require('../agent/conscious-agent');
 const { ExperienceSpace } = require('../agent/experience-space');
 
-function combine(agent1, agent2) {
-  if (agent1.agentId === 'CA_0') return agent2;
-  if (agent2.agentId === 'CA_0') return agent1;
+function combine(...agents) {
+  if (agents.length === 0) return trivialAgent();
+  if (agents.length === 1) return agents[0];
 
-  const combinedId = _hashAgentIds(agent1.agentId, agent2.agentId);
-  const mergedTrie = agent1.experience.trie.merge(agent2.experience.trie);
-
-  const leafIds1 = agent1.leafConstituentIds.size > 0 ? agent1.leafConstituentIds : new Set([agent1.agentId]);
-  const leafIds2 = agent2.leafConstituentIds.size > 0 ? agent2.leafConstituentIds : new Set([agent2.agentId]);
-  const leafConstituentIds = new Set([...leafIds1, ...leafIds2]);
-  const constituentIds = new Set([agent1.agentId, agent2.agentId]);
-
-  const jointMt = _buildJointMetaTrie(agent1.experience.metaTrie, agent2.experience.metaTrie);
-  const combinedSelf = _combineAttractors(agent1.experience.selfToken, agent2.experience.selfToken);
-  const mergedLexicon = _mergeLexicons(agent1.experience.lexicon, agent2.experience.lexicon);
-
-  let initState = null;
-  const traceBuf = new TraceBuffer(50);
-  if (agent1.experience.lastWorldStateId !== null || agent2.experience.lastWorldStateId !== null) {
-    initState = _canonicalHash(
-      agent1.experience.lastWorldStateId || -1,
-      agent2.experience.lastWorldStateId || -1,
-    );
-    traceBuf.append(new TraceEvent(-1, initState, 0, -1, false, 0.5));
+  const hasWeights = agents.length === 2 && agents[1] && typeof agents[1] === 'object' && !(agents[1] instanceof ConsciousAgent) && 'weights' in agents[1];
+  
+  if (hasWeights) {
+    const [agent1, opts] = agents;
+    const agent2 = opts.other;
+    const w1 = opts.weights[0];
+    const w2 = opts.weights[1];
+    return _weightedCombine(agent1, agent2 || opts.other || trivialAgent(), w1, w2);
   }
 
-  const exp = new ExperienceSpace({
-    trie: mergedTrie,
-    metaTrie: jointMt,
-    selfToken: combinedSelf,
-    lexicon: mergedLexicon,
-    traceBuffer: traceBuf,
-    lastWorldStateId: initState,
-  });
+  if (agents.length === 2) {
+    const [agent1, agent2] = agents;
+    if (agent1.agentId === 'CA_0') return agent2;
+    if (agent2.agentId === 'CA_0') return agent1;
 
-  return new ConsciousAgent({
-    agentId: combinedId,
-    experience: exp,
-    generation: Math.max(agent1.generation, agent2.generation),
-    constituentIds,
-    leafConstituentIds,
-    cycleLevel: Math.max(agent1.cycleLevel, agent2.cycleLevel) + 1,
-  });
+    const combinedId = _hashAgentIds(agent1.agentId, agent2.agentId);
+    const mergedTrie = agent1.experience.trie.merge(agent2.experience.trie);
+
+    const leafIds1 = agent1.leafConstituentIds.size > 0 ? agent1.leafConstituentIds : new Set([agent1.agentId]);
+    const leafIds2 = agent2.leafConstituentIds.size > 0 ? agent2.leafConstituentIds : new Set([agent2.agentId]);
+    const leafConstituentIds = new Set([...leafIds1, ...leafIds2]);
+    const constituentIds = new Set([agent1.agentId, agent2.agentId]);
+
+    const jointMt = _buildJointMetaTrie(agent1.experience.metaTrie, agent2.experience.metaTrie);
+    const combinedSelf = _combineAttractors(agent1.experience.selfToken, agent2.experience.selfToken);
+    const mergedLexicon = _mergeLexicons(agent1.experience.lexicon, agent2.experience.lexicon);
+
+    let initState = null;
+    const traceBuf = new TraceBuffer(50);
+    if (agent1.experience.lastWorldStateId !== null || agent2.experience.lastWorldStateId !== null) {
+      initState = _canonicalHash(
+        agent1.experience.lastWorldStateId || -1,
+        agent2.experience.lastWorldStateId || -1,
+      );
+      traceBuf.append(new TraceEvent(-1, initState, 0, -1, false, 0.5));
+    }
+
+    const exp = new ExperienceSpace({
+      trie: mergedTrie,
+      metaTrie: jointMt,
+      selfToken: combinedSelf,
+      lexicon: mergedLexicon,
+      traceBuffer: traceBuf,
+      lastWorldStateId: initState,
+    });
+
+    return new ConsciousAgent({
+      agentId: combinedId,
+      experience: exp,
+      generation: Math.max(agent1.generation, agent2.generation),
+      constituentIds,
+      leafConstituentIds,
+      cycleLevel: Math.max(agent1.cycleLevel, agent2.cycleLevel) + 1,
+    });
+  }
+
+  const mid = Math.floor(agents.length / 2);
+  return combine(combine(...agents.slice(0, mid)), combine(...agents.slice(mid)));
+}
+
+function _weightedCombine(agent1, agent2, w1, w2) {
+  const base = combine(agent1, agent2);
+  const total = w1 + w2;
+  if (total === 0) return base;
+  const normW1 = w1 / total;
+  const normW2 = w2 / total;
+  const weightedStable = agent1.pStable * normW1 + agent2.pStable * normW2;
+  const weightedLexicon = agent1.pLexicon * normW1 + agent2.pLexicon * normW2;
+  const weightedExplore = agent1.pExplore * normW1 + agent2.pExplore * normW2;
+  base.pStable = weightedStable;
+  base.pLexicon = weightedLexicon;
+  base.pExplore = weightedExplore;
+  return base;
 }
 
 function trivialAgent() {

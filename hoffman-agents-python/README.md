@@ -4,6 +4,8 @@
 
 Build self-referential agents that learn by *inhabiting* worlds — constructing internal models of both their environment and themselves.
 
+> **For AI coding assistants**: A `SKILL.md` file lives in `.context/SKILL.md` with patterns for complex use cases (multi-agent networks, crystal projection, live data feeding, debugging). opencode and compatible tools load it automatically.
+
 ```python
 from conscious_agent import ConsciousAgent
 from conscious_agent.worlds import CoinTossWorld
@@ -119,18 +121,70 @@ from conscious_agent import (
     SelfTokenState, ExperienceLexicon, strange_loop_score,
 )
 
-# v2.0 — New APIs
-# Agent mode control: agent.set_mode("frozen"), agent.thaw(), agent.refreeze()
-# Memory control: agent.clear_memory()
-# Metrics: agent.metrics, network.get_metrics(), network.get_agent_metrics(id)
-# Batch stepping: network.step_all(world_state), network.agent_list
-# Action distribution: output.action_distribution
-# Token constraints: agent.set_allowable_tokens({...})
-# Incremental injection: agent.inject_observation(world_state)
-# N-ary combine: combine(a1, a2, a3)
-# Trie introspection: trie.get_stats(), trie.export_nodes(3), trie.get_dominant_paths(5)
-# Trace buffer: trace_buffer.resize(new_size)
+# v2.0 — Agent mode control
+agent.set_mode("frozen")        # 'learning', 'frozen', 'debug'
+agent.thaw()                    # back to learning mode
+agent.refreeze()                # back to frozen
+
+# v2.0 — Memory & lifecycle
+agent.clear_memory()            # reset trace buffer + counters, preserve trie
+agent.inject_observation(world_state)  # push new data mid-run
+
+# v2.0 — Metrics & introspection
+agent.metrics                   # { prediction_error, i_locked, loop_depth, ... }
+network.get_metrics()           # { agent_count, mean_prediction_error, i_lock_rate }
+network.get_agent_metrics(id)   # individual agent's metrics
+trie.get_stats()                # { node_count, max_depth, mean_visit_count, ... }
+trie.export_nodes(3)            # all paths with visit_count >= 3
+trie.get_dominant_paths(5)      # top 5 most-visited paths
+
+# v2.0 — Batch stepping
+network.step_all(world_state)   # step all agents with same world state
+network.agent_list              # agents as an ordered list
+
+# v2.0 — Action space
+output.action_distribution      # { token: probability, ... }
+agent.set_allowable_tokens({"I", "notice"})  # constrain output
+
+# v2.0 — Composition
+combine(a1, a2, a3)             # n-ary combination (3+ agents)
+
+# v2.0 — TraceBuffer
+trace_buffer.resize(100)         # dynamic window resizing
 ```
+
+## Self-Awareness
+
+This library provides **four self-awareness mechanisms**, three built-in and one optional:
+
+| Mechanism | Type | What it does |
+|-----------|------|-------------|
+| **MetaTrie** | Built-in (implicit) | Models the agent's own trace buffer patterns — a hidden self-model |
+| **SelfTokenState ("I")** | Built-in (implicit) | Tracks identity stability; locks on meta-trie convergence |
+| **strangeLoopScore** | Built-in (explicit) | Measures self-referential depth in output tokens |
+| **SelfWorld** | Optional wrapper | Injects agent's internal metrics into its perception stream |
+
+### SelfWorld
+
+`SelfWorld` is a world wrapper that lets the agent perceive its own internal state alongside external data. The agent's trie learns transitions over composite states of `(world + self)`.
+
+```python
+from conscious_agent.worlds import SelfWorld
+
+inner = SimpleWorld(n_states=10)
+agent = ConsciousAgent(
+    agent_id="self_aware",
+    world=SelfWorld(inner, lambda a: {
+        "sp": a.experience.self_token.stationary_prob,
+        "pe": a.mean_prediction_error,
+    }),
+)
+agent.run(n_steps=1000)
+```
+
+Each step, the agent's WorldState contains both `'world'` and `'self'` sequences. The agent discovers patterns like "when my prediction error is high and the world shows pattern X, the next state tends to be Y."
+
+→ Full philosophical architecture: `docs/SELF_AWARENESS.md`
 
 ## How It Works
 

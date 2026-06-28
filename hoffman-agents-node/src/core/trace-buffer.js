@@ -66,6 +66,18 @@ class TraceBuffer {
     }
   }
 
+  resize(newMaxlen) {
+    if (newMaxlen < 1) throw new Error(`maxlen must be >= 1, got ${newMaxlen}`);
+    const ordered = [...this];
+    this._maxlen = newMaxlen;
+    if (ordered.length > newMaxlen) {
+      this._events = ordered.slice(ordered.length - newMaxlen);
+    } else {
+      this._events = ordered;
+    }
+    this._cursor = 0;
+  }
+
   clear() {
     this._events = [];
     this._cursor = 0;

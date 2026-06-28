@@ -1,9 +1,9 @@
 {
   "name": "conscious-agent",
-  "version": "1.0.0",
+  "version": "2.0.1",
   "description": "Self-referential structure-learning system — agents that learn by inhabiting worlds",
   "main": "src/index.js",
-  "files": ["src/"],
+  "files": ["src/", "docs/", "examples/", "test/" , ".context/"],
   "repository": {
     "type": "git",
     "url": "https://github.com/ben42-01/hoffman-agents.git",
