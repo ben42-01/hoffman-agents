@@ -12,7 +12,7 @@
   "bugs": {
     "url": "https://github.com/ben42-01/hoffman-agents/issues"
   },
-  "homepage": "https://github.com/ben42-01/hoffman-agents",
+  "homepage": "https://ben42-01.github.io/hoffman-agents",
   "author": "Benjamin Keil team.agora.hub@gmail.com",
   "scripts": {
     "examples:fbt": "node examples/01_fitness_beats_truth/fitness_beats_truth.js",
