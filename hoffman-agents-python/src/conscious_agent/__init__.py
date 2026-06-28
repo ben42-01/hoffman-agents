@@ -13,7 +13,7 @@ Quick start:
     print(f'"I" locked: {agent.experience.self_token.locked}')
 """
 
-__version__ = "2.0.0"
+__version__ = "2.0.1"
 
 from .agent import ConsciousAgent, SimpleWorld, WorldState, StepOutput, ExperienceSpace
 from .world import World, WorldBuilder, SelfWorld, CoinTossWorld, build_world_from_dataframe
