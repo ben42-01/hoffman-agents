@@ -30,7 +30,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Check for RN-incompatible Node APIs
-        run: node --test test/rn-compat.test.js --test-name-pattern="source files"
+        run: node --test --test-name-pattern="source files" test/rn-compat.test.js
 
       - name: Run RN compatibility tests
         run: node --test test/rn-compat.test.js
