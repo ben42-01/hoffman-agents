@@ -347,14 +347,31 @@ function tickMonitor() {
       }
     }
 
-    // Random anomaly injection
-    if (a.anomalyTimer <= 0 && Math.random() < 0.008) {
-      a.anomalyType = Math.random() < 0.5 ? 'warning' : 'critical';
+    // Random anomaly injection — more frequent, biased toward critical
+    if (a.anomalyTimer <= 0 && Math.random() < 0.022) {
+      a.anomalyType = Math.random() < 0.3 ? 'warning' : 'critical';
       const target = a.def[a.anomalyType];
       a.baseValue = target[0] + Math.random() * (target[1] - target[0]);
-      a.predError = a.anomalyType === 'critical' ? 0.6 + Math.random() * 0.35 : 0.3 + Math.random() * 0.25;
-      a.anomalyTimer = Math.floor(5 + Math.random() * 12);
-      if (a.anomalyType === 'critical') triggerMonitorDisturbance();
+      a.predError = a.anomalyType === 'critical' ? 0.7 + Math.random() * 0.28 : 0.35 + Math.random() * 0.25;
+      a.anomalyTimer = Math.floor(4 + Math.random() * 10);
+      if (a.anomalyType === 'critical') {
+        triggerMonitorDisturbance(1.0);
+        // Cascade: sometimes trigger a neighbor too
+        if (Math.random() < 0.3) {
+          const idx = monitorAgents.indexOf(a);
+          const neighbor = monitorAgents[(idx + 1) % monitorAgents.length];
+          if (neighbor && neighbor.anomalyTimer <= 0) {
+            const nt = neighbor.def.critical;
+            neighbor.baseValue = nt[0] + Math.random() * (nt[1] - nt[0]);
+            neighbor.predError = 0.6 + Math.random() * 0.35;
+            neighbor.anomalyTimer = Math.floor(3 + Math.random() * 6);
+            neighbor.anomalyType = 'critical';
+            triggerMonitorDisturbance(0.7);
+          }
+        }
+      } else {
+        triggerMonitorDisturbance(0.4);
+      }
     }
 
     // Random walk
@@ -427,11 +444,13 @@ function updateMonitorSummary() {
   const avgErr = monitorAgents.reduce((s, a) => s + a.predError, 0) / total;
 
   const el = document.getElementById('monitorSummary');
+  const statusColor = critical > 0 ? '#ef4444' : warning > 0 ? '#eab308' : '#22c55e';
+  const statusLabel = critical > 0 ? 'CRITICAL' : warning > 0 ? 'WARNING' : 'NORMAL';
   el.innerHTML = `
-    <div class="summary-item"><div class="label">System Health</div><div class="value" style="color:${critical > 0 ? '#ef4444' : warning > 0 ? '#eab308' : '#22c55e'}">${critical > 0 ? 'Critical' : warning > 0 ? 'Warning' : 'Normal'}</div></div>
+    <div class="summary-item"><div class="label">System Health</div><div class="value" style="color:${statusColor}">${statusLabel}</div></div>
     <div class="summary-item"><div class="label">I-Locked</div><div class="value" style="color:#22c55e">${locked}/${total}</div></div>
-    <div class="summary-item"><div class="label">Avg Pred Error</div><div class="value">${avgErr.toFixed(3)}</div></div>
-    <div class="summary-item"><div class="label">Anomalies</div><div class="value" style="color:#ef4444">${critical + warning}</div></div>
+    <div class="summary-item"><div class="label">Avg Pred Error</div><div class="value" style="color:${avgErr > 0.3 ? '#ef4444' : '#94a3b8'}">${avgErr.toFixed(3)}</div></div>
+    <div class="summary-item"><div class="label">Active Alerts</div><div class="value" style="color:#ef4444">${critical + warning}</div></div>
   `;
 }
 
@@ -453,16 +472,20 @@ function initParticleBrain() {
   particleAnimId = requestAnimationFrame(renderMonitorCloud);
 }
 
-function triggerMonitorDisturbance() {
+function triggerMonitorDisturbance(level) {
   const w = particleCanvas.width, h = particleCanvas.height;
   const cx = w / 2, cy = h / 2;
-  const angle = Math.random() * Math.PI * 2;
-  const r = Math.random() * Math.min(w, h) * 0.25;
-  const x = cx + Math.cos(angle) * r;
-  const y = cy + Math.sin(angle) * r;
-  const strength = 0.5 + Math.random() * 1.0;
-  const radius = Math.min(w, h) * (0.1 + Math.random() * 0.15);
-  addDisturbance(x, y, strength, radius);
+  // Multiple disturbance points for critical events (more violent)
+  const count = level > 0.7 ? 2 + Math.floor(Math.random() * 2) : 1;
+  for (let d = 0; d < count; d++) {
+    const angle = Math.random() * Math.PI * 2;
+    const r = Math.random() * Math.min(w, h) * 0.3;
+    const x = cx + Math.cos(angle) * r;
+    const y = cy + Math.sin(angle) * r;
+    const strength = level * (0.5 + Math.random() * 0.8);
+    const radius = Math.min(w, h) * (0.08 + level * 0.1 + Math.random() * 0.08);
+    addDisturbance(x, y, strength, radius);
+  }
 }
 
 function getSystemHealth() {
@@ -483,20 +506,22 @@ function renderMonitorCloud() {
   updateSmokeParticles(brainParticles, w, h, monitorCloudTime, health);
   updateDisturbances(brainParticles, monitorCloudTime);
 
-  // Background glow on critical
-  if (health > 0.3) {
+  // Background glow — red comes on earlier and builds faster
+  if (health > 0.1) {
     const grad = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, Math.max(w,h) * 0.55);
-    const clr = health > 0.5 ? '239,68,68' : '234,179,8';
-    grad.addColorStop(0, `rgba(${clr},${(health - 0.3) * 0.06})`);
+    const clr = health > 0.25 ? '239,68,68' : '234,179,8';
+    const glowAlpha = health > 0.25 ? (health - 0.15) * 0.1 : (health - 0.1) * 0.05;
+    grad.addColorStop(0, `rgba(${clr},${Math.min(0.25, Math.max(0, glowAlpha))})`);
     grad.addColorStop(1, `rgba(${clr},0)`);
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, w, h);
   }
 
-  // Draw connections (sparse)
-  for (let i = 0; i < brainParticles.length; i += 12) {
+  // Draw connections — tint red on critical
+  const connClr = health > 0.25 ? '239,68,68' : health > 0.1 ? '234,179,8' : '148,163,184';
+  for (let i = 0; i < brainParticles.length; i += 10) {
     const p = brainParticles[i];
-    for (let k = 0; k < p.connectedTo.length && k < 4; k++) {
+    for (let k = 0; k < p.connectedTo.length && k < 3; k++) {
       const other = brainParticles[p.connectedTo[k]];
       if (!other) continue;
       const dx = p.x - other.x;
@@ -504,9 +529,9 @@ function renderMonitorCloud() {
       if (dx > 120 || dy > 120) continue;
       const d = Math.sqrt(dx * dx + dy * dy);
       if (d < 120 && d > 0) {
-        ctx.globalAlpha = (1 - d / 120) * 0.12 * (1 - health * 0.3);
-        ctx.strokeStyle = `rgba(148,163,184,${ctx.globalAlpha})`;
-        ctx.lineWidth = 0.3;
+        ctx.globalAlpha = (1 - d / 120) * 0.15 * (1 + health);
+        ctx.strokeStyle = `rgba(${connClr},${ctx.globalAlpha})`;
+        ctx.lineWidth = 0.3 + health * 0.3;
         ctx.beginPath();
         ctx.moveTo(p.x, p.y);
         ctx.lineTo(other.x, other.y);
@@ -516,12 +541,14 @@ function renderMonitorCloud() {
   }
   ctx.globalAlpha = 1;
 
-  // Draw particles (fast fillRect)
-  const colorBase = health > 0.5 ? '239,68,68' : health > 0.2 ? '234,179,8' : '148,163,184';
+  // Draw particles — faster transition to red
+  const colorBase = health > 0.25 ? '239,68,68' : health > 0.1 ? '234,179,8' : '148,163,184';
+  const sizeBoost = 1 + health * 0.5;
   for (let i = 0, n = brainParticles.length; i < n; i++) {
     const p = brainParticles[i];
-    ctx.fillStyle = `rgba(${colorBase},${p.alpha})`;
-    ctx.fillRect(p.x - p.size, p.y - p.size, p.size * 2, p.size * 2);
+    const sz = p.size * sizeBoost;
+    ctx.fillStyle = `rgba(${colorBase},${p.alpha * (1 + health * 0.3)})`;
+    ctx.fillRect(p.x - sz, p.y - sz, sz * 2, sz * 2);
   }
 
   particleAnimId = requestAnimationFrame(renderMonitorCloud);
