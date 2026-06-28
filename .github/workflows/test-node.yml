@@ -8,7 +8,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-      - run: node --test hoffman-agents-node/test/*.test.js
+      - name: Run tests with report
+        run: |
+          set -o pipefail
+          node --test --test-reporter=tap hoffman-agents-node/test/*.test.js | tee node-test-report.tap
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: node-test-report
+          path: node-test-report.tap
       - name: Smoke-test examples
         run: |
           node hoffman-agents-node/examples/01_fitness_beats_truth/fitness_beats_truth.js
