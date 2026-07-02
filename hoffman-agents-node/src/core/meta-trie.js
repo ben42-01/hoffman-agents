@@ -18,20 +18,25 @@ class MetaTrie {
     this._tokenRegistry = new Map();
   }
 
-  _computeMetaStateId(stateIds, meanPredictionError) {
-    const roundedError = Math.round(meanPredictionError * 100) / 100;
-    const data = JSON.stringify([...stateIds, roundedError]);
+  _computeMetaStateId(stateIds, meanPredictionError, ergodicState, isLocked) {
+    const errorBucket =
+      meanPredictionError < 0.05 ? 0 :
+      meanPredictionError < 0.15 ? 1 :
+      meanPredictionError < 0.35 ? 2 :
+      meanPredictionError < 0.65 ? 3 : 4;
+    const coarseStates = stateIds.slice(-2).map(id => id % 8);
+    const data = JSON.stringify([coarseStates, errorBucket, ergodicState || 'idle', !!isLocked]);
     const hash = crypto.createHash('sha256').update(data).digest();
     return hash.readUInt32BE(0);
   }
 
-  observeSelf(traceBuffer, timestamp = 0) {
+  observeSelf(traceBuffer, timestamp = 0, ergodicState = 'idle', isLocked = false) {
     const recent = traceBuffer.getRecent(this._snapshotWindow);
     if (recent.length === 0) return 0;
 
     const stateIds = recent.map(e => e.toState);
     const meanError = traceBuffer.predictionErrorMean(this._snapshotWindow);
-    const metaId = this._computeMetaStateId(stateIds, meanError);
+    const metaId = this._computeMetaStateId(stateIds, meanError, ergodicState, isLocked);
 
     if (!this._registry.has(metaId)) {
       this._registry.set(metaId, new MetaStateSnapshot(

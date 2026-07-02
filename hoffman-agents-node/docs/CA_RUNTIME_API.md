@@ -361,8 +361,9 @@ combined = combine(btc_agent, eth_agent)
 
 # combined has:
 # - merged experience trie (sees both worlds' transition structures)
-# - new meta-trie recording BTC-ETH interaction history
+# - combined meta-trie preserving both parents' self-models (bit-shifted)
 # - combined "I" attractor (higher-order identity)
+# - inherited trace buffer from preferred parent for continuity
 
 print(f"BTC agent vocab: {btc_agent.lexicon.vocabulary_size()}")
 print(f"ETH agent vocab: {eth_agent.lexicon.vocabulary_size()}")
@@ -371,6 +372,28 @@ print(f"Combined loop depth: {combined.loop_score:.3f}")
 
 # Combine all three
 all_combined = combine(combined, gold_agent)
+```
+
+### Fuse agents with ⊘ (inverse of combination)
+
+```python
+from conscious_agent import fuse
+
+# Split a combined agent back into its immediate constituents
+# Inverse of combine(CA1, CA2) — recovers CA1 and CA2
+btc_back, eth_back = fuse(combined)
+
+# Fused agents have:
+# - shared experience trie (both remember the combined world model)
+# - split meta-tries (each recovers its own self-model via bitmask)
+# - fresh self-tokens (identity re-stabilizes in the simpler form)
+# - shared trace buffer (short-term memory preserved)
+
+print(f"Fused BTC: {btc_back.agent_id}, level={btc_back.cycle_level}, locked={btc_back.experience.self_token.locked}")
+print(f"Fused ETH: {eth_back.agent_id}, level={eth_back.cycle_level}, locked={eth_back.experience.self_token.locked}")
+
+# Base agents (not combined) return as-is
+[fuse(base_agent) for base_agent in base_agents]  # each returns [base_agent]
 ```
 
 ### Network of agents (mutual world observation)

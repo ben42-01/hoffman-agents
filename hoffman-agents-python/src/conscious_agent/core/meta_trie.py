@@ -32,20 +32,34 @@ class MetaTrie:
     def _compute_meta_state_id(
         state_ids: tuple[int, ...],
         mean_prediction_error: float,
+        ergodic_state: str = "idle",
+        is_locked: bool = False,
     ) -> int:
-        rounded_error = round(mean_prediction_error, 2)
-        data = str(state_ids) + str(rounded_error)
+        error_bucket = (
+            0 if mean_prediction_error < 0.05 else
+            1 if mean_prediction_error < 0.15 else
+            2 if mean_prediction_error < 0.35 else
+            3 if mean_prediction_error < 0.65 else 4
+        )
+        coarse_states = tuple(sid % 8 for sid in state_ids[-2:])
+        data = str((coarse_states, error_bucket, ergodic_state, is_locked))
         hash_bytes = hashlib.sha256(data.encode()).digest()
         return int.from_bytes(hash_bytes[:8], "big")
 
-    def observe_self(self, trace_buffer: TraceBuffer, timestamp: int = 0) -> int:
+    def observe_self(
+        self,
+        trace_buffer: TraceBuffer,
+        timestamp: int = 0,
+        ergodic_state: str = "idle",
+        is_locked: bool = False,
+    ) -> int:
         recent = trace_buffer.get_recent(self._snapshot_window)
         if not recent:
             return 0
 
         state_ids = tuple(e.to_state for e in recent)
         mean_error = trace_buffer.prediction_error_mean(window=self._snapshot_window)
-        meta_id = self._compute_meta_state_id(state_ids, mean_error)
+        meta_id = self._compute_meta_state_id(state_ids, mean_error, ergodic_state, is_locked)
 
         if meta_id not in self._registry:
             self._registry[meta_id] = MetaStateSnapshot(

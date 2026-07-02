@@ -4,7 +4,7 @@ const { WorldState, sequenceToStateId } = require('./agent/world-state');
 const { ExperienceSpace } = require('./agent/experience-space');
 const { World, WorldBuilder, CoinTossWorld, SelfWorld } = require('./world');
 const { AgentNetwork } = require('./network');
-const { combine, trivialAgent, experienceSpaceDistance } = require('./combination');
+const { combine, trivialAgent, experienceSpaceDistance, fuse } = require('./combination');
 const {
   serialize, deserialize, clone, fingerprint,
   saveAgent, loadAgent, loadLatest, cloneAgent,
@@ -26,7 +26,7 @@ module.exports = {
   SimpleWorld, WorldState, ExperienceSpace,
   World, WorldBuilder, CoinTossWorld, SelfWorld,
   AgentNetwork,
-  combine, trivialAgent, experienceSpaceDistance,
+  combine, trivialAgent, experienceSpaceDistance, fuse,
   serialize, deserialize, clone, fingerprint,
   saveAgent, loadAgent, loadLatest, cloneAgent,
   TraceBuffer, TraceEvent, ExperienceTrie, MetaTrie,

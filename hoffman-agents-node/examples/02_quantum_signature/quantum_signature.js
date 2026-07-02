@@ -1,4 +1,4 @@
-const { ConsciousAgent, WorldState, combine } = require('../../src/index');
+const { ConsciousAgent, WorldState, combine, fuse } = require('../../src/index');
 
 function extractMetaMatrix(agent) {
   const mt = agent.experience.metaTrie;
@@ -35,10 +35,46 @@ function extractMetaMatrix(agent) {
 function spectralGap(P) {
   const n = P.length;
   if (n < 2) return 1;
-  let sumMax = 0;
-  for (let i = 0; i < n; i++) { let m = 0; for (let j = 0; j < n; j++) if (P[i][j] > m) m = P[i][j]; sumMax += m; }
-  const avgMax = sumMax / n, uniform = 1 / n;
-  return avgMax === uniform ? 0 : (avgMax - uniform) / (1 - uniform);
+
+  // Stationary distribution via power iteration
+  let pi = new Float64Array(n).fill(1 / n);
+  for (let iter = 0; iter < 1000; iter++) {
+    const piNew = new Float64Array(n);
+    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) piNew[j] += pi[i] * P[i][j];
+    let diff = 0;
+    for (let i = 0; i < n; i++) diff += Math.abs(piNew[i] - pi[i]);
+    pi = piNew;
+    if (diff < 1e-12) break;
+  }
+
+  // Deflate: B = P - 1 * pi^T  (removes eigenvalue 1)
+  const B = Array.from({ length: n }, () => new Float64Array(n));
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) B[i][j] = P[i][j] - pi[j];
+
+  // Power iteration on B to find dominant (second) eigenvalue
+  let v = new Float64Array(n);
+  for (let i = 0; i < n; i++) v[i] = 1 / Math.sqrt(n);
+  for (let iter = 0; iter < 1000; iter++) {
+    const vNew = new Float64Array(n);
+    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) vNew[i] += B[i][j] * v[j];
+    let norm = 0;
+    for (let i = 0; i < n; i++) norm += vNew[i] * vNew[i];
+    norm = Math.sqrt(norm);
+    if (norm < 1e-15) return 1;
+    for (let i = 0; i < n; i++) vNew[i] /= norm;
+    let diff = 0;
+    for (let i = 0; i < n; i++) diff += Math.abs(vNew[i] - v[i]);
+    v = vNew;
+    if (diff < 1e-10) break;
+  }
+
+  // Rayleigh quotient: λ₂ ≈ v^T B v
+  let Bv = new Float64Array(n);
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) Bv[i] += B[i][j] * v[j];
+  let lambda2 = 0;
+  for (let i = 0; i < n; i++) lambda2 += v[i] * Bv[i];
+
+  return 1 - Math.abs(lambda2);
 }
 
 function detailedBalanceError(P) {
@@ -77,19 +113,19 @@ function analyze(agents, label) {
 }
 
 function run() {
-  const nBase = 6, nRounds = 200;
+  const nBase = 8, nRounds = 400;
   const t0 = Date.now();
   console.log('='.repeat(66));
   console.log('Quantum Signature — Tree-of-Life Spectral Analysis');
   console.log('='.repeat(66));
   console.log(`\n${nBase} base agents, ${nRounds} rounds...`);
 
-  // Phase 1: isolated agents
+  // Phase 1: isolated agents — enough steps for meta-states to cycle
   const agents = {};
   for (let i = 0; i < nBase; i++) {
     const aid = `CA_${String(i).padStart(3, '0')}`;
     agents[aid] = new ConsciousAgent({ agentId: aid });
-    for (let t = 0; t < 30; t++) agents[aid].step(new WorldState({ world: [`s${i}_${t}`] }));
+    for (let t = 0; t < 400; t++) agents[aid].step(new WorldState({ world: [`s${i}_${t}`] }));
   }
   analyze(agents, 'Phase 1: Isolated agents');
 
@@ -101,7 +137,7 @@ function run() {
     for (const [aid, ag] of Object.entries(agents)) {
       for (const [oa, o] of Object.entries(outputs)) if (oa !== aid) ag.step(new WorldState({ [oa]: o }));
     }
-    if (rnd === 19 && !snapTaken) { analyze(agents, 'Phase 2: Interacting, pre-combination'); snapTaken = true; }
+    if (rnd === 39 && !snapTaken) { analyze(agents, 'Phase 2: Interacting (40 rounds)'); snapTaken = true; }
     if (rnd > 0 && rnd % 20 === 0) {
       const ripe = Object.entries(agents).filter(([, a]) => a.experience.selfToken.locked && !a._combined).map(([id]) => id);
       if (ripe.length >= 2) {
@@ -118,6 +154,17 @@ function run() {
   }
 
   const post = analyze(agents, 'Phase 3: Post-combination');
+
+  // Phase 4: Fuse the highest-level agent back into its constituents
+  const topAgents = Object.entries(agents).filter(([aid]) => aid.startsWith('L')).sort();
+  if (topAgents.length > 0) {
+    const highest = topAgents[topAgents.length - 1][1];
+    const fused = fuse(highest);
+    const fusedMap = {};
+    for (const f of fused) { fusedMap[f.agentId] = f; }
+    analyze(fusedMap, `Phase 4: Fusion of ${highest.agentId}`);
+  }
+
   console.log(`\n  Done in ${((Date.now() - t0) / 1000).toFixed(1)}s\n`);
 
   // Cross-level summary

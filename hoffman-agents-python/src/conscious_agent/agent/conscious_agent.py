@@ -93,6 +93,7 @@ class ConsciousAgent:
                 step=self.step_count,
                 meta_observation_interval=self.meta_observation_interval,
                 frozen=is_frozen,
+                ergodic_state=self._ergodic_state,
             )
 
         p_stable = 1.0 if is_frozen else self.p_stable

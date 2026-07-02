@@ -18,7 +18,7 @@ __version__ = "2.0.1"
 from .agent import ConsciousAgent, SimpleWorld, WorldState, StepOutput, ExperienceSpace
 from .world import World, WorldBuilder, SelfWorld, CoinTossWorld, build_world_from_dataframe
 from .network import AgentNetwork
-from .combination import combine, trivial_agent, experience_space_distance
+from .combination import combine, trivial_agent, experience_space_distance, fuse
 from .io import serialize, deserialize, clone, clone_agent, fingerprint, save_agent, load_agent, load_latest
 from .core import (
     TraceBuffer,

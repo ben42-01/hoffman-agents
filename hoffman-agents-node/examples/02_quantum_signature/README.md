@@ -2,18 +2,32 @@
 
 ## What This Tests
 
-Hoffman's theory predicts that the combination operator ⊗ should have specific algebraic properties, including tensor-product structure in the combined agent's dynamics. This experiment tests whether the implemented ⊗ (path union + averaging) produces eigenvalue spectra consistent with a tensor product.
+Hoffman's "Fusions of Consciousness" (Entropy, 2023) predicts that conscious agents combine into more complex agents and fuse into simpler agents, with Markov chains governing the dynamics. This experiment tests whether the implemented ⊗ operator produces eigenvalue spectra that shift from classical (deterministic, reversible) to quantum-like (stochastic, irreversible) as combination depth increases.
 
 ## How It Works
 
-1. Run Tree of Life to generate agents at multiple combination depths (L0→L1→L2→L3)
-2. Extract Markov transition matrices from each agent's meta-trie
-3. Compute spectral gap, detailed balance, entropy for each agent
-4. Compare gap ratios across levels — do they converge to 1.0 (tensor product prediction)?
+1. **Phase 1**: Isolated agents — each walks a deterministic world for 400 steps. Meta-states are computed from coarse-grained trace fingerprints (error buckets + ergodic state + last-2 state IDs modulo 8), making meta-states genuinely revisitable.
+2. **Phase 2**: Agents interact for 40 rounds — each observes all others' output tokens.
+3. **Phase 3**: Every 20 rounds, ripe agents combine via ⊗. Transition matrices from each agent's meta-trie are analyzed for spectral gap (1 − |λ₂|) and detailed balance error.
+4. **Phase 4**: The highest-level combined agent is fused back into its constituents via ⊘, demonstrating invertibility.
+
+## Key Changes from Original
+
+- **Revisitable meta-states**: Coarse-grained fingerprint (error bucket × ergodic state × lock status × 2-state mod-8 pattern) replaces unique hash — enables genuine communicating classes in the Markov chain
+- **Real spectral gap**: Uses power iteration with Hotelling deflation instead of row-dominance heuristic — computes actual eigenvalue gap matching the Python version
+- **Combination preserves dynamics**: `_buildJointMetaTrie` transfers transition structure and `_lastMetaState` — combined agent inherits parents' self-model
+- **Trace buffer transfer**: Combined agent inherits last 10 events from preferred parent for short-term memory continuity
+- **Fusion operator (⊘)**: New inverse of combination — splits combined agent by meta-trie bitmask, recovers constituent agents with shared world-model and fresh identity
 
 ## Expected Result
 
-Gap ratios converge toward 1.0 as combination depth increases, even though nobody programmed the tensor product into the code.
+| Level | Gap | DB Error | Interpretation |
+|-------|-----|----------|---------------|
+| Base (L0) | ~1.0 | ~0.0 | Classical — isolated, deterministic |
+| Interacting | ~1.0 | ~0.0 | Still classical — interaction alone doesn't break reversibility |
+| Level 1 | mixed | > 0.5 | Transitional — some agents collapse |
+| Level 2+ | < 0.05 | > 0.95 | Quantum-like — stochastic, irreversible |
+| Fused | mixed | > 0.5 | Fused agents retain quantum signature from shared history |
 
 ## Why This Matters (from FOR_DR_HOFFMAN.md)
 

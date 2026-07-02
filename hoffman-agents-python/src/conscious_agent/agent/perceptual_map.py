@@ -13,6 +13,7 @@ def perceive(
     step: int = 0,
     meta_observation_interval: int = 20,
     frozen: bool = False,
+    ergodic_state: str = "idle",
 ) -> ExperienceSpace:
     if not world:
         return experience
@@ -49,7 +50,10 @@ def perceive(
         _update_lexicon(experience, world, world_state_id, prediction_error, step)
 
         if step > 0 and step % meta_observation_interval == 0:
-            meta_id = experience.meta_trie.observe_self(experience.trace_buffer, timestamp=step)
+            meta_id = experience.meta_trie.observe_self(
+                experience.trace_buffer, timestamp=step,
+                ergodic_state=ergodic_state, is_locked=experience.self_token.locked,
+            )
             experience.self_token.update(experience.meta_trie, generation=step)
 
         if step > 0 and step % (meta_observation_interval * 3) == 0:

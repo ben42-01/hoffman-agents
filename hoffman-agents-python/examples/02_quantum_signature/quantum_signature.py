@@ -99,7 +99,7 @@ def analyze(agents, label):
     return by_level
 
 
-def run_experiment(n_base=6, n_interaction_rounds=200):
+def run_experiment(n_base=8, n_interaction_rounds=400):
     np.random.seed(42)
     t0 = time.time()
     print("=" * 66)
@@ -113,7 +113,7 @@ def run_experiment(n_base=6, n_interaction_rounds=200):
         aid = f"CA_{i:03d}"
         agent = ConsciousAgent(agent_id=aid)
         agents[aid] = agent
-        for t in range(30):
+        for t in range(400):
             ws = WorldState.from_sequence("world", [f"seed_{i}_{t}"])
             agent.step(ws)
 
