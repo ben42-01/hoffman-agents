@@ -94,7 +94,8 @@ class ConsciousAgent {
         this.experience,
         this.stepCount,
         this.metaObservationInterval,
-        isFrozen
+        isFrozen,
+        this._ergodicState
       );
     }
 

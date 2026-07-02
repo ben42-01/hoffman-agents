@@ -48,11 +48,13 @@ External world → SelfWorld (injects agent metrics into W)
 
 2. **CamelCase**: JavaScript conventions — `agent.getOutput()`, `metaTrie.observeSelf()`, `traceBuffer.predictionErrorMean()`. See Python's snake_case equivalents.
 
-3. **Spectral gap proxy**: No numpy eigenvalues. Uses row-concentration proxy:
+3. **Spectral gap**: Real eigenvalue-based via power iteration + Hotelling deflation. Uses Float64Array.
    ```
-   gap = (avgMaxRowProb - 1/n) / (1 - 1/n)
+   B = P - 1·πᵀ      (deflate eigenvalue 1)
+   λ₂ = power_iteration(B)
+   gap = 1 - |λ₂|
    ```
-   Range: 0 (uniform) to 1 (deterministic).
+   Range: 0 (deterministic cycle) to 1 (maximal mixing).
 
 4. **Float64Array** for matrix operations (stationary distribution, power iteration).
 
@@ -119,6 +121,13 @@ const agent = new ConsciousAgent({ agentId: 'ablated', experience: exp });
 ### N-ary Combine (v2.0)
 ```javascript
 const combined = combine(agentA, agentB, agentC);  // 3+ agents
+```
+
+### Fuse (decompose combined agent)
+```javascript
+const { fuse } = require('conscious-agent');
+const [a, b] = fuse(combined);  // splits L1 agent back into L0 constituents
+// Fused agents retain: shared experience trie, split meta-trie, fresh self-token
 ```
 
 ### Save/load
@@ -253,7 +262,7 @@ if (best && best[1] > 0.5) {
 | `src/core/meta-trie.js` | Self-model (implicit) |
 | `src/core/self-token.js` | "I" attractor |
 | `src/core/strange-loop.js` | Self-reference scoring |
-| `src/combination/operator.js` | ⊗ combine (n-ary in v2.0) |
+| `src/combination/operator.js` | ⊗ combine (n-ary) + fuse decomposition |
 | `src/io/serialization.js` | Save/load/clone |
 | `src/world/world-builder.js` | World construction |
 | `src/world/self-world.js` | SelfWorld (v2.0) — explicit self-perception |

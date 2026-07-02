@@ -1,3 +1,3 @@
-const { combine, trivialAgent, experienceSpaceDistance } = require('./operator');
+const { combine, trivialAgent, experienceSpaceDistance, fuse } = require('./operator');
 
-module.exports = { combine, trivialAgent, experienceSpaceDistance };
+module.exports = { combine, trivialAgent, experienceSpaceDistance, fuse };

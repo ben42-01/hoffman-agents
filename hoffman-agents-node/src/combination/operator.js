@@ -40,11 +40,19 @@ function combine(...agents) {
 
     let initState = null;
     const traceBuf = new TraceBuffer(50);
-    if (agent1.experience.lastWorldStateId !== null || agent2.experience.lastWorldStateId !== null) {
-      initState = _canonicalHash(
-        agent1.experience.lastWorldStateId || -1,
-        agent2.experience.lastWorldStateId || -1,
-      );
+
+    // Transfer short-term memory from the preferred parent (mt1) to preserve continuity
+    const sourceBuf = agent1.experience.traceBuffer;
+    const recentEvents = sourceBuf.getRecent(10);
+    for (const e of recentEvents) {
+      traceBuf.append(e);
+    }
+    if (recentEvents.length > 0) {
+      initState = recentEvents[recentEvents.length - 1].toState;
+    } else if (agent2.experience.lastWorldStateId !== null) {
+      initState = agent2.experience.lastWorldStateId;
+    } else {
+      initState = _canonicalHash(-1, -1);
       traceBuf.append(new TraceEvent(-1, initState, 0, -1, false, 0.5));
     }
 
@@ -129,6 +137,31 @@ function _buildJointMetaTrie(mt1, mt2) {
     joint._registry.set(mid | 0x20000000, snap);
   }
 
+  const _transferTrie = (sourceTrie, mask) => {
+    const paths = sourceTrie.getAllPaths(1);
+    for (const path of paths) {
+      if (path.length < 2) continue;
+      const shifted = path.map(id => id | mask);
+      joint._trie.insert(shifted);
+      const sourceNode = sourceTrie.lookup(path);
+      const jointNode = joint._trie.lookup(shifted);
+      if (sourceNode && jointNode) {
+        jointNode.visitCount = sourceNode.visitCount;
+        jointNode.predictionErrors = [...sourceNode.predictionErrors];
+        jointNode.meanPredictionError = sourceNode.meanPredictionError;
+      }
+    }
+  };
+
+  _transferTrie(mt1.trie, 0x10000000);
+  _transferTrie(mt2.trie, 0x20000000);
+
+  if (mt1.lastMetaState !== null) {
+    joint._lastMetaState = mt1.lastMetaState | 0x10000000;
+  } else if (mt2.lastMetaState !== null) {
+    joint._lastMetaState = mt2.lastMetaState | 0x20000000;
+  }
+
   for (const [mid, counts] of mt1._tokenRegistry) {
     joint._tokenRegistry.set(mid | 0x10000000, new Map(counts));
   }
@@ -146,7 +179,7 @@ function _combineAttractors(st1, st2) {
     lockConsecutiveRequired: Math.max(st1.lockConsecutiveRequired, st2.lockConsecutiveRequired),
     stationaryProb: (st1.stationaryProb + st2.stationaryProb) / 2,
     locked: st1.locked && st2.locked,
-    referentMetaStateId: st1.locked && st2.locked ? st1.referentMetaStateId : null,
+    referentMetaStateId: st1.locked && st2.locked ? (st1.referentMetaStateId | 0x10000000) : null,
     lockGeneration: st1.locked && st2.locked ? Math.max(st1.lockGeneration || 0, st2.lockGeneration || 0) : null,
   });
 }
@@ -174,4 +207,85 @@ function _mergeLexicons(lex1, lex2) {
   return merged;
 }
 
-module.exports = { combine, trivialAgent, experienceSpaceDistance };
+function _splitMetaTrie(jointMt, mask) {
+  const stripped = new MetaTrie(jointMt._snapshotWindow, jointMt.trie.maxDepth);
+
+  for (const [mid, snap] of jointMt._registry) {
+    if ((mid & mask) !== 0) {
+      stripped._registry.set(mid & ~mask, snap);
+    }
+  }
+
+  const paths = jointMt.trie.getAllPaths(1);
+  for (const path of paths) {
+    if (path.length < 2) continue;
+    if (path.every(id => (id & mask) !== 0)) {
+      const strippedPath = path.map(id => id & ~mask);
+      stripped._trie.insert(strippedPath);
+      const srcNode = jointMt.trie.lookup(path);
+      const dstNode = stripped._trie.lookup(strippedPath);
+      if (srcNode && dstNode) {
+        dstNode.visitCount = srcNode.visitCount;
+        dstNode.predictionErrors = [...srcNode.predictionErrors];
+        dstNode.meanPredictionError = srcNode.meanPredictionError;
+      }
+    }
+  }
+
+  if (jointMt.lastMetaState !== null && (jointMt.lastMetaState & mask) !== 0) {
+    stripped._lastMetaState = jointMt.lastMetaState & ~mask;
+  }
+
+  for (const [mid, counts] of jointMt._tokenRegistry) {
+    if ((mid & mask) !== 0) {
+      stripped._tokenRegistry.set(mid & ~mask, new Map(counts));
+    }
+  }
+
+  return stripped;
+}
+
+function fuse(agent) {
+  if (agent.constituentIds.size === 0) return [agent];
+
+  const [id1, id2] = [...agent.constituentIds];
+
+  const mt1 = _splitMetaTrie(agent.experience.metaTrie, 0x10000000);
+  const mt2 = _splitMetaTrie(agent.experience.metaTrie, 0x20000000);
+
+  const _buildFusedAgent = (id, metaTrie) => {
+    const ancestorLeafs = agent.leafConstituentIds;
+    const directConstituents = agent.constituentIds;
+
+    const leafIds = new Set();
+    for (const leaf of ancestorLeafs) {
+      leafIds.add(leaf);
+    }
+
+    const exp = new ExperienceSpace({
+      trie: agent.experience.trie.merge(new ExperienceTrie(agent.experience.trie.maxDepth)),
+      metaTrie,
+      selfToken: new SelfTokenState(),
+      lexicon: agent.experience.lexicon,
+      traceBuffer: new TraceBuffer(agent.experience.traceBuffer.maxlen),
+      lastWorldStateId: agent.experience.lastWorldStateId,
+    });
+
+    for (const e of [...agent.experience.traceBuffer]) {
+      exp.traceBuffer.append(e);
+    }
+
+    return new ConsciousAgent({
+      agentId: id,
+      experience: exp,
+      generation: agent.generation,
+      constituentIds: new Set(),
+      leafConstituentIds: leafIds,
+      cycleLevel: Math.max(0, agent.cycleLevel - 1),
+    });
+  };
+
+  return [_buildFusedAgent(id1, mt1), _buildFusedAgent(id2, mt2)];
+}
+
+module.exports = { combine, trivialAgent, experienceSpaceDistance, fuse, _splitMetaTrie };

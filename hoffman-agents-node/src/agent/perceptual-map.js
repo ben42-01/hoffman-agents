@@ -41,7 +41,7 @@ function _decayLexicon(experience) {
   }
 }
 
-function perceive(world, experience, step = 0, metaObservationInterval = 20, frozen = false) {
+function perceive(world, experience, step = 0, metaObservationInterval = 20, frozen = false, ergodicState = 'idle') {
   if (!world || Object.keys(world.sequences).length === 0) return experience;
 
   const worldStateId = world.getStateId();
@@ -115,7 +115,7 @@ function perceive(world, experience, step = 0, metaObservationInterval = 20, fro
   }
 
   if (!frozen && step > 0 && step % metaObservationInterval === 0) {
-    const metaId = experience.metaTrie.observeSelf(experience.traceBuffer, step);
+    const metaId = experience.metaTrie.observeSelf(experience.traceBuffer, step, ergodicState, experience.selfToken.locked);
     experience.selfToken.update(experience.metaTrie, step);
   }
 

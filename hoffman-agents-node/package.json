@@ -1,6 +1,6 @@
 {
   "name": "conscious-agent",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Self-referential structure-learning system — agents that learn by inhabiting worlds",
   "main": "src/index.js",
   "files": ["src/", "docs/", "examples/", "test/" , ".context/"],
