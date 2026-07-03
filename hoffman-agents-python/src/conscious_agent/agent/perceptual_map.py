@@ -23,8 +23,22 @@ def perceive(
     previous_id = experience.last_world_state_id
     if previous_id is not None:
         prediction = experience.trie.predict_next([previous_id])
+        prob_pred = experience.trie.predict_next_probabilistic([previous_id])
         prediction_correct = prediction == world_state_id if prediction is not None else False
-        prediction_error = _compute_prediction_error(prediction, world_state_id)
+        if prob_pred is not None:
+            if prob_pred["state"] == world_state_id:
+                prediction_error = 1.0 - prob_pred["probability"]
+            else:
+                node = experience.trie.lookup([previous_id])
+                actual_prob = 0.0
+                total = 0
+                if node is not None and node.children:
+                    if world_state_id in node.children:
+                        actual_prob = node.children[world_state_id].visit_count
+                    total = sum(c.visit_count for c in node.children.values())
+                prediction_error = 1.0 - (actual_prob / total) if total > 0 else 1.0
+        else:
+            prediction_error = 1.0
     else:
         prediction = None
         prediction_correct = False
@@ -50,11 +64,70 @@ def perceive(
         _update_lexicon(experience, world, world_state_id, prediction_error, step)
 
         if step > 0 and step % meta_observation_interval == 0:
-            meta_id = experience.meta_trie.observe_self(
-                experience.trace_buffer, timestamp=step,
-                ergodic_state=ergodic_state, is_locked=experience.self_token.locked,
-            )
-            experience.self_token.update(experience.meta_trie, generation=step)
+            if experience.parent_meta_tries is not None:
+                pmt1, pmt2 = experience.parent_meta_tries
+                pt1, pt2 = experience.parent_tries or (None, None)
+                buf = experience.trace_buffer
+                recent_events = buf.get_recent(10)
+                sids = tuple(e.to_state for e in recent_events)
+
+                def compute_err(trie):
+                    if previous_id is None or trie is None:
+                        return 0.5
+                    prob_pred = trie.predict_next_probabilistic([previous_id])
+                    if prob_pred is None:
+                        return 1.0
+                    if prob_pred["state"] == world_state_id:
+                        return 1.0 - prob_pred["probability"]
+                    node = trie.lookup([previous_id])
+                    actual_prob = 0.0
+                    total = 0
+                    if node is not None and node.children:
+                        if world_state_id in node.children:
+                            actual_prob = node.children[world_state_id].visit_count
+                        total = sum(c.visit_count for c in node.children.values())
+                    return 1.0 - (actual_prob / total) if total > 0 else 1.0
+
+                err1 = compute_err(pt1)
+                err2 = compute_err(pt2)
+
+                meta1 = pmt1.observe_self(buf, timestamp=step, ergodic_state=ergodic_state,
+                                          is_locked=experience.self_token.locked, override_error=err1)
+                meta2 = pmt2.observe_self(buf, timestamp=step, ergodic_state=ergodic_state,
+                                          is_locked=experience.self_token.locked, override_error=err2)
+
+                import hashlib
+                def _local_cid(m1, m2):
+                    data = f"cp:{m1}:{m2}"
+                    h = hashlib.sha256(data.encode()).digest()
+                    return int.from_bytes(h[:8], "big")
+                joint_id = _local_cid(meta1, meta2)
+
+                if joint_id not in experience.meta_trie._registry:
+                    snap1 = pmt1.get_meta_state_snapshot(meta1) or None
+                    snap2 = pmt2.get_meta_state_snapshot(meta2) or None
+                    s1_ids = list(snap1.state_ids) if snap1 else list(sids)
+                    s2_ids = list(snap2.state_ids) if snap2 else list(sids)
+                    me1 = snap1.mean_prediction_error if snap1 else err1
+                    me2 = snap2.mean_prediction_error if snap2 else err2
+                    experience.meta_trie._registry[joint_id] = {
+                        "state_ids": s1_ids + s2_ids,
+                        "mean_prediction_error": (me1 + me2) / 2,
+                        "timestamp": step,
+                        "_parent_perspective": [meta1, meta2],
+                    }
+
+                last = experience.meta_trie.last_meta_state
+                if last is not None and last != joint_id:
+                    experience.meta_trie._trie.insert([last, joint_id])
+                experience.meta_trie._last_meta_state = joint_id
+                experience.self_token.update(experience.meta_trie, generation=step)
+            else:
+                meta_id = experience.meta_trie.observe_self(
+                    experience.trace_buffer, timestamp=step,
+                    ergodic_state=ergodic_state, is_locked=experience.self_token.locked,
+                )
+                experience.self_token.update(experience.meta_trie, generation=step)
 
         if step > 0 and step % (meta_observation_interval * 3) == 0:
             _check_bind_proto_word(experience, world_state_id, step)

@@ -58,7 +58,9 @@ function combine(...agents) {
 
     const exp = new ExperienceSpace({
       trie: mergedTrie,
+      parentTries: [agent1.experience.trie, agent2.experience.trie],
       metaTrie: jointMt,
+      parentMetaTries: [agent1.experience.metaTrie, agent2.experience.metaTrie],
       selfToken: combinedSelf,
       lexicon: mergedLexicon,
       traceBuffer: traceBuf,
@@ -124,42 +126,49 @@ function _canonicalHash(s1, s2) {
   return h.readUInt32BE(0);
 }
 
+function _compositeId(mid1, mid2) {
+  const h = crypto.createHash('sha256').update(`cp:${mid1}:${mid2}`).digest();
+  return h.readUInt32BE(0);
+}
+
+function _cloneMetaTrie(mt) {
+  const clone = new MetaTrie(mt._snapshotWindow, mt.trie.maxDepth);
+  for (const [mid, snap] of mt._registry) {
+    clone._registry.set(mid, snap);
+  }
+  const paths = mt.trie.getAllPaths(1);
+  for (const path of paths) {
+    if (path.length < 2) continue;
+    clone._trie.insert(path);
+    const src = mt.trie.lookup(path);
+    const dst = clone._trie.lookup(path);
+    if (src && dst) {
+      dst.visitCount = src.visitCount;
+      dst.predictionErrors = [...src.predictionErrors];
+      dst.meanPredictionError = src.meanPredictionError;
+    }
+  }
+  if (mt.lastMetaState !== null) clone._lastMetaState = mt.lastMetaState;
+  for (const [mid, counts] of mt._tokenRegistry) {
+    clone._tokenRegistry.set(mid, new Map(counts));
+  }
+  return clone;
+}
+
 function _buildJointMetaTrie(mt1, mt2) {
   const joint = new MetaTrie(
     Math.max(mt1._snapshotWindow, mt2._snapshotWindow),
     Math.max(mt1.trie.maxDepth, mt2.trie.maxDepth)
   );
 
-  for (const [mid, snap] of mt1._registry) {
-    joint._registry.set(mid | 0x10000000, snap);
-  }
-  for (const [mid, snap] of mt2._registry) {
-    joint._registry.set(mid | 0x20000000, snap);
-  }
+  joint._parentMetaTries = [_cloneMetaTrie(mt1), _cloneMetaTrie(mt2)];
 
-  const _transferTrie = (sourceTrie, mask) => {
-    const paths = sourceTrie.getAllPaths(1);
-    for (const path of paths) {
-      if (path.length < 2) continue;
-      const shifted = path.map(id => id | mask);
-      joint._trie.insert(shifted);
-      const sourceNode = sourceTrie.lookup(path);
-      const jointNode = joint._trie.lookup(shifted);
-      if (sourceNode && jointNode) {
-        jointNode.visitCount = sourceNode.visitCount;
-        jointNode.predictionErrors = [...sourceNode.predictionErrors];
-        jointNode.meanPredictionError = sourceNode.meanPredictionError;
-      }
-    }
-  };
-
-  _transferTrie(mt1.trie, 0x10000000);
-  _transferTrie(mt2.trie, 0x20000000);
-
-  if (mt1.lastMetaState !== null) {
-    joint._lastMetaState = mt1.lastMetaState | 0x10000000;
+  if (mt1.lastMetaState !== null && mt2.lastMetaState !== null) {
+    joint._lastMetaState = _compositeId(mt1.lastMetaState, mt2.lastMetaState);
+  } else if (mt1.lastMetaState !== null) {
+    joint._lastMetaState = mt1.lastMetaState;
   } else if (mt2.lastMetaState !== null) {
-    joint._lastMetaState = mt2.lastMetaState | 0x20000000;
+    joint._lastMetaState = mt2.lastMetaState;
   }
 
   for (const [mid, counts] of mt1._tokenRegistry) {
@@ -179,7 +188,9 @@ function _combineAttractors(st1, st2) {
     lockConsecutiveRequired: Math.max(st1.lockConsecutiveRequired, st2.lockConsecutiveRequired),
     stationaryProb: (st1.stationaryProb + st2.stationaryProb) / 2,
     locked: st1.locked && st2.locked,
-    referentMetaStateId: st1.locked && st2.locked ? (st1.referentMetaStateId | 0x10000000) : null,
+    referentMetaStateId: st1.locked && st2.locked
+      ? _compositeId(st1.referentMetaStateId, st2.referentMetaStateId)
+      : null,
     lockGeneration: st1.locked && st2.locked ? Math.max(st1.lockGeneration || 0, st2.lockGeneration || 0) : null,
   });
 }
@@ -207,7 +218,13 @@ function _mergeLexicons(lex1, lex2) {
   return merged;
 }
 
-function _splitMetaTrie(jointMt, mask) {
+function _splitMetaTrie(jointMt, parentIdx) {
+  const parents = jointMt._parentMetaTries;
+  if (parents && parents[parentIdx]) {
+    return parents[parentIdx];
+  }
+
+  const mask = parentIdx === 0 ? 0x10000000 : 0x20000000;
   const stripped = new MetaTrie(jointMt._snapshotWindow, jointMt.trie.maxDepth);
 
   for (const [mid, snap] of jointMt._registry) {
@@ -250,8 +267,8 @@ function fuse(agent) {
 
   const [id1, id2] = [...agent.constituentIds];
 
-  const mt1 = _splitMetaTrie(agent.experience.metaTrie, 0x10000000);
-  const mt2 = _splitMetaTrie(agent.experience.metaTrie, 0x20000000);
+  const mt1 = _splitMetaTrie(agent.experience.metaTrie, 0);
+  const mt2 = _splitMetaTrie(agent.experience.metaTrie, 1);
 
   const _buildFusedAgent = (id, metaTrie) => {
     const ancestorLeafs = agent.leafConstituentIds;

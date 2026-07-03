@@ -1,6 +1,6 @@
 {
   "name": "conscious-agent",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Self-referential structure-learning system — agents that learn by inhabiting worlds",
   "main": "src/index.js",
   "files": ["src/", "docs/", "examples/", "test/" , ".context/"],
@@ -16,10 +16,12 @@
   "author": "Benjamin Keil team.agora.hub@gmail.com",
   "scripts": {
     "examples:fbt": "node examples/01_fitness_beats_truth/fitness_beats_truth.js",
-    "examples:qs": "node examples/02_quantum_signature/quantum_signature.js",
+    "examples:mt": "node examples/02_markov_transition/markov_transition.js",
+"examples:kronecker": "node examples/02_markov_transition/kronecker_test.js",
     "examples:weather": "node examples/03_weather_benchmark/weather_benchmark.js",
     "examples:trafficLights": "node examples/04_stop_lights/stop_lights.js",
     "examples:selfRefAblation":"node examples/05_self_ref_ablation/self_ref_ablation.js",
+"examples:fbtCombination":"node examples/06_fitness_combination/fitness_combination.js",
     "build:dryRun":"npm pack --dry-run",
     "build:pack":"npm pack --pack-destination ../.dist",
     "test": "node test/core.test.js"

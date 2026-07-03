@@ -1,16 +1,16 @@
 """
-Quantum Signature — Spectral Analysis of Tree-of-Life Combination Run
+Markov Structural Transition — Tree-of-Life Spectral Analysis
 
 Agents interact in a shared network, observing each other's outputs.
 When ripe, they combine via ⊗. Meta-trie transition matrices are
-analyzed for quantum-like signatures.
+analyzed for structural transitions (spectral gap, entropy production).
 
 Expected result:
-  Base agents (level 0):     gap ~1.0, db_err ~0.0  (classical)
-  Combined agents (level 1):  gap collapses < 0.3    (quantum-like)
-  Higher levels (level 2+):   gap recovers            (classical limit)
+  Base agents (level 0):     gap ~1.0, EPR ~0.0  (fast mixing, reversible)
+  Combined agents (level 1):  gap collapses < 0.3 (slow mixing)
+  Higher levels (level 2+):   gap near 0, high EPR (structured, irreversible)
 """
-from conscious_agent import ConsciousAgent, WorldState, combine
+from conscious_agent import ConsciousAgent, WorldState, combine, fuse
 import numpy as np
 import time
 
@@ -56,58 +56,83 @@ def spectral_gap(P):
     return 1.0 - mags[1] if len(mags) > 1 else 1.0
 
 
-def detailed_balance_error(P):
+def mixing_time(gap):
+    if gap <= 0:
+        return float('inf')
+    if gap >= 1:
+        return 0.0
+    return -1.0 / np.log(1.0 - gap)
+
+
+def entropy_production_rate(P):
     n = P.shape[0]
     pi = np.ones(n) / n
     for _ in range(500):
         pi_new = pi @ P
-        if np.max(np.abs(pi_new - pi)) < 1e-10:
+        if np.max(np.abs(pi_new - pi)) < 1e-12:
             break
         pi = pi_new
-    errors = []
+
+    epr = 0.0
     for i in range(n):
-        for j in range(i + 1, n):
-            if pi[i] > 0 and pi[j] > 0:
-                lhs = pi[i] * P[i, j]
-                rhs = pi[j] * P[j, i]
-                if abs(lhs + rhs) > 1e-12:
-                    errors.append(abs(lhs - rhs) / (lhs + rhs))
-    return np.mean(errors) if errors else 0.0
+        if pi[i] <= 0:
+            continue
+        for j in range(n):
+            if P[i, j] <= 0 or P[j, i] <= 0:
+                continue
+            epr += pi[i] * P[i, j] * np.log(P[i, j] / P[j, i])
+    return epr
 
 
 def analyze(agents, label):
-    """Analyze meta-trie spectra for all agents at current state."""
     by_level = {}
-    print(f"\n  {'─' * 50}")
+    print(f"\n  {'─' * 60}")
     print(f"  {label}")
-    print(f"  {'─' * 50}")
-    print(f"  {'Agent':<22s} {'Lvl':<4s} {'States':<7s} {'Gap':<10s} {'DB Err':<10s}")
+    print(f"  {'─' * 60}")
+    print(f"  {'Agent':<22s} {'Lvl':<4s} {'States':<7s} {'Gap':<10s} {'MixTime':<10s} {'EPR':<10s}")
     for aid, agent in sorted(agents.items()):
         P = extract_meta_matrix(agent)
         if P is not None:
             gap = spectral_gap(P)
-            dbe = detailed_balance_error(P)
+            epr = entropy_production_rate(P)
+            mt = mixing_time(gap)
             gap_str = f"{gap:.4f}"
-            dbe_str = f"{dbe:.4f}"
+            epr_str = f"{epr:.4f}"
+            mt_str = f"{mt:.1f}" if np.isfinite(mt) else "∞"
             lvl = agent.cycle_level
-            by_level.setdefault(lvl, []).append((gap, dbe))
+            by_level.setdefault(lvl, []).append((gap, epr, mt if np.isfinite(mt) else float('nan')))
         else:
             gap_str = "N/A"
-            dbe_str = "N/A"
+            epr_str = "N/A"
+            mt_str = "N/A"
             lvl = agent.cycle_level
-        print(f"  {aid:<22s} {lvl:<4d} {agent.experience.meta_trie.registry_size:<7d} {gap_str:<10s} {dbe_str:<10s}")
+        print(f"  {aid:<22s} {lvl:<4d} {agent.experience.meta_trie.registry_size:<7d} {gap_str:<10s} {mt_str:<10s} {epr_str:<10s}")
     return by_level
 
 
-def run_experiment(n_base=8, n_interaction_rounds=400):
+def _build_interaction_graph(agent_ids, connectivity):
+    n = len(agent_ids)
+    if connectivity >= n:
+        return None
+    import random
+    graph = {}
+    for aid in agent_ids:
+        others = [x for x in agent_ids if x != aid]
+        random.shuffle(others)
+        graph[aid] = others[:connectivity]
+    return graph
+
+
+def run_experiment(n_base=8, n_interaction_rounds=400, connectivity=None):
+    if connectivity is None:
+        connectivity = n_base
     np.random.seed(42)
     t0 = time.time()
     print("=" * 66)
-    print("Quantum Signature — Tree-of-Life Spectral Analysis")
+    print("Markov Structural Transition — Tree-of-Life Analysis")
     print("=" * 66)
-    print(f"\n{n_base} base agents, {n_interaction_rounds} interaction rounds...")
+    print(f"\n{n_base} base agents, {n_interaction_rounds} rounds, connectivity={'all' if connectivity >= n_base else connectivity}...")
 
-    # Phase 1: Create isolated agents — each in its own independent world
     agents = {}
     for i in range(n_base):
         aid = f"CA_{i:03d}"
@@ -117,28 +142,28 @@ def run_experiment(n_base=8, n_interaction_rounds=400):
             ws = WorldState.from_sequence("world", [f"seed_{i}_{t}"])
             agent.step(ws)
 
-    # Snapshot: pure base agents before any interaction
-    pre = analyze(agents, "Phase 1: Isolated agents (pure classical baseline)")
+    analyze(agents, "Phase 1: Isolated agents")
 
-    # Interaction rounds: agents observe each other's outputs
+    def _interact_round(outputs, graph):
+        for aid, agent in agents.items():
+            targets = graph.get(aid, list(outputs.keys())) if graph else list(outputs.keys())
+            for oa in targets:
+                if oa != aid:
+                    agent.step(WorldState(sequences={oa: outputs[oa]}))
+
     snapshot_taken = False
     for rnd in range(n_interaction_rounds):
         outputs = {}
         for aid, agent in agents.items():
             outputs[aid] = agent.get_output()
 
-        for aid, agent in agents.items():
-            for other_aid, other_output in outputs.items():
-                if other_aid != aid:
-                    ws = WorldState(sequences={other_aid: other_output})
-                    agent.step(ws)
+        graph = _build_interaction_graph(list(agents.keys()), connectivity)
+        _interact_round(outputs, graph)
 
-        # Snapshot RIGHT before first combination: interacting but uncombined
-        if rnd == 19 and not snapshot_taken:
-            pre_combo = analyze(agents, "Phase 2: Interacting, pre-combination")
+        if rnd == 39 and not snapshot_taken:
+            analyze(agents, "Phase 2: Interacting (40 rounds)")
             snapshot_taken = True
 
-        # Every 20 rounds, try combining ripe agents
         if rnd > 0 and rnd % 20 == 0:
             ripe = [aid for aid, ag in agents.items()
                     if ag.experience.self_token.locked
@@ -157,46 +182,51 @@ def run_experiment(n_base=8, n_interaction_rounds=400):
                     a._combined = True
                     b._combined = True
 
-    # Phase 3: Post-combination analysis
-    post = analyze(agents, "Phase 3: Post-combination hierarchy")
+    post = analyze(agents, "Phase 3: Post-combination")
+
+    top_agents = [(aid, ag) for aid, ag in agents.items() if aid.startswith("L")]
+    top_agents.sort()
+    if top_agents:
+        highest = top_agents[-1][1]
+        fused = fuse(highest)
+        fused_map = {f.agent_id: f for f in fused}
+        analyze(fused_map, f"Phase 4: Fusion of {top_agents[-1][0]}")
 
     elapsed = time.time() - t0
     print(f"\n  Completed in {elapsed:.1f}s\n")
 
     by_level = post
 
-    # Cross-level summary
     print(f"\n{'─' * 66}")
-    print("Cross-Level Quantum Signature Summary")
+    print("Cross-Level Summary")
     print(f"{'─' * 66}")
 
     prev_gap = None
     for lvl in sorted(by_level.keys()):
-        gaps = [g for g, _ in by_level[lvl]]
-        dbes = [d for _, d in by_level[lvl]]
+        gaps = [g for g, _, _ in by_level[lvl]]
+        ep = [e for _, e, _ in by_level[lvl]]
         mean_gap = np.mean(gaps)
-        mean_db = np.mean(dbes)
+        mean_ep = np.mean(ep)
 
         change = ""
         if prev_gap is not None:
             if mean_gap > prev_gap + 0.05:
-                change = f"  ↑ recovery from {prev_gap:.3f}"
+                change = f"  ↑ faster"
             elif mean_gap < prev_gap - 0.05:
-                change = f"  ↓ collapse"
+                change = f"  ↓ slower"
 
         label = "Base" if lvl == 0 else f"Level {lvl}"
         tag = ""
-        if mean_gap < 0.3 and mean_db > 0.1:
-            tag = "  ← QUANTUM-LIKE"
-        elif mean_gap > 0.85 and mean_db < 0.15:
-            tag = "  ← CLASSICAL"
-        print(f"  {label:<8s} ({len(by_level[lvl]):>2d} agents)  gap={mean_gap:.4f}  db_err={mean_db:.4f}{tag}{change}")
+        if mean_gap < 0.05:
+            tag = "  ← SLOW MIXING"
+        elif mean_gap > 0.8:
+            tag = "  ← FAST MIXING"
+        print(f"  {label:<8s} ({len(by_level[lvl]):>2d} agents)  gap={mean_gap:.4f}  epr={mean_ep:.4f}{tag}{change}")
         prev_gap = mean_gap
 
-    print(f"\n  Interpretation:")
-    print(f"    gap~1.0, db_err~0.0  = classical, reversible (deterministic)")
-    print(f"    gap~0.0, db_err>0.1  = quantum-like (stochastic, irreversible)")
-    print(f"    gap recovery at higher levels = classical limit of quantum systems")
+    print(f"\n  gap ~ 1.0 = fast mixing (near-uniform transitions)")
+    print(f"  gap ~ 0.0 = slow mixing (near-reducible / cyclic structure)")
+    print(f"  EPR > 0   = irreversible dynamics (directed flow)")
 
     return by_level
 

@@ -14,7 +14,9 @@ from ..core import (
 @dataclass
 class ExperienceSpace:
     trie: ExperienceTrie = field(default_factory=lambda: ExperienceTrie(max_depth=10))
+    parent_tries: list | None = None
     meta_trie: MetaTrie = field(default_factory=lambda: MetaTrie(snapshot_window=10, max_depth=10))
+    parent_meta_tries: list | None = None
     self_token: SelfTokenState = field(default_factory=SelfTokenState)
     lexicon: ExperienceLexicon = field(default_factory=lambda: ExperienceLexicon(embedding_dim=64))
     trace_buffer: TraceBuffer = field(default_factory=lambda: TraceBuffer(maxlen=50))

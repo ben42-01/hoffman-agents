@@ -63,8 +63,11 @@ External world → SelfWorld (injects agent metrics into W)
 ```bash
 node --test test/*.test.js      # run all tests
 node --test --test-name-pattern="AgentNetwork"  # run specific tests
-node examples/04_stop_lights/stop_lights.js  # run an example (has web UI)
-node examples/01_*/fitness_beats_truth.js    # run example 1
+node examples/04_stop_lights/stop_lights.js    # run an example (has web UI)
+node examples/01_*/fitness_beats_truth.js      # run example 1
+node examples/02_markov_transition/markov_transition.js  # run example 2 (structural transition)
+node examples/02_markov_transition/kronecker_test.js     # run Kronecker product test (separate)
+node examples/06_fitness_combination/fitness_combination.js  # run example 6 (FBT + combination)
 node -e "console.log(require('./src/index'))" # verify exports
 npm pack                        # create .tgz for local install
 npm publish                     # publish to npm

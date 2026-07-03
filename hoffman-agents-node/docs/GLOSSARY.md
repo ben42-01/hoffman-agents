@@ -68,7 +68,13 @@ A finite set of states with defined transition probabilities. Every CA needs a M
 Every state reachable from every other state. Required for the agent to build a meaningful world-model.
 
 ### Spectral Gap
-The difference between the largest (1.0) and second-largest eigenvalue of a transition matrix. Small spectral gap = near-degenerate eigenvalues, associated with quantum-like dynamics.
+The difference between the largest (1.0) and second-largest eigenvalue of a transition matrix. Gap = 1 − |λ₂|. Gap ≈ 1 means fast mixing (near-uniform transitions). Gap ≈ 0 means slow mixing (near-reducible or cyclic structure). Measures how quickly the Markov chain converges to stationarity.
+
+### Mixing Time
+The number of steps required for the Markov chain to get within ε of its stationary distribution: τ = −1/log(|λ₂|). A gap of 0.003 gives τ ≈ 333 steps. A gap of 1.0 gives τ ≈ 0.
+
+### Entropy Production Rate (EPR)
+Measures irreversibility of Markov chain dynamics: σ = Σᵢⱼ πᵢPᵢⱼ log(Pᵢⱼ / Pⱼᵢ). EPR = 0 for reversible chains. EPR > 0 means probability flows in a preferred direction. Does not saturate like detailed balance error — has dynamic range across different chain structures.
 
 ### Detailed Balance
 A property of reversible Markov chains: the probability of transitioning from i to j equals that of j to i. Breaks when combination produces irreversible dynamics.

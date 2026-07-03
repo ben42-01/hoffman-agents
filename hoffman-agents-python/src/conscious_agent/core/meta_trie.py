@@ -52,13 +52,14 @@ class MetaTrie:
         timestamp: int = 0,
         ergodic_state: str = "idle",
         is_locked: bool = False,
+        override_error: float | None = None,
     ) -> int:
         recent = trace_buffer.get_recent(self._snapshot_window)
         if not recent:
             return 0
 
         state_ids = tuple(e.to_state for e in recent)
-        mean_error = trace_buffer.prediction_error_mean(window=self._snapshot_window)
+        mean_error = override_error if override_error is not None else trace_buffer.prediction_error_mean(window=self._snapshot_window)
         meta_id = self._compute_meta_state_id(state_ids, mean_error, ergodic_state, is_locked)
 
         if meta_id not in self._registry:

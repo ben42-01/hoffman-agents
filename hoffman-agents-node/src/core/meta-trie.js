@@ -30,12 +30,12 @@ class MetaTrie {
     return hash.readUInt32BE(0);
   }
 
-  observeSelf(traceBuffer, timestamp = 0, ergodicState = 'idle', isLocked = false) {
+  observeSelf(traceBuffer, timestamp = 0, ergodicState = 'idle', isLocked = false, overrideError = null) {
     const recent = traceBuffer.getRecent(this._snapshotWindow);
     if (recent.length === 0) return 0;
 
     const stateIds = recent.map(e => e.toState);
-    const meanError = traceBuffer.predictionErrorMean(this._snapshotWindow);
+    const meanError = overrideError !== null ? overrideError : traceBuffer.predictionErrorMean(this._snapshotWindow);
     const metaId = this._computeMetaStateId(stateIds, meanError, ergodicState, isLocked);
 
     if (!this._registry.has(metaId)) {

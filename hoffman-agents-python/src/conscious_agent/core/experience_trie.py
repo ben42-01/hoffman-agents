@@ -54,6 +54,23 @@ class ExperienceTrie:
             return None
         return max(node.children.items(), key=lambda x: x[1].visit_count)[0]
 
+    def predict_next_probabilistic(self, path: list[int]) -> dict | None:
+        import random
+        node = self.lookup(path)
+        if node is None or not node.children:
+            return None
+        items = list(node.children.items())
+        total = sum(c.visit_count for _, c in items)
+        if total == 0:
+            return None
+        r = random.random() * total
+        for state_id, child in items:
+            r -= child.visit_count
+            if r <= 0:
+                return {"state": state_id, "probability": child.visit_count / total}
+        last_state, last_child = items[-1]
+        return {"state": last_state, "probability": last_child.visit_count / total}
+
     def get_all_paths(self, min_visits: int = 1) -> list[list[int]]:
         paths: list[list[int]] = []
 

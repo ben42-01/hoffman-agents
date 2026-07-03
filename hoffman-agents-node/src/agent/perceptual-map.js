@@ -1,5 +1,11 @@
+const crypto = require('crypto');
 const { TraceEvent } = require('../core/trace-buffer');
 const { inventToken, isInventedToken } = require('../core/token-inventor');
+
+function _compositeId(mid1, mid2) {
+  const h = crypto.createHash('sha256').update(`cp:${mid1}:${mid2}`).digest();
+  return h.readUInt32BE(0);
+}
 
 function _buildTransitionSignature(prevId, currId, embeddingDim) {
   const sig = new Float64Array(embeddingDim);
@@ -49,9 +55,20 @@ function perceive(world, experience, step = 0, metaObservationInterval = 20, fro
 
   let prediction = null, predictionCorrect = false, predictionError = 0.5;
   if (previousId !== null) {
+    const probPred = experience.trie.predictNextProbabilistic([previousId]);
     prediction = experience.trie.predictNext([previousId]);
     predictionCorrect = prediction === worldStateId;
-    predictionError = prediction === worldStateId ? 0 : 1;
+    if (probPred) {
+      if (probPred.state === worldStateId) {
+        predictionError = 1 - probPred.probability;
+      } else {
+        const node = experience.trie.lookup([previousId]);
+        let actualProb = 0;
+        if (node && node.children[worldStateId]) actualProb = node.children[worldStateId].visitCount;
+        const total = node ? Object.values(node.children).reduce((s, c) => s + c.visitCount, 0) : 0;
+        predictionError = total > 0 ? 1 - actualProb / total : 1;
+      }
+    }
   }
 
   const event = new TraceEvent(
@@ -115,8 +132,55 @@ function perceive(world, experience, step = 0, metaObservationInterval = 20, fro
   }
 
   if (!frozen && step > 0 && step % metaObservationInterval === 0) {
-    const metaId = experience.metaTrie.observeSelf(experience.traceBuffer, step, ergodicState, experience.selfToken.locked);
-    experience.selfToken.update(experience.metaTrie, step);
+    if (experience.parentMetaTries) {
+      const [pmt1, pmt2] = experience.parentMetaTries;
+      const [pt1, pt2] = experience.parentTries || [];
+      const buf = experience.traceBuffer;
+      const recent = buf.getRecent(10);
+      const stateIds = recent.map(e => e.toState);
+      const prevId = experience.lastWorldStateId;
+
+      const computeErr = (trie) => {
+        if (prevId === null || !trie) return 0.5;
+        const probPred = trie.predictNextProbabilistic([prevId]);
+        if (!probPred) return 1;
+        if (probPred.state === worldStateId) return 1 - probPred.probability;
+        const node = trie.lookup([prevId]);
+        let actualProb = 0;
+        if (node && node.children[worldStateId]) actualProb = node.children[worldStateId].visitCount;
+        const total = node ? Object.values(node.children).reduce((s, c) => s + c.visitCount, 0) : 0;
+        return total > 0 ? 1 - actualProb / total : 1;
+      };
+
+      const err1 = computeErr(pt1);
+      const err2 = computeErr(pt2);
+
+      const meta1 = pmt1.observeSelf(buf, step, ergodicState, experience.selfToken.locked, err1);
+      const meta2 = pmt2.observeSelf(buf, step, ergodicState, experience.selfToken.locked, err2);
+
+      const jointId = _compositeId(meta1, meta2);
+
+      if (!experience.metaTrie._registry.has(jointId)) {
+        const snap1 = pmt1.getMetaStateSnapshot(meta1) || { stateIds, meanPredictionError: err1, timestamp: step };
+        const snap2 = pmt2.getMetaStateSnapshot(meta2) || { stateIds, meanPredictionError: err2, timestamp: step };
+        experience.metaTrie._registry.set(jointId, {
+          stateIds: [...(snap1.stateIds || []), ...(snap2.stateIds || [])],
+          meanPredictionError: (snap1.meanPredictionError + snap2.meanPredictionError) / 2,
+          timestamp: step,
+          _parentPerspective: [meta1, meta2],
+        });
+      }
+
+      const last = experience.metaTrie.lastMetaState;
+      if (last !== null && last !== jointId) {
+        experience.metaTrie._trie.insert([last, jointId]);
+      }
+      experience.metaTrie._lastMetaState = jointId;
+      experience.selfToken.update(experience.metaTrie, step);
+    } else {
+      const metaId = experience.metaTrie.observeSelf(experience.traceBuffer, step, ergodicState, experience.selfToken.locked);
+      experience.selfToken.update(experience.metaTrie, step);
+    }
   }
 
   if (!frozen && step > 0 && step % (metaObservationInterval * 3) === 0) {

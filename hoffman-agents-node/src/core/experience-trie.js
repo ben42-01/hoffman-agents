@@ -61,6 +61,21 @@ class ExperienceTrie {
     return bestState;
   }
 
+  predictNextProbabilistic(path) {
+    const node = this.lookup(path);
+    if (!node || Object.keys(node.children).length === 0) return null;
+    const children = Object.entries(node.children);
+    const total = children.reduce((s, [, c]) => s + c.visitCount, 0);
+    if (total === 0) return null;
+    let r = Math.random() * total;
+    for (const [stateId, child] of children) {
+      r -= child.visitCount;
+      if (r <= 0) return { state: parseInt(stateId), probability: child.visitCount / total };
+    }
+    const last = children[children.length - 1];
+    return { state: parseInt(last[0]), probability: last[1].visitCount / total };
+  }
+
   _dfsPaths(node, current, minVisits, results, leavesOnly) {
     if (node !== this._root && node.visitCount >= minVisits) {
       if (!leavesOnly || Object.keys(node.children).length === 0) {

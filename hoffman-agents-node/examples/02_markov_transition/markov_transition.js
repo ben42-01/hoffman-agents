@@ -36,7 +36,6 @@ function spectralGap(P) {
   const n = P.length;
   if (n < 2) return 1;
 
-  // Stationary distribution via power iteration
   let pi = new Float64Array(n).fill(1 / n);
   for (let iter = 0; iter < 1000; iter++) {
     const piNew = new Float64Array(n);
@@ -47,11 +46,9 @@ function spectralGap(P) {
     if (diff < 1e-12) break;
   }
 
-  // Deflate: B = P - 1 * pi^T  (removes eigenvalue 1)
   const B = Array.from({ length: n }, () => new Float64Array(n));
   for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) B[i][j] = P[i][j] - pi[j];
 
-  // Power iteration on B to find dominant (second) eigenvalue
   let v = new Float64Array(n);
   for (let i = 0; i < n; i++) v[i] = 1 / Math.sqrt(n);
   for (let iter = 0; iter < 1000; iter++) {
@@ -68,7 +65,6 @@ function spectralGap(P) {
     if (diff < 1e-10) break;
   }
 
-  // Rayleigh quotient: λ₂ ≈ v^T B v
   let Bv = new Float64Array(n);
   for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) Bv[i] += B[i][j] * v[j];
   let lambda2 = 0;
@@ -77,50 +73,80 @@ function spectralGap(P) {
   return 1 - Math.abs(lambda2);
 }
 
-function detailedBalanceError(P) {
+function mixingTime(gap) {
+  if (gap <= 0 || gap >= 1) return gap <= 0 ? Infinity : 0;
+  const t = -1 / Math.log(1 - gap);
+  return t > 1e6 ? Infinity : t;
+}
+
+function entropyProductionRate(P) {
   const n = P.length;
   let pi = new Float64Array(n).fill(1 / n);
-  for (let iter = 0; iter < 200; iter++) {
+  for (let iter = 0; iter < 500; iter++) {
     const pn = new Float64Array(n);
     for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) pn[j] += pi[i] * P[i][j];
+    let diff = 0;
+    for (let i = 0; i < n; i++) diff += Math.abs(pn[i] - pi[i]);
     pi = pn;
+    if (diff < 1e-12) break;
   }
-  const errs = [];
-  for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) {
-    if (pi[i] > 0 && pi[j] > 0) {
-      const l = pi[i] * P[i][j], r = pi[j] * P[j][i];
-      if (Math.abs(l + r) > 1e-12) errs.push(Math.abs(l - r) / (l + r));
+
+  let epr = 0;
+  for (let i = 0; i < n; i++) {
+    if (pi[i] <= 0) continue;
+    for (let j = 0; j < n; j++) {
+      if (P[i][j] <= 0 || P[j][i] <= 0) continue;
+      epr += pi[i] * P[i][j] * Math.log(P[i][j] / P[j][i]);
     }
   }
-  return errs.length > 0 ? errs.reduce((a, b) => a + b, 0) / errs.length : 0;
+  return epr;
 }
 
 function analyze(agents, label) {
   const byLevel = {};
-  console.log(`\n  ${'─'.repeat(50)}`);
+  console.log(`\n  ${'─'.repeat(60)}`);
   console.log(`  ${label}`);
-  console.log(`  ${'─'.repeat(50)}`);
-  console.log(`  ${'Agent'.padEnd(22)} ${'Lvl'.padEnd(4)} ${'States'.padEnd(7)} ${'Gap'.padEnd(10)} ${'DB Err'.padEnd(10)}`);
+  console.log(`  ${'─'.repeat(60)}`);
+  console.log(`  ${'Agent'.padEnd(22)} ${'Lvl'.padEnd(4)} ${'States'.padEnd(7)} ${'Gap'.padEnd(10)} ${'MixTime'.padEnd(10)} ${'EPR'.padEnd(10)}`);
   for (const [aid, agent] of Object.entries(agents).sort()) {
     const P = extractMetaMatrix(agent);
-    let gap = null, dbe = null, gs = 'N/A', ds = 'N/A';
-    if (P) { gap = spectralGap(P); dbe = detailedBalanceError(P); gs = gap.toFixed(4); ds = dbe.toFixed(4); }
+    let gap = null, epr = null, mt = null, gs = 'N/A', es = 'N/A', ms = 'N/A';
+    if (P) {
+      gap = spectralGap(P);
+      epr = entropyProductionRate(P);
+      mt = mixingTime(gap);
+      gs = gap.toFixed(4);
+      es = epr.toFixed(4);
+      ms = Number.isFinite(mt) ? mt.toFixed(1) : '∞';
+    }
     const lvl = agent.cycleLevel;
-    console.log(`  ${aid.padEnd(22)} ${String(lvl).padEnd(4)} ${String(agent.experience.metaTrie.registrySize).padEnd(7)} ${gs.padEnd(10)} ${ds.padEnd(10)}`);
-    if (gap !== null) { if (!byLevel[lvl]) byLevel[lvl] = []; byLevel[lvl].push({ gap, dbe }); }
+    console.log(`  ${aid.padEnd(22)} ${String(lvl).padEnd(4)} ${String(agent.experience.metaTrie.registrySize).padEnd(7)} ${gs.padEnd(10)} ${ms.padEnd(10)} ${es.padEnd(10)}`);
+    if (gap !== null) { if (!byLevel[lvl]) byLevel[lvl] = []; byLevel[lvl].push({ gap, epr, mt: Number.isFinite(mt) ? mt : NaN }); }
   }
   return byLevel;
 }
 
-function run() {
+function buildInteractionGraph(agentIds, connectivity) {
+  const n = agentIds.length;
+  if (connectivity >= n) return null;
+  const graph = {};
+  for (const id of agentIds) {
+    const others = agentIds.filter(x => x !== id);
+    const shuffled = [...others].sort(() => Math.random() - 0.5);
+    graph[id] = shuffled.slice(0, connectivity);
+  }
+  return graph;
+}
+
+function run(connectivityOverride) {
   const nBase = 8, nRounds = 400;
+  const connectivity = connectivityOverride !== undefined ? connectivityOverride : nBase;
   const t0 = Date.now();
   console.log('='.repeat(66));
-  console.log('Quantum Signature — Tree-of-Life Spectral Analysis');
+  console.log('Markov Structural Transition — Tree-of-Life Analysis');
   console.log('='.repeat(66));
-  console.log(`\n${nBase} base agents, ${nRounds} rounds...`);
+  console.log(`\n${nBase} base agents, ${nRounds} rounds, connectivity=${connectivity === nBase ? 'all' : connectivity}...`);
 
-  // Phase 1: isolated agents — enough steps for meta-states to cycle
   const agents = {};
   for (let i = 0; i < nBase; i++) {
     const aid = `CA_${String(i).padStart(3, '0')}`;
@@ -129,13 +155,16 @@ function run() {
   }
   analyze(agents, 'Phase 1: Isolated agents');
 
-  // Phase 2 + 3: interaction then combination
   let snapTaken = false;
   for (let rnd = 0; rnd < nRounds; rnd++) {
     const outputs = {};
     for (const [aid, ag] of Object.entries(agents)) outputs[aid] = ag.getOutput();
+    const graph = connectivity < nBase ? buildInteractionGraph(Object.keys(agents), connectivity) : null;
     for (const [aid, ag] of Object.entries(agents)) {
-      for (const [oa, o] of Object.entries(outputs)) if (oa !== aid) ag.step(new WorldState({ [oa]: o }));
+      const targets = graph ? graph[aid] : Object.keys(agents);
+      for (const oa of targets) {
+        if (oa !== aid) ag.step(new WorldState({ [oa]: outputs[oa] }));
+      }
     }
     if (rnd === 39 && !snapTaken) { analyze(agents, 'Phase 2: Interacting (40 rounds)'); snapTaken = true; }
     if (rnd > 0 && rnd % 20 === 0) {
@@ -155,7 +184,6 @@ function run() {
 
   const post = analyze(agents, 'Phase 3: Post-combination');
 
-  // Phase 4: Fuse the highest-level agent back into its constituents
   const topAgents = Object.entries(agents).filter(([aid]) => aid.startsWith('L')).sort();
   if (topAgents.length > 0) {
     const highest = topAgents[topAgents.length - 1][1];
@@ -167,21 +195,22 @@ function run() {
 
   console.log(`\n  Done in ${((Date.now() - t0) / 1000).toFixed(1)}s\n`);
 
-  // Cross-level summary
   console.log(`${'─'.repeat(66)}`);
-  console.log('Cross-Level Quantum Signature Summary');
+  console.log('Cross-Level Summary');
   console.log(`${'─'.repeat(66)}`);
   let pg = null;
   for (const lvl of Object.keys(post).sort((a, b) => a - b)) {
     const items = post[lvl];
-    const gs = items.map(x => x.gap), ds = items.map(x => x.dbe);
-    const mg = gs.reduce((a, b) => a + b, 0) / gs.length, md = ds.reduce((a, b) => a + b, 0) / ds.length;
-    let tag = mg < 0.3 && md > 0.1 ? '  ← QUANTUM-LIKE' : mg > 0.85 && md < 0.15 ? '  ← CLASSICAL' : '';
-    let ch = pg !== null ? (mg > pg + 0.05 ? ' ↑ recovery' : mg < pg - 0.05 ? ' ↓ collapse' : '') : '';
-    console.log(`  ${(lvl === '0' ? 'Base' : `Level ${lvl}`).padEnd(8)} (${items.length} agents)  gap=${mg.toFixed(4)}  db_err=${md.toFixed(4)}${tag}${ch}`);
+    const gs = items.map(x => x.gap), eps = items.map(x => x.epr);
+    const mg = gs.reduce((a, b) => a + b, 0) / gs.length, me = eps.reduce((a, b) => a + b, 0) / eps.length;
+    const tag = mg < 0.05 ? '  ← SLOW MIXING' : mg > 0.8 ? '  ← FAST MIXING' : '';
+    let ch = pg !== null ? (mg > pg + 0.05 ? ' ↑ faster' : mg < pg - 0.05 ? ' ↓ slower' : '') : '';
+    console.log(`  ${(lvl === '0' ? 'Base' : `Level ${lvl}`).padEnd(8)} (${items.length} agents)  gap=${mg.toFixed(4)}  epr=${me.toFixed(4)}${tag}${ch}`);
     pg = mg;
   }
-  console.log(`\n  gap~1.0, db_err~0.0 = classical | gap~0.0, db_err>0.1 = quantum-like`);
+  console.log(`\n  gap ~ 1.0 = fast mixing (near-uniform transitions)`);
+  console.log(`  gap ~ 0.0 = slow mixing (near-reducible / cyclic structure)`);
+  console.log(`  EPR > 0   = irreversible dynamics (directed flow)`);
 }
 
 run();

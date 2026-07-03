@@ -75,7 +75,9 @@ def _binary_combine(agent1: ConsciousAgent, agent2: ConsciousAgent) -> Conscious
 
     exp = ExperienceSpace(
         trie=merged_trie,
+        parent_tries=[agent1.experience.trie, agent2.experience.trie],
         meta_trie=joint_mt,
+        parent_meta_tries=[agent1.experience.meta_trie, agent2.experience.meta_trie],
         self_token=combined_self,
         lexicon=merged_lexicon,
         trace_buffer=trace_buf,
@@ -109,38 +111,52 @@ def _canonical_hash(s1: int, s2: int) -> int:
     return int.from_bytes(hash_bytes[:8], "big")
 
 
+def _composite_id(mid1: int, mid2: int) -> int:
+    data = f"cp:{mid1}:{mid2}"
+    h = hashlib.sha256(data.encode()).digest()
+    return int.from_bytes(h[:8], "big")
+
+
+def _clone_meta_trie(mt: MetaTrie) -> MetaTrie:
+    clone = MetaTrie(
+        snapshot_window=mt._snapshot_window,
+        max_depth=mt.trie.max_depth,
+    )
+    for mid, snap in mt._registry.items():
+        clone._registry[mid] = snap
+    paths = mt.trie.get_all_paths(min_visits=1)
+    for path in paths:
+        if len(path) < 2:
+            continue
+        clone._trie.insert(list(path))
+        src = mt.trie.lookup(path)
+        dst = clone._trie.lookup(path)
+        if src is not None and dst is not None:
+            dst.visit_count = src.visit_count
+            dst.prediction_errors = list(src.prediction_errors)
+            dst.mean_prediction_error = src.mean_prediction_error
+    if mt.last_meta_state is not None:
+        clone._last_meta_state = mt.last_meta_state
+    if hasattr(mt, "_token_registry"):
+        for mid, counts in mt._token_registry.items():
+            clone._token_registry[mid] = dict(counts)
+    return clone
+
+
 def _build_joint_meta_trie(mt1: MetaTrie, mt2: MetaTrie) -> MetaTrie:
     joint = MetaTrie(
         snapshot_window=max(mt1._snapshot_window, mt2._snapshot_window),
         max_depth=max(mt1.trie.max_depth, mt2.trie.max_depth),
     )
 
-    for mid, snap in mt1._registry.items():
-        joint._registry[mid | 0x10000000] = snap
-    for mid, snap in mt2._registry.items():
-        joint._registry[mid | 0x20000000] = snap
+    joint._parent_meta_tries = [_clone_meta_trie(mt1), _clone_meta_trie(mt2)]
 
-    def _transfer_trie(source_trie, mask):
-        paths = source_trie.get_all_paths(min_visits=1)
-        for path in paths:
-            if len(path) < 2:
-                continue
-            shifted = [sid | mask for sid in path]
-            joint._trie.insert(list(shifted))
-            source_node = source_trie.lookup(path)
-            joint_node = joint._trie.lookup(shifted)
-            if source_node is not None and joint_node is not None:
-                joint_node.visit_count = source_node.visit_count
-                joint_node.prediction_errors = list(source_node.prediction_errors)
-                joint_node.mean_prediction_error = source_node.mean_prediction_error
-
-    _transfer_trie(mt1.trie, 0x10000000)
-    _transfer_trie(mt2.trie, 0x20000000)
-
-    if mt1.last_meta_state is not None:
-        joint._last_meta_state = mt1.last_meta_state | 0x10000000
+    if mt1.last_meta_state is not None and mt2.last_meta_state is not None:
+        joint._last_meta_state = _composite_id(mt1.last_meta_state, mt2.last_meta_state)
+    elif mt1.last_meta_state is not None:
+        joint._last_meta_state = mt1.last_meta_state
     elif mt2.last_meta_state is not None:
-        joint._last_meta_state = mt2.last_meta_state | 0x20000000
+        joint._last_meta_state = mt2.last_meta_state
 
     if hasattr(mt1, "_token_registry"):
         for mid, counts in mt1._token_registry.items():
@@ -161,7 +177,7 @@ def _combine_attractors(st1: SelfTokenState, st2: SelfTokenState) -> SelfTokenSt
         locked=st1.locked and st2.locked,
     )
     if st1.locked and st2.locked:
-        combined.referent_meta_state_id = st1.referent_meta_state_id | 0x10000000
+        combined.referent_meta_state_id = _composite_id(st1.referent_meta_state_id, st2.referent_meta_state_id)
         combined.lock_generation = max(st1.lock_generation or 0, st2.lock_generation or 0)
     return combined
 
@@ -188,7 +204,12 @@ def _merge_lexicons(lex1: ExperienceLexicon, lex2: ExperienceLexicon) -> Experie
     return merged
 
 
-def _split_meta_trie(joint_mt: MetaTrie, mask: int) -> MetaTrie:
+def _split_meta_trie(joint_mt: MetaTrie, parent_idx: int) -> MetaTrie:
+    parents = getattr(joint_mt, "_parent_meta_tries", None)
+    if parents is not None and len(parents) > parent_idx:
+        return parents[parent_idx]
+
+    mask = 0x10000000 if parent_idx == 0 else 0x20000000
     stripped = MetaTrie(
         snapshot_window=joint_mt._snapshot_window,
         max_depth=joint_mt.trie.max_depth,
@@ -203,10 +224,10 @@ def _split_meta_trie(joint_mt: MetaTrie, mask: int) -> MetaTrie:
         if len(path) < 2:
             continue
         if all(sid & mask for sid in path):
-            stripped_path = [sid & ~mask for sid in path]
-            stripped._trie.insert(list(stripped_path))
+            spath = [sid & ~mask for sid in path]
+            stripped._trie.insert(list(spath))
             src_node = joint_mt.trie.lookup(path)
-            dst_node = stripped._trie.lookup(stripped_path)
+            dst_node = stripped._trie.lookup(spath)
             if src_node is not None and dst_node is not None:
                 dst_node.visit_count = src_node.visit_count
                 dst_node.prediction_errors = list(src_node.prediction_errors)
@@ -230,8 +251,8 @@ def fuse(agent: ConsciousAgent) -> list[ConsciousAgent]:
     cids = list(agent.constituent_ids)
     id1, id2 = cids[0], cids[-1]
 
-    mt1 = _split_meta_trie(agent.experience.meta_trie, 0x10000000)
-    mt2 = _split_meta_trie(agent.experience.meta_trie, 0x20000000)
+    mt1 = _split_meta_trie(agent.experience.meta_trie, 0)
+    mt2 = _split_meta_trie(agent.experience.meta_trie, 1)
 
     def _build_fused(agent_id, meta_trie):
         leaf_ids = set(agent.leaf_constituent_ids)
