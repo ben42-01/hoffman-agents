@@ -40,7 +40,7 @@ hoffman-agents-python/
 │   └── test_core.py               # 15 tests covering all modules
 ├── examples/
 │   ├── 01_fitness_beats_truth/
-│   ├── 02_quantum_signature/
+│   ├── 02_markov_transition/
 │   ├── 03_weather_benchmark/
 │   └── 04_stop_lights/            # Web UI dashboard
 ├── pyproject.toml

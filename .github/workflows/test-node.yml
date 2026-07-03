@@ -21,7 +21,7 @@ jobs:
       - name: Smoke-test examples
         run: |
           node hoffman-agents-node/examples/01_fitness_beats_truth/fitness_beats_truth.js
-          node hoffman-agents-node/examples/02_quantum_signature/quantum_signature.js
+          node hoffman-agents-node/examples/02_markov_transition/markov_transition.js
           node hoffman-agents-node/examples/05_self_ref_ablation/self_ref_ablation.js
 
   pack-check:

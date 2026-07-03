@@ -11,7 +11,7 @@ RUN="uv run python"
 # ── Examples ────────────────────────────────────────────────────
 EXAMPLES=(
   "01_fitness_beats_truth:fitness_beats_truth.py:Fitness Beats Truth — Interface Theory"
-  "02_quantum_signature:quantum_signature.py:Quantum Signature — Spectral Analysis"
+  "02_markov_transition:markov_transition.py:Markov Structural Transition — Spectrum"
   "03_weather_benchmark:weather_benchmark.py:Weather Benchmark — Markov v Classical"
   "04_stop_lights:stop_lights.py:Stop Lights — Web Dashboard (localhost:8765)"
   "05_self_ref_ablation:self_ref_ablation.py:Self-Reference ON/OFF Contrast"

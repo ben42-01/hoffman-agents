@@ -44,7 +44,7 @@ hoffman-agents-node/
 │   └── core.test.js                # 15 tests covering all modules
 ├── examples/
 │   ├── 01_fitness_beats_truth/
-│   ├── 02_quantum_signature/
+│   ├── 02_markov_transition/
 │   ├── 03_weather_benchmark/
 │   └── 04_stop_lights/             # Web UI dashboard
 ├── docs/
@@ -129,7 +129,7 @@ const { combine, AgentNetwork } = require('./src/index');
 
 ```bash
 node examples/01_fitness_beats_truth/fitness_beats_truth.js
-node examples/02_quantum_signature/quantum_signature.js
+node examples/02_markov_transition/markov_transition.js
 node examples/03_weather_benchmark/weather_benchmark.js
 node examples/04_stop_lights/stop_lights.js     # http://localhost:8765
 ```

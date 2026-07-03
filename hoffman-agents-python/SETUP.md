@@ -61,7 +61,7 @@ python -m pytest tests/ -v
 uv run python examples/01_fitness_beats_truth/fitness_beats_truth.py
 
 # Quantum Signature (spectral analysis of combined agents)
-uv run python examples/02_quantum_signature/quantum_signature.py
+uv run python examples/02_markov_transition/markov_transition.py
 
 # Weather Benchmark (Markov world vs classical baselines)
 uv run python examples/03_weather_benchmark/weather_benchmark.py data/weather_berlin.csv
