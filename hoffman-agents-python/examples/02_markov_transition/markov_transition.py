@@ -61,7 +61,8 @@ def mixing_time(gap):
         return float('inf')
     if gap >= 1:
         return 0.0
-    return -1.0 / np.log(1.0 - gap)
+    t = -1.0 / np.log(1.0 - gap)
+    return float('inf') if t > 1e6 else t
 
 
 def entropy_production_rate(P):

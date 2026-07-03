@@ -127,7 +127,10 @@ def decide(
             experience.meta_trie.last_meta_state
         ) if experience.meta_trie.last_meta_state is not None else None
         tokens.append(experience.self_token.token)
-        if snapshot is not None and snapshot.mean_prediction_error > 0.3:
+        mpe = None
+        if snapshot is not None:
+            mpe = snapshot.get("mean_prediction_error") if isinstance(snapshot, dict) else snapshot.mean_prediction_error
+        if mpe is not None and mpe > 0.3:
             tokens.append("different")
         else:
             tokens.append("familiar")
