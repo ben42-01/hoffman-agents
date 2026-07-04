@@ -844,9 +844,9 @@ print(f'"I" locked: {agent.is_i_locked}')`;
       codeEl.textContent = `const { ConsciousAgent } = require('conscious-agent');
 const { CoinTossWorld } = require('conscious-agent/worlds');
 
-const world = new CoinTossWorld({ nCoins: 4 });
+const world = new CoinTossWorld(4);
 const agent = new ConsciousAgent({ agentId: 'my_agent', world });
-const outputs = agent.run({ nSteps: 1000 });
+const outputs = agent.run(1000);
 console.log('I locked:', agent.isILocked);`;
     }
     codeEl.className = `language-${lang}`;

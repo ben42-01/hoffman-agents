@@ -25,6 +25,9 @@ The function `D: X → G` — how the agent's experience produces its output.
 ### Combination Operator (⊗)
 The operation that merges two agents into a higher-order agent. Satisfies associativity, non-commutativity, and identity properties.
 
+### Fusion Operator (⊘)
+The inverse of combination. Splits a combined agent back into its immediate constituents. Recovers each parent's self-model from bit-masked meta-trie partitions. Fused agents share the merged experience trie but get fresh self-tokens (identity re-stabilizes naturally).
+
 ### Experience Trie (T)
 A compressed prefix tree over state transition sequences. The agent's long-term memory and world-model.
 

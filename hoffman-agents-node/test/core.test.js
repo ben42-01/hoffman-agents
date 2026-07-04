@@ -5,11 +5,18 @@ const os = require('node:os');
 const fs = require('node:fs');
 
 const {
-  ConsciousAgent, StepOutput, SimpleWorld,
-  TraceBuffer, TraceEvent, ExperienceTrie, MetaTrie,
-  SelfTokenState, ExperienceLexicon,
-  combine, AgentNetwork, World, WorldBuilder, CoinTossWorld, SelfWorld,
+  ConsciousAgent, StepOutput, Prediction, SimpleWorld,
+  TraceBuffer, TraceEvent, ExperienceTrie, TrieNode, MetaTrie, MetaStateSnapshot,
+  SelfTokenState, ExperienceLexicon, LexiconEntry,
+  combine, AgentNetwork, Topology, World, WorldBuilder, CoinTossWorld, SelfWorld,
+  Normalizer, FeatureSpec,
+  buildWorldFromDataFrame,
   SharedMeaningTracker,
+  strangeLoopScore, computeSelfReferenceScore,
+  populationReferenceScore, populationLoopScore, firstDepthNGeneration,
+  prune, traceDistance, mergeSimilarPaths,
+  inventToken, isInventedToken,
+  EnvironmentState, sequenceToStateId,
 } = require('../src/index');
 
 const { serialize, deserialize, clone, saveAgent, loadAgent, cloneAgent } = require('../src/io');
@@ -197,6 +204,51 @@ describe('Agent', () => {
     for (let i = 0; i < 10; i++) agent.step(world.step());
     assert.ok(agent.experience.trie.size() > sizeBefore);
   });
+
+  it('Prediction class', () => {
+    const topK = [
+      { stateId: 42, stateLabel: '42', confidence: 0.7 },
+      { stateId: 7, stateLabel: '7', confidence: 0.3 },
+    ];
+    const p = new Prediction({ stateId: 42, stateLabel: '42', confidence: 0.7, topK });
+    assert.equal(p.stateId, 42);
+    assert.equal(p.stateLabel, '42');
+    assert.equal(p.confidence, 0.7);
+    assert.equal(p.topK(1).length, 1);
+    assert.equal(p.topK(10).length, 2);
+  });
+
+  it('ConsciousAgent.predictNext returns null with no experience', () => {
+    const agent = new ConsciousAgent({ agentId: 'pred_null' });
+    assert.equal(agent.predictNext(), null);
+  });
+
+  it('ConsciousAgent.predictNext returns Prediction after training', () => {
+    const agent = new ConsciousAgent({ agentId: 'pred_test' });
+    const world = new SimpleWorld({ nStates: 5, seed: 42 });
+    for (let i = 0; i < 40; i++) agent.step(world.step());
+    const result = agent.predictNext();
+    assert.ok(result instanceof Prediction);
+    assert.ok(typeof result.stateId === 'number');
+    assert.ok(typeof result.stateLabel === 'string');
+    assert.ok(result.confidence >= 0 && result.confidence <= 1);
+    assert.ok(Array.isArray(result.topK(3)));
+  });
+
+  it('ConsciousAgent.fromConfig', () => {
+    const agent = ConsciousAgent.fromConfig('config_test', {
+      agent: {
+        selfToken: { lockThreshold: 0.5, lockConsecutiveRequired: 5 },
+        metaObservationInterval: 10,
+        expressionTemp: 0.5,
+      },
+    });
+    assert.equal(agent.agentId, 'config_test');
+    assert.equal(agent.experience.selfToken.lockThreshold, 0.5);
+    assert.equal(agent.experience.selfToken.lockConsecutiveRequired, 5);
+    assert.equal(agent.metaObservationInterval, 10);
+    assert.equal(agent.expressionTemp, 0.5);
+  });
 });
 
 describe('Combination', () => {
@@ -261,6 +313,29 @@ describe('Network', () => {
     assert.ok('predictionError' in m);
     assert.equal(net.getAgentMetrics('nonexistent'), null);
   });
+
+  it('Topology.getConnectionStrength', () => {
+    const top = new Topology({ nAgents: 4, seed: 42 });
+    const strength = top.getConnectionStrength(0, 1);
+    assert.ok(typeof strength === 'number');
+    assert.ok(strength >= 0 && strength <= 1);
+    assert.equal(top.getConnectionStrength(99, 100), 0);
+  });
+
+  it('Topology.maybeAddConnection', () => {
+    const top = new Topology({ nAgents: 20, initialConnectionsPerAgent: 2, seed: 42, addThreshold: 1.0 });
+    const added = top.maybeAddConnection(0, 19);
+    assert.equal(added, true);
+    const duplicate = top.maybeAddConnection(0, 19);
+    assert.equal(duplicate, false);
+  });
+
+  it('Topology.getAgentObservers', () => {
+    const top = new Topology({ nAgents: 4, initialConnectionsPerAgent: 2, seed: 42 });
+    const observers = top.getAgentObservers(0);
+    assert.ok(Array.isArray(observers));
+    observers.forEach(idx => assert.ok(idx >= 0 && idx < 4));
+  });
 });
 
 describe('World', () => {
@@ -280,6 +355,35 @@ describe('World', () => {
     assert.equal(w.nStates, 8);
     const state = w.step();
     assert.notEqual(state, null);
+  });
+
+  it('CoinTossWorld seeded reproducibility', () => {
+    const w1 = new CoinTossWorld(4, 42);
+    const w2 = new CoinTossWorld(4, 42);
+    for (let i = 0; i < 10; i++) {
+      const s1 = w1.step();
+      const s2 = w2.step();
+      assert.equal(s1.sequences.world[0], s2.sequences.world[0]);
+    }
+  });
+
+  it('buildWorldFromDataFrame with auto-detect', () => {
+    const rows = [{ temp: 1.2, price: 3.4 }, { temp: 2.5, price: 4.1 }, { temp: 0.8, price: 2.9 }];
+    const w = buildWorldFromDataFrame(rows);
+    assert.ok(w instanceof World);
+    assert.ok(w.nStates > 0);
+  });
+
+  it('buildWorldFromDataFrame with explicit spec', () => {
+    const rows = [{ a: 1, b: 2 }, { a: 3, b: 4 }, { a: 5, b: 6 }];
+    const w = buildWorldFromDataFrame(rows, [
+      { name: 'a', normalization: 'minmax', nBins: 2 },
+    ]);
+    assert.ok(w instanceof World);
+  });
+
+  it('buildWorldFromDataFrame throws on empty', () => {
+    assert.throws(() => buildWorldFromDataFrame([]), /non-empty/);
   });
 
   it("SelfWorld wraps SimpleWorld", () => {

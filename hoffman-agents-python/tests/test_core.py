@@ -352,3 +352,54 @@ def test_shared_meaning():
     lex2.bind(label="b", output_token="foo", trace_signature=sig)
     result = tracker.snapshot({"a1": lex1, "a2": lex2}, generation=1)
     assert result["sharedness"] > 0.0
+
+
+def test_predict_next_none_when_no_experience():
+    agent = ConsciousAgent(agent_id="pred_none")
+    assert agent.predict_next() is None
+
+
+def test_predict_next_returns_prediction():
+    from conscious_agent import Prediction
+    agent = ConsciousAgent(agent_id="pred_test")
+    world = SimpleWorld(n_states=5, seed=42)
+    for _ in range(40):
+        agent.step(world.step())
+    result = agent.predict_next()
+    assert isinstance(result, Prediction)
+    assert isinstance(result.state_id, int)
+    assert isinstance(result.state_label, str)
+    assert 0.0 <= result.confidence <= 1.0
+    top3 = result.top_k(3)
+    assert len(top3) <= 3
+    for t in top3:
+        assert "state_id" in t
+        assert "confidence" in t
+
+
+def test_prediction_top_k():
+    from conscious_agent import Prediction
+    top_k = [
+        {"state_id": 42, "state_label": "42", "confidence": 0.7},
+        {"state_id": 7, "state_label": "7", "confidence": 0.3},
+    ]
+    p = Prediction(state_id=42, state_label="42", confidence=0.7, _top_k=top_k)
+    assert p.state_id == 42
+    assert p.confidence == 0.7
+    assert len(p.top_k(1)) == 1
+    assert len(p.top_k(10)) == 2
+
+
+def test_from_config():
+    agent = ConsciousAgent.from_config("config_test", {
+        "agent": {
+            "self_token": {"lock_threshold": 0.5, "lock_consecutive_required": 5},
+            "meta_observation_interval": 10,
+            "expression_temp": 0.5,
+        },
+    })
+    assert agent.agent_id == "config_test"
+    assert agent.experience.self_token.lock_threshold == 0.5
+    assert agent.experience.self_token.lock_consecutive_required == 5
+    assert agent.meta_observation_interval == 10
+    assert agent.expression_temp == 0.5

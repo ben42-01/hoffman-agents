@@ -17,7 +17,7 @@ hoffman-agents-python/
 │       │   ├── self_token.py
 │       │   ├── strange_loop.py
 │       │   ├── trie_compression.py
-│       │   └── experience_lexicon.py
+│       │   ├── experience_lexicon.py
 │       │   └── token_inventor.py
 │       ├── agent/
 │       │   ├── conscious_agent.py  # Main class
@@ -33,16 +33,20 @@ hoffman-agents-python/
 │       ├── network/
 │       │   └── agent_network.py     # Multi-agent network + topology
 │       ├── world/
-│       │   └── world_builder.py     # WorldBuilder, World, CoinTossWorld
+│       │   ├── __init__.py          # World, WorldBuilder, CoinTossWorld, Normalizer, FeatureSpec, SelfWorld, build_world_from_dataframe
+│       │   ├── world_builder.py     # WorldBuilder, World, CoinTossWorld
+│       │   └── self_world.py        # SelfWorld wrapper
 │       └── meaning/
+│           ├── __init__.py
 │           └── shared_meaning.py    # SharedMeaningTracker
 ├── tests/
-│   └── test_core.py               # 15 tests covering all modules
+│   └── test_core.py               # 40 tests covering all modules
 ├── examples/
 │   ├── 01_fitness_beats_truth/
 │   ├── 02_quantum_signature/
 │   ├── 03_weather_benchmark/
-│   └── 04_stop_lights/            # Web UI dashboard
+│   ├── 04_stop_lights/            # Web UI dashboard
+│   └── 06_lem_dashboard/          # LEM dashboard
 ├── pyproject.toml
 ├── SETUP.md
 ├── README.md

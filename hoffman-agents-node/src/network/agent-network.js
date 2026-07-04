@@ -55,6 +55,30 @@ class Topology {
     conn.age++;
   }
 
+  getConnectionStrength(i, j) {
+    const conn = this._connections.get(`${i},${j}`);
+    return conn ? conn.strength : 0;
+  }
+
+  maybeAddConnection(i, j) {
+    const key = `${i},${j}`;
+    if (this._connections.has(key)) return false;
+    if (this._rng() < this._addThreshold) {
+      this._connections.set(key, new Connection(0.1));
+      return true;
+    }
+    return false;
+  }
+
+  getAgentObservers(agentIdx) {
+    const result = [];
+    for (const [key, conn] of this._connections) {
+      const [i, j] = key.split(',').map(Number);
+      if (j === agentIdx && conn.strength > 0) result.push(i);
+    }
+    return result;
+  }
+
   pruneWeakConnections() {
     let count = 0;
     for (const [key, conn] of this._connections) {

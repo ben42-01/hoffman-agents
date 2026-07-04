@@ -70,6 +70,30 @@ const agent = new ConsciousAgent({ agentId: 'weather_agent', world });
 const outputs = agent.run(1000);
 ```
 
+### Build world from JSON data (v2.1)
+
+```javascript
+const { buildWorldFromDataFrame } = require('conscious-agent');
+
+const rows = [
+  { temperature: 23.5, humidity: 65, pressure: 1013 },
+  { temperature: 24.1, humidity: 63, pressure: 1011 },
+  // ...
+];
+const world = buildWorldFromDataFrame(rows);
+// Auto-detects numeric columns, or pass explicit feature specs
+```
+
+### Predict next state (v2.1)
+
+```javascript
+const prediction = agent.predictNext();
+if (prediction) {
+  console.log(`Expecting state ${prediction.stateId} (conf: ${prediction.confidence.toFixed(2)})`);
+  const top3 = prediction.topK(3);
+}
+```
+
 ### Combine two agents
 
 ```javascript
@@ -110,22 +134,40 @@ const cloned = cloneAgent(agent, 'experiment_clone');
 ```javascript
 // Core classes
 const { ConsciousAgent, World, WorldBuilder } = require('conscious-agent');
-const { SimpleWorld, ExperienceSpace } = require('conscious-agent');
+const { SimpleWorld, ExperienceSpace, Prediction } = require('conscious-agent');
 
 // World factories
-const { CoinTossWorld } = require('conscious-agent/worlds');
+const { CoinTossWorld, SelfWorld, Normalizer, FeatureSpec } = require('conscious-agent/worlds');
+const { buildWorldFromDataFrame } = require('conscious-agent');
 
 // IO
-const { saveAgent, loadAgent, cloneAgent, loadLatest } = require('conscious-agent/io');
+const { saveAgent, loadAgent, cloneAgent, loadLatest, clone } = require('conscious-agent/io');
 
 // Multi-agent
-const { AgentNetwork, combine } = require('conscious-agent');
+const { AgentNetwork, Topology, InteractionCycle, combine } = require('conscious-agent');
 
 // Core components
-const { TraceBuffer, ExperienceTrie, MetaTrie, SelfTokenState, ExperienceLexicon } = require('conscious-agent');
+const { TraceBuffer, TraceEvent, ExperienceTrie, TrieNode } = require('conscious-agent');
+const { MetaTrie, MetaStateSnapshot, SelfTokenState, ExperienceLexicon, LexiconEntry } = require('conscious-agent');
+
+// Utilities
+const { strangeLoopScore, computeSelfReferenceScore, populationReferenceScore } = require('conscious-agent');
+const { prune, traceDistance, mergeSimilarPaths, inventToken, isInventedToken } = require('conscious-agent');
+const { SharedMeaningTracker, EnvironmentState, sequenceToStateId } = require('conscious-agent');
+
+// v2.1 — Predict next state
+agent.predictNext();         // → Prediction { stateId, stateLabel, confidence, topK(n) }
+prediction.topK(3);          // top 3 alternatives with confidence
+
+// v2.1 — Config-driven construction
+ConsciousAgent.fromConfig('id', { agent: { selfToken: { lockThreshold: 0.3 } } });
+
+// v2.1 — Topology introspection
+topology.getConnectionStrength(0, 1);   // query connection weight
+topology.maybeAddConnection(0, 5);       // add link probabilistically
+topology.getAgentObservers(3);           // who observes agent 3?
 
 // v2.0 — Agent mode control
-const { setMode } = agent;   // 'learning', 'frozen', 'debug'
 agent.setMode('frozen');     // deterministic projection, no trie/meta updates
 agent.thaw();                // back to learning mode
 agent.refreeze();            // back to frozen
@@ -153,9 +195,15 @@ agent.setAllowableTokens(['I', 'notice', 'familiar']);
 
 // v2.0 — Composition
 combine(a, b, c);            // n-ary combination (3+ agents)
+fuse(combined);              // decompose back into constituents
 
 // v2.0 — TraceBuffer
 traceBuffer.resize(100);     // dynamic window resizing
+
+// v2.0 — Trie compression
+prune(trie, 5);              // remove nodes with < 5 visits
+traceDistance(pathA, pathB); // edit distance with transition-aware cost
+mergeSimilarPaths(trie, matrix, 0.15);  // merge paths within threshold
 ```
 
 ## Self-Awareness

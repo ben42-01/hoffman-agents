@@ -143,19 +143,28 @@ class WorldBuilder {
   }
 }
 
+function seedRandom(seed) {
+  let s = seed;
+  return function () {
+    s = (s * 1664525 + 1013904223) & 0x7FFFFFFF;
+    return s / 0x7FFFFFFF;
+  };
+}
+
 class World {
-  constructor({ nStates, transitionMatrix, stateIds, stateLabels, normalizers = [], initialState = 0 } = {}) {
+  constructor({ nStates, transitionMatrix, stateIds, stateLabels, normalizers = [], initialState = 0, seed = null } = {}) {
     this.nStates = nStates;
     this.transitionMatrix = transitionMatrix;
     this.stateIds = stateIds;
     this.stateLabels = stateLabels;
     this.normalizers = normalizers;
     this._currentState = initialState;
+    this._rng = seed != null ? seedRandom(seed) : Math.random.bind(Math);
   }
 
   step() {
     const row = this.transitionMatrix[this._currentState];
-    let r = Math.random(), cumulative = 0;
+    let r = this._rng(), cumulative = 0;
     let nextIdx = 0;
     for (let j = 0; j < row.length; j++) {
       cumulative += row[j];
@@ -192,16 +201,56 @@ class World {
 }
 
 class CoinTossWorld {
-  constructor(nCoins = 4) {
+  constructor(nCoins = 4, seed = 42) {
     this.nCoins = nCoins;
     this.nStates = 2 ** nCoins;
     this._state = 0;
+    this._rng = seedRandom(seed);
   }
 
   step() {
-    this._state = Math.floor(Math.random() * this.nStates);
+    this._state = Math.floor(this._rng() * this.nStates);
     return WorldState.fromSequence('world', [String(this._state)]);
   }
+}
+
+function buildWorldFromDataFrame(rows, featureSpecs) {
+  if (!Array.isArray(rows) || rows.length === 0) {
+    throw new Error('rows must be a non-empty array of objects');
+  }
+
+  const builder = new WorldBuilder();
+
+  if (featureSpecs && featureSpecs.length > 0) {
+    for (const spec of featureSpecs) {
+      builder.addFeature(spec.name, spec.normalization || 'minmax', spec.nBins || 4, spec.params || {});
+    }
+  } else {
+    const firstRow = rows[0];
+    if (!firstRow || typeof firstRow !== 'object') {
+      throw new Error('rows must contain objects with named properties');
+    }
+    const numericKeys = Object.keys(firstRow)
+      .filter(k => typeof firstRow[k] === 'number')
+      .slice(0, 6);
+    for (const key of numericKeys) {
+      builder.addFeature(key, 'minmax', 4);
+    }
+    if (numericKeys.length === 0) {
+      throw new Error('no numeric columns found — provide featureSpecs or ensure row objects have numeric values');
+    }
+  }
+
+  const nCols = builder._features.length;
+  const data = rows.map(row => {
+    const vals = [];
+    for (let i = 0; i < nCols; i++) {
+      vals.push(row[builder._features[i].name] !== undefined ? row[builder._features[i].name] : 0);
+    }
+    return vals;
+  });
+
+  return builder.build(data);
 }
 
 function hashCode(str) {
@@ -213,4 +262,4 @@ function hashCode(str) {
   return hash;
 }
 
-module.exports = { World, WorldBuilder, CoinTossWorld, Normalizer, FeatureSpec };
+module.exports = { World, WorldBuilder, CoinTossWorld, Normalizer, FeatureSpec, buildWorldFromDataFrame };

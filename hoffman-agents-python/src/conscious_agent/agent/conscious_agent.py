@@ -39,6 +39,17 @@ class StepOutput:
 
 
 @dataclass
+class Prediction:
+    state_id: int
+    state_label: str
+    confidence: float
+    _top_k: list[dict] = field(default_factory=list)
+
+    def top_k(self, n: int) -> list[dict]:
+        return self._top_k[:max(0, n)]
+
+
+@dataclass
 class ConsciousAgent:
     agent_id: str
     experience: ExperienceSpace = field(default_factory=ExperienceSpace)
@@ -154,6 +165,36 @@ class ConsciousAgent:
 
     def inject_observation(self, world_state: WorldState) -> StepOutput:
         return self.step(world_state)
+
+    def predict_next(self) -> Prediction | None:
+        last_state_id = self.experience.last_world_state_id
+        if last_state_id is None:
+            return None
+
+        node = self.experience.trie.lookup([last_state_id])
+        if node is None or not node.children:
+            return None
+
+        children = [(sid, child.visit_count) for sid, child in node.children.items()]
+        total = sum(vc for _, vc in children)
+        if total == 0:
+            return None
+
+        children.sort(key=lambda x: x[1], reverse=True)
+        best_id, best_count = children[0]
+        confidence = best_count / total
+
+        top_k = [
+            {"state_id": sid, "state_label": str(sid), "confidence": c / total}
+            for sid, c in children
+        ]
+
+        return Prediction(
+            state_id=best_id,
+            state_label=str(best_id),
+            confidence=confidence,
+            _top_k=top_k,
+        )
 
     def get_output(self) -> list[str]:
         return list(self._last_output)

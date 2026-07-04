@@ -104,22 +104,46 @@ cloned = clone_agent(agent, "experiment_clone")
 ```python
 # Core classes
 from conscious_agent import ConsciousAgent, World, WorldBuilder
-from conscious_agent import SimpleWorld, ExperienceSpace
+from conscious_agent import SimpleWorld, ExperienceSpace, Prediction
 
 # World factories
-from conscious_agent.worlds import CoinTossWorld, build_world_from_dataframe
+from conscious_agent.worlds import CoinTossWorld, SelfWorld, Normalizer, FeatureSpec
+from conscious_agent import build_world_from_dataframe
 
 # IO
 from conscious_agent.io import save_agent, load_agent, clone_agent, load_latest
 
 # Multi-agent
-from conscious_agent import AgentNetwork, combine
+from conscious_agent import AgentNetwork, Topology, InteractionCycle, combine
 
 # Core components (for advanced use)
 from conscious_agent import (
-    TraceBuffer, TraceEvent, ExperienceTrie, MetaTrie,
-    SelfTokenState, ExperienceLexicon, strange_loop_score,
+    TraceBuffer, TraceEvent, ExperienceTrie, TrieNode,
+    MetaTrie, MetaStateSnapshot, SelfTokenState,
+    ExperienceLexicon, LexiconEntry,
 )
+
+# Utilities
+from conscious_agent import (
+    strange_loop_score, compute_self_reference_score,
+    population_reference_score, population_loop_score,
+    first_depth_n_generation,
+    prune, trace_distance, merge_similar_paths,
+    invent_token, is_invented_token,
+    SharedMeaningTracker,
+)
+
+# v2.1 — Predict next state
+agent.predict_next()                     # → Prediction object
+prediction.top_k(3)                      # top 3 alternatives with confidence
+
+# v2.1 — Config-driven construction
+ConsciousAgent.from_config("id", {"agent": {"self_token": {"lock_threshold": 0.3}}})
+
+# v2.1 — Topology introspection
+topology.get_connection_strength(0, 1)   # query connection weight
+topology.maybe_add_connection(0, 5)       # add link probabilistically
+topology.get_agent_observers(3)           # who observes agent 3?
 
 # v2.0 — Agent mode control
 agent.set_mode("frozen")        # 'learning', 'frozen', 'debug'
@@ -148,9 +172,15 @@ agent.set_allowable_tokens({"I", "notice"})  # constrain output
 
 # v2.0 — Composition
 combine(a1, a2, a3)             # n-ary combination (3+ agents)
+fuse(combined)                  # decompose back into constituents
 
 # v2.0 — TraceBuffer
 trace_buffer.resize(100)         # dynamic window resizing
+
+# v2.0 — Trie compression
+prune(trie, min_visits=5)        # remove nodes with < 5 visits
+trace_distance(path_a, path_b)   # edit distance with transition cost
+merge_similar_paths(trie, matrix, threshold=0.15)  # merge near-duplicate paths
 ```
 
 ## Self-Awareness

@@ -21,6 +21,20 @@ class StepOutput {
   }
 }
 
+class Prediction {
+  constructor({ stateId, stateLabel, confidence, topK } = {}) {
+    this.stateId = stateId;
+    this.stateLabel = stateLabel;
+    this.confidence = confidence;
+    this._topK = topK;
+  }
+
+  topK(n) {
+    if (!this._topK) return [];
+    return this._topK.slice(0, Math.max(0, n));
+  }
+}
+
 const MODES = { learning: 'learning', frozen: 'frozen', debug: 'debug' };
 
 class ConsciousAgent {
@@ -61,6 +75,23 @@ class ConsciousAgent {
     this._mode = MODES[mode] || 'learning';
     this._rng = rng || Math.random.bind(Math);
     this._allowableTokens = allowableTokens ? new Set(allowableTokens) : null;
+  }
+
+  static fromConfig(agentId, config = {}) {
+    const agentCfg = config.agent || {};
+    const stCfg = agentCfg.selfToken || {};
+    const { SelfTokenState } = require('../core/self-token');
+    const st = new SelfTokenState({
+      lockThreshold: stCfg.lockThreshold || 0.25,
+      lockConsecutiveRequired: stCfg.lockConsecutiveRequired || 3,
+    });
+    const exp = new ExperienceSpace({ selfToken: st });
+    return new ConsciousAgent({
+      agentId,
+      experience: exp,
+      metaObservationInterval: agentCfg.metaObservationInterval || 20,
+      expressionTemp: agentCfg.expressionTemp || 1.0,
+    });
   }
 
   setAllowableTokens(tokens) {
@@ -172,6 +203,34 @@ class ConsciousAgent {
     return this.step(worldState);
   }
 
+  predictNext() {
+    const lastStateId = this.experience.lastWorldStateId;
+    if (lastStateId == null) return null;
+
+    const node = this.experience.trie.lookup([lastStateId]);
+    if (!node || !node.children || Object.keys(node.children).length === 0) return null;
+
+    const children = Object.entries(node.children).map(([id, child]) => ({
+      stateId: parseInt(id),
+      visitCount: child.visitCount,
+    }));
+    const total = children.reduce((s, c) => s + c.visitCount, 0);
+    if (total === 0) return null;
+
+    children.sort((a, b) => b.visitCount - a.visitCount);
+    const best = children[0];
+    const confidence = best.visitCount / total;
+    const stateLabel = String(best.stateId);
+
+    const topK = children.map(c => ({
+      stateId: c.stateId,
+      stateLabel: String(c.stateId),
+      confidence: c.visitCount / total,
+    }));
+
+    return new Prediction({ stateId: best.stateId, stateLabel, confidence, topK });
+  }
+
   getOutput() { return [...this._lastOutput]; }
   setWorld(w) { this.world = w; }
 
@@ -222,4 +281,4 @@ class ConsciousAgent {
   }
 }
 
-module.exports = { ConsciousAgent, StepOutput };
+module.exports = { ConsciousAgent, StepOutput, Prediction };
