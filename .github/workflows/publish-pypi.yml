@@ -2,6 +2,17 @@ name: Publish to PyPI
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      version_bump:
+        description: 'Version bump type (patch/minor/major) — updates version before publishing'
+        required: false
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
 jobs:
   publish:
     runs-on: ubuntu-latest
