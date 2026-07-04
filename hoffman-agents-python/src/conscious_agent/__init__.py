@@ -13,23 +13,33 @@ Quick start:
     print(f'"I" locked: {agent.experience.self_token.locked}')
 """
 
-__version__ = "2.1.0"
+__version__ = "2.1.1"
 
-from .agent import ConsciousAgent, SimpleWorld, WorldState, StepOutput, ExperienceSpace
-from .world import World, WorldBuilder, SelfWorld, CoinTossWorld, build_world_from_dataframe
-from .network import AgentNetwork
+from .agent import ConsciousAgent, SimpleWorld, WorldState, EnvironmentState, sequence_to_state_id, StepOutput, Prediction, ExperienceSpace
+from .world import World, WorldBuilder, SelfWorld, CoinTossWorld, Normalizer, FeatureSpec, build_world_from_dataframe
+from .network import AgentNetwork, Topology, InteractionCycle, Connection
 from .combination import combine, trivial_agent, experience_space_distance, fuse
 from .io import serialize, deserialize, clone, clone_agent, fingerprint, save_agent, load_agent, load_latest
 from .core import (
     TraceBuffer,
     TraceEvent,
     ExperienceTrie,
+    TrieNode,
     MetaTrie,
+    MetaStateSnapshot,
     SelfTokenState,
     ExperienceLexicon,
     LexiconEntry,
     strange_loop_score,
     compute_self_reference_score,
+    population_reference_score,
+    population_loop_score,
+    first_depth_n_generation,
+    prune,
+    trace_distance,
+    merge_similar_paths,
+    invent_token,
+    is_invented_token,
 )
 from .meaning import SharedMeaningTracker
 
@@ -42,14 +52,22 @@ __all__ = [
     "ConsciousAgent",
     "SimpleWorld",
     "WorldState",
+    "EnvironmentState",
+    "sequence_to_state_id",
     "StepOutput",
+    "Prediction",
     "ExperienceSpace",
     "World",
     "WorldBuilder",
     "SelfWorld",
     "CoinTossWorld",
+    "Normalizer",
+    "FeatureSpec",
     "build_world_from_dataframe",
     "AgentNetwork",
+    "Topology",
+    "InteractionCycle",
+    "Connection",
     "combine",
     "trivial_agent",
     "experience_space_distance",
@@ -64,11 +82,21 @@ __all__ = [
     "TraceBuffer",
     "TraceEvent",
     "ExperienceTrie",
+    "TrieNode",
     "MetaTrie",
+    "MetaStateSnapshot",
     "SelfTokenState",
     "ExperienceLexicon",
     "LexiconEntry",
     "strange_loop_score",
     "compute_self_reference_score",
+    "population_reference_score",
+    "population_loop_score",
+    "first_depth_n_generation",
+    "prune",
+    "trace_distance",
+    "merge_similar_paths",
+    "invent_token",
+    "is_invented_token",
     "SharedMeaningTracker",
 ]

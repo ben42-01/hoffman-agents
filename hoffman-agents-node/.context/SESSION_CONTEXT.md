@@ -36,12 +36,13 @@ hoffman-agents-node/
 │   │   └── agent-network.js        # AgentNetwork, Topology, InteractionCycle
 │   ├── world/
 │   │   ├── index.js                # Re-exports
-│   │   └── world-builder.js        # WorldBuilder, World, CoinTossWorld
+│   │   ├── world-builder.js        # WorldBuilder, World, CoinTossWorld, Normalizer, FeatureSpec, buildWorldFromDataFrame
+│   │   └── self-world.js           # SelfWorld wrapper
 │   └── meaning/
 │       ├── index.js                # Re-exports
 │       └── shared-meaning.js       # SharedMeaningTracker
 ├── test/
-│   └── core.test.js                # 15 tests covering all modules
+│   └── core.test.js                # 47 tests covering all modules
 ├── examples/
 │   ├── 01_fitness_beats_truth/
 │   ├── 02_quantum_signature/
@@ -60,13 +61,17 @@ hoffman-agents-node/
 ## Quick Start
 
 ```javascript
-const { ConsciousAgent } = require('./src/index');
+const { ConsciousAgent, Prediction } = require('./src/index');
 const { CoinTossWorld } = require('./src/world');
 
 const world = new CoinTossWorld(4);
 const agent = new ConsciousAgent({ agentId: 'my_agent', world });
 const outputs = agent.run(1000);
 console.log(`"I" locked: ${agent.isILocked}`);
+
+// Predict next state (v2.1)
+const pred = agent.predictNext();
+if (pred) console.log(`Expecting ${pred.stateId} (conf: ${pred.confidence.toFixed(2)})`);
 ```
 
 ## Key Design Decisions
@@ -116,13 +121,29 @@ agent.step(ws) ───────→ perceive() → update TraceBuffer + Expe
 | `src/world/world-builder.js` | World construction from data |
 | `src/index.js` | Public API exports |
 
-## Public API
+## Public API (47 exports at top level)
 
 ```javascript
-const { ConsciousAgent, World, WorldBuilder } = require('./src/index');
-const { CoinTossWorld } = require('./src/world');
-const { saveAgent, loadAgent, cloneAgent } = require('./src/io');
-const { combine, AgentNetwork } = require('./src/index');
+// Core
+const { ConsciousAgent, StepOutput, Prediction, ExperienceSpace } = require('./src/index');
+const { World, WorldBuilder, CoinTossWorld, SelfWorld, Normalizer, FeatureSpec } = require('./src/index');
+const { buildWorldFromDataFrame } = require('./src/index');
+
+// Core internals
+const { TraceBuffer, TraceEvent, ExperienceTrie, TrieNode } = require('./src/index');
+const { MetaTrie, MetaStateSnapshot, SelfTokenState } = require('./src/index');
+const { ExperienceLexicon, LexiconEntry } = require('./src/index');
+
+// Network & combination
+const { AgentNetwork, Topology, InteractionCycle, combine, fuse } = require('./src/index');
+
+// IO
+const { serialize, deserialize, clone, fingerprint, cloneAgent } = require('./src/index');
+
+// Utilities
+const { prune, traceDistance, mergeSimilarPaths, inventToken, isInventedToken } = require('./src/index');
+const { strangeLoopScore, computeSelfReferenceScore, populationReferenceScore } = require('./src/index');
+const { SharedMeaningTracker } = require('./src/index');
 ```
 
 ## Examples
@@ -136,7 +157,16 @@ node examples/04_stop_lights/stop_lights.js     # http://localhost:8765
 
 ## Note
 
-This is a Node.js port of the Python `conscious-agent` library. The
-Python version has additional features (numpy/scipy for matrix ops).
-The Node.js version implements the same algorithms with stdlib-only
-Float64Array operations.
+This is a Node.js implementation of `conscious-agent` (Hoffman's Conscious
+Realism). The Python and Node versions are now **at full API parity** —
+all public classes, methods, and functions exist in both. The Python
+version uses numpy/scipy for matrix ops; the Node version uses stdlib-only
+Float64Array operations. Both have 40+ tests covering every module.
+
+**New in v2.1:**
+- `agent.predictNext()` / `Prediction` class — rich next-state prediction
+- `ConsciousAgent.fromConfig()` — config-driven agent construction
+- `buildWorldFromDataFrame()` — build world from array of row objects
+- `Topology` introspection: `getConnectionStrength`, `maybeAddConnection`, `getAgentObservers`
+- Seeded RNG for `CoinTossWorld` and `World` (reproducible experiments)
+- Full export coverage: `TrieNode`, `MetaStateSnapshot`, `prune`, `traceDistance`, `mergeSimilarPaths`, `populationReferenceScore`, `inventToken`, and more
