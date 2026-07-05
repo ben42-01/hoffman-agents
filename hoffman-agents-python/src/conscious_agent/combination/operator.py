@@ -37,7 +37,9 @@ def _binary_combine(agent1: ConsciousAgent, agent2: ConsciousAgent) -> Conscious
     leaf_ids_1 = agent1.leaf_constituent_ids or frozenset([agent1.agent_id])
     leaf_ids_2 = agent2.leaf_constituent_ids or frozenset([agent2.agent_id])
     leaf_constituent_ids = leaf_ids_1 | leaf_ids_2
-    constituent_ids = frozenset({agent1.agent_id, agent2.agent_id})
+    # Order matters: fuse() relies on constituent_ids[0]/[1] corresponding
+    # to agent1/agent2 respectively (mt1/mt2 are tagged in that order).
+    constituent_ids = (agent1.agent_id, agent2.agent_id)
 
     joint_mt = _build_joint_meta_trie(
         agent1.experience.meta_trie,
@@ -253,7 +255,7 @@ def fuse(agent: ConsciousAgent) -> list[ConsciousAgent]:
             agent_id=agent_id,
             experience=exp,
             generation=agent.generation,
-            constituent_ids=frozenset(),
+            constituent_ids=(),
             leaf_constituent_ids=frozenset(leaf_ids),
             cycle_level=max(0, agent.cycle_level - 1),
         )

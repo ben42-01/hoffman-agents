@@ -114,12 +114,13 @@ def decide(
     p_lexicon: float = 0.10,
     p_explore: float = 0.05,
     ergodic_state: OutputState | None = None,
+    rng: random.Random = random._inst,
 ) -> tuple[list[str], OutputState]:
     if not experience.self_token.is_locked():
         return (["wait"], "idle")
 
     state = ergodic_state if ergodic_state is not None else "core"
-    next_state_val = _next_state(state, p_stable, p_lexicon, p_explore)
+    next_state_val = _next_state(state, p_stable, p_lexicon, p_explore, rng)
 
     if next_state_val == "core":
         tokens = [experience.self_token.token, "notice"]
@@ -133,14 +134,14 @@ def decide(
             tokens.append("familiar")
 
     elif next_state_val == "lexicon":
-        label = _sample_lexicon_label(experience)
+        label = _sample_lexicon_label(experience, rng=rng)
         if label is not None:
             tokens = [experience.self_token.token, "notice", label]
         else:
             tokens = [experience.self_token.token, "notice", "familiar"]
 
     elif next_state_val == "explore":
-        token = random.choice(CORE_TOKENS)
+        token = rng.choice(CORE_TOKENS)
         tokens = [token]
 
     else:

@@ -403,3 +403,31 @@ def test_from_config():
     assert agent.experience.self_token.lock_consecutive_required == 5
     assert agent.meta_observation_interval == 10
     assert agent.expression_temp == 0.5
+
+
+def test_agent_rng_is_deterministic():
+    """Regression test: agent._rng must actually drive decision-time
+    randomness (decide()). Two agents seeded with identical rng streams,
+    fed identical world states, must produce identical output sequences.
+    Previously decide() silently used the global `random` module instead
+    of the agent's configured rng, making ConsciousAgent(rng=...) a no-op.
+    """
+    import random as _random
+
+    world_a = SimpleWorld(n_states=5, seed=42)
+    world_b = SimpleWorld(n_states=5, seed=42)
+
+    agent_a = ConsciousAgent(agent_id="rng_a")
+    agent_b = ConsciousAgent(agent_id="rng_b")
+    agent_a._rng = _random.Random(123)
+    agent_b._rng = _random.Random(123)
+
+    sequences_a = []
+    sequences_b = []
+    for _ in range(200):
+        out_a = agent_a.step(world_a.step())
+        out_b = agent_b.step(world_b.step())
+        sequences_a.append(out_a.sequence_str)
+        sequences_b.append(out_b.sequence_str)
+
+    assert sequences_a == sequences_b
