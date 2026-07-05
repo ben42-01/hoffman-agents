@@ -21,6 +21,7 @@ function serialize(agent, filePath) {
       metaTrie: serializeMetaTrie(agent.experience.metaTrie),
       selfToken: serializeSelfToken(agent.experience.selfToken),
       lexicon: agent.experience.lexicon.toDict(),
+      lastWorldStateId: agent.experience.lastWorldStateId,
     },
     config: {
       traceBufferLength: agent.experience.traceBuffer.maxlen,
@@ -53,6 +54,7 @@ function deserialize(filePath) {
     metaTrie: deserializeMetaTrie(comp.metaTrie || {}),
     selfToken: deserializeSelfToken(comp.selfToken || {}),
     lexicon: ExperienceLexicon.fromDict(comp.lexicon || { entries: [] }),
+    lastWorldStateId: comp.lastWorldStateId !== undefined ? comp.lastWorldStateId : null,
   });
 
   const meta = data.metadata || {};

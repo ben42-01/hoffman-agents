@@ -4,10 +4,10 @@ const CONSONANTS = 'bdfghjklmnprstvwxyz';
 const VOWELS = 'aeiou';
 const CORE_TOKENS = new Set(['I', 'notice', 'familiar', 'different', 'wait']);
 
-function inventToken() {
-  const c1 = CONSONANTS[Math.floor(Math.random() * CONSONANTS.length)];
-  const v = VOWELS[Math.floor(Math.random() * VOWELS.length)];
-  const c2 = CONSONANTS[Math.floor(Math.random() * CONSONANTS.length)];
+function inventToken(rng = Math.random) {
+  const c1 = CONSONANTS[Math.floor(rng() * CONSONANTS.length)];
+  const v = VOWELS[Math.floor(rng() * VOWELS.length)];
+  const c2 = CONSONANTS[Math.floor(rng() * CONSONANTS.length)];
   return `${c1}${v}${c2}`;
 }
 
