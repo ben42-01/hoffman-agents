@@ -41,7 +41,7 @@ function _decayLexicon(experience) {
   }
 }
 
-function perceive(world, experience, step = 0, metaObservationInterval = 20, frozen = false, ergodicState = 'idle') {
+function perceive(world, experience, step = 0, metaObservationInterval = 20, frozen = false, ergodicState = 'idle', rng = Math.random) {
   if (!world || Object.keys(world.sequences).length === 0) return experience;
 
   const worldStateId = world.getStateId();
@@ -71,67 +71,67 @@ function perceive(world, experience, step = 0, metaObservationInterval = 20, fro
     if (event.fromState >= 0) {
       experience.trie.insert([event.fromState, event.toState], predictionError);
     }
-  }
 
-  _decayLexicon(experience);
+    _decayLexicon(experience);
 
-  for (const [agentId, sequence] of Object.entries(world.sequences)) {
-    if (agentId === 'world') continue;
-    for (const token of sequence) {
-      if (!isInventedToken(token)) continue;
-      const existing = _lookupByOutputToken(experience, token);
-      if (existing) {
-        existing.encounterCount++;
-        existing.integrationDepth = Math.min(existing.integrationDepth + 0.05, 1);
-        experience.lexicon.updateIntegration(existing.label, true);
-      } else {
-        const sig = _buildTransitionSignature(experience.lastWorldStateId, worldStateId, experience.lexicon._embeddingDim);
-        const label = `adopted:${token}`;
-        const entry = experience.lexicon.bind(label, sig, {
-          predictionErrorPeak: predictionError,
-          source: 'adopted',
-          step,
-          outputToken: token,
-        });
-        entry.integrationDepth = 0.7;
-        entry.encounterCount = 1;
+    for (const [agentId, sequence] of Object.entries(world.sequences)) {
+      if (agentId === 'world') continue;
+      for (const token of sequence) {
+        if (!isInventedToken(token)) continue;
+        const existing = _lookupByOutputToken(experience, token);
+        if (existing) {
+          existing.encounterCount++;
+          existing.integrationDepth = Math.min(existing.integrationDepth + 0.05, 1);
+          experience.lexicon.updateIntegration(existing.label, true);
+        } else {
+          const sig = _buildTransitionSignature(experience.lastWorldStateId, worldStateId, experience.lexicon._embeddingDim);
+          const label = `adopted:${token}`;
+          const entry = experience.lexicon.bind(label, sig, {
+            predictionErrorPeak: predictionError,
+            source: 'adopted',
+            step,
+            outputToken: token,
+          });
+          entry.integrationDepth = 0.7;
+          entry.encounterCount = 1;
+        }
       }
     }
-  }
 
-  if (predictionError >= 0.3) {
-    const label = `p:${worldStateId.toString(16).padStart(8, '0')}`;
-    if (!experience.lexicon.lookupByLabel(label)) {
-      const sig = _buildTransitionSignature(experience.lastWorldStateId, worldStateId, experience.lexicon._embeddingDim);
-      const tok = inventToken();
-      const entry = experience.lexicon.bind(label, sig, {
-        predictionErrorPeak: predictionError,
-        source: 'proto',
-        step,
-        outputToken: tok,
-      });
-      entry.integrationDepth = 0.3;
-    }
-  }
-
-  if (!frozen && step > 0 && step % metaObservationInterval === 0) {
-    const metaId = experience.metaTrie.observeSelf(experience.traceBuffer, step, ergodicState, experience.selfToken.locked);
-    experience.selfToken.update(experience.metaTrie, step);
-  }
-
-  if (!frozen && step > 0 && step % (metaObservationInterval * 3) === 0) {
-    const recentErrors = experience.traceBuffer.predictionErrorMean(20);
-    if (recentErrors > 0.6) {
+    if (predictionError >= 0.3) {
       const label = `p:${worldStateId.toString(16).padStart(8, '0')}`;
       if (!experience.lexicon.lookupByLabel(label)) {
         const sig = _buildTransitionSignature(experience.lastWorldStateId, worldStateId, experience.lexicon._embeddingDim);
-        const tok = inventToken();
-        experience.lexicon.bind(label, sig, {
-          predictionErrorPeak: recentErrors,
+        const tok = inventToken(rng);
+        const entry = experience.lexicon.bind(label, sig, {
+          predictionErrorPeak: predictionError,
           source: 'proto',
           step,
           outputToken: tok,
         });
+        entry.integrationDepth = 0.3;
+      }
+    }
+
+    if (step > 0 && step % metaObservationInterval === 0) {
+      const metaId = experience.metaTrie.observeSelf(experience.traceBuffer, step, ergodicState, experience.selfToken.locked);
+      experience.selfToken.update(experience.metaTrie, step);
+    }
+
+    if (step > 0 && step % (metaObservationInterval * 3) === 0) {
+      const recentErrors = experience.traceBuffer.predictionErrorMean(20);
+      if (recentErrors > 0.6) {
+        const label = `p:${worldStateId.toString(16).padStart(8, '0')}`;
+        if (!experience.lexicon.lookupByLabel(label)) {
+          const sig = _buildTransitionSignature(experience.lastWorldStateId, worldStateId, experience.lexicon._embeddingDim);
+          const tok = inventToken(rng);
+          experience.lexicon.bind(label, sig, {
+            predictionErrorPeak: recentErrors,
+            source: 'proto',
+            step,
+            outputToken: tok,
+          });
+        }
       }
     }
   }

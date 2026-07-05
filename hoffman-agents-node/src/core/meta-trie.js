@@ -27,7 +27,10 @@ class MetaTrie {
     const coarseStates = stateIds.slice(-2).map(id => id % 8);
     const data = JSON.stringify([coarseStates, errorBucket, ergodicState || 'idle', !!isLocked]);
     const hash = crypto.createHash('sha256').update(data).digest();
-    return hash.readUInt32BE(0);
+    // Mask to 28 bits, reserving the top 4 bits (0x10000000/0x20000000) for
+    // combine()/fuse()'s constituent-tagging scheme so tagged ids never
+    // collide with naturally-occurring high bits in the hash output.
+    return hash.readUInt32BE(0) & 0x0FFFFFFF;
   }
 
   observeSelf(traceBuffer, timestamp = 0, ergodicState = 'idle', isLocked = false) {

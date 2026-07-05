@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import random
+
 import numpy as np
 
 from ..core import TraceEvent, TraceBuffer, ExperienceLexicon, LexiconEntry, invent_token, is_invented_token
@@ -14,6 +16,7 @@ def perceive(
     meta_observation_interval: int = 20,
     frozen: bool = False,
     ergodic_state: str = "idle",
+    rng: random.Random = random._inst,
 ) -> ExperienceSpace:
     if not world:
         return experience
@@ -47,7 +50,7 @@ def perceive(
         if event.from_state >= 0:
             experience.trie.insert([event.from_state, event.to_state], prediction_error)
 
-        _update_lexicon(experience, world, world_state_id, prediction_error, step)
+        _update_lexicon(experience, world, world_state_id, prediction_error, step, rng)
 
         if step > 0 and step % meta_observation_interval == 0:
             meta_id = experience.meta_trie.observe_self(
@@ -57,7 +60,7 @@ def perceive(
             experience.self_token.update(experience.meta_trie, generation=step)
 
         if step > 0 and step % (meta_observation_interval * 3) == 0:
-            _check_bind_proto_word(experience, world_state_id, step)
+            _check_bind_proto_word(experience, world_state_id, step, rng)
 
     experience.last_world_state_id = world_state_id
     return experience
@@ -78,6 +81,7 @@ def _update_lexicon(
     world_state_id: int,
     prediction_error: float,
     step: int,
+    rng: random.Random = random._inst,
 ) -> None:
     _decay_lexicon(experience)
 
@@ -122,7 +126,7 @@ def _update_lexicon(
         experience.lexicon.embedding_dim,
     )
 
-    output_token = invent_token()
+    output_token = invent_token(rng)
     entry = experience.lexicon.bind(
         label=label,
         output_token=output_token,
@@ -170,6 +174,7 @@ def _check_bind_proto_word(
     experience: ExperienceSpace,
     world_state_id: int,
     step: int,
+    rng: random.Random = random._inst,
 ) -> None:
     recent_errors = experience.trace_buffer.prediction_error_mean(window=20)
     if recent_errors > 0.6:
@@ -182,7 +187,7 @@ def _check_bind_proto_word(
             experience.lexicon.embedding_dim,
         )
 
-        output_token = invent_token()
+        output_token = invent_token(rng)
         experience.lexicon.bind(
             label=label,
             output_token=output_token,

@@ -181,6 +181,7 @@ def serialize(agent: ConsciousAgent, path: str) -> None:
             "meta_trie": _serialize_meta_trie(agent.experience.meta_trie),
             "self_token": _serialize_self_token(agent.experience.self_token),
             "lexicon": agent.experience.lexicon.to_dict(),
+            "last_world_state_id": agent.experience.last_world_state_id,
         },
         "config": {
             "trace_buffer_length": agent.experience.trace_buffer.maxlen,
@@ -192,7 +193,7 @@ def serialize(agent: ConsciousAgent, path: str) -> None:
         },
         "metadata": {
             "cycle_level": agent.cycle_level,
-            "constituent_ids": sorted(agent.constituent_ids),
+            "constituent_ids": list(agent.constituent_ids),
             "leaf_constituent_ids": sorted(agent.leaf_constituent_ids),
             "combined": agent._combined,
         },
@@ -216,6 +217,7 @@ def deserialize(path: str) -> ConsciousAgent:
         meta_trie=_deserialize_meta_trie(comp.get("meta_trie", {})),
         self_token=_deserialize_self_token(comp.get("self_token", {})),
         lexicon=ExperienceLexicon.from_dict(comp.get("lexicon", {"entries": []})),
+        last_world_state_id=comp.get("last_world_state_id"),
     )
 
     meta = state.get("metadata", {})
@@ -225,7 +227,7 @@ def deserialize(path: str) -> ConsciousAgent:
         generation=state.get("generation", 0),
         step_count=state.get("step", 0),
         meta_observation_interval=state.get("config", {}).get("meta_observation_interval", 20),
-        constituent_ids=frozenset(meta.get("constituent_ids", [])),
+        constituent_ids=tuple(meta.get("constituent_ids", [])),
         leaf_constituent_ids=frozenset(meta.get("leaf_constituent_ids", [])),
         cycle_level=meta.get("cycle_level", 0),
     )

@@ -57,7 +57,7 @@ class ConsciousAgent:
     generation: int = 0
     step_count: int = 0
     meta_observation_interval: int = 20
-    constituent_ids: frozenset[str] = field(default_factory=frozenset)
+    constituent_ids: tuple[str, ...] = field(default_factory=tuple)
     leaf_constituent_ids: frozenset[str] = field(default_factory=frozenset)
     cycle_level: int = 0
     expression_temp: float = 1.0
@@ -105,6 +105,7 @@ class ConsciousAgent:
                 meta_observation_interval=self.meta_observation_interval,
                 frozen=is_frozen,
                 ergodic_state=self._ergodic_state,
+                rng=self._rng,
             )
 
         p_stable = 1.0 if is_frozen else self.p_stable
@@ -117,6 +118,7 @@ class ConsciousAgent:
             p_lexicon=p_lexicon,
             p_explore=p_explore,
             ergodic_state=self._ergodic_state,
+            rng=self._rng,
         )
 
         if self._allowable_tokens is not None:

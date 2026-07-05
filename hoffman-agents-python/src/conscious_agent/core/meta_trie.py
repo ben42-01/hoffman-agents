@@ -44,7 +44,10 @@ class MetaTrie:
         coarse_states = tuple(sid % 8 for sid in state_ids[-2:])
         data = str((coarse_states, error_bucket, ergodic_state, is_locked))
         hash_bytes = hashlib.sha256(data.encode()).digest()
-        return int.from_bytes(hash_bytes[:8], "big")
+        # Mask to 28 bits, reserving the top 4 bits (0x10000000/0x20000000)
+        # for combine()/fuse()'s constituent-tagging scheme so tagged ids
+        # never collide with naturally-occurring high bits in the hash.
+        return int.from_bytes(hash_bytes[:8], "big") & 0x0FFFFFFF
 
     def observe_self(
         self,

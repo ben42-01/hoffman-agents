@@ -160,6 +160,21 @@ describe('Agent', () => {
     assert.equal(agent.experience.trie.size(), sizeBefore);
   });
 
+  it('ConsciousAgent frozen mode also freezes lexicon (regression)', () => {
+    // Regression: frozen mode previously still decayed/adopted/invented
+    // lexicon entries even though trie/meta updates were correctly frozen.
+    const agent = new ConsciousAgent({ agentId: 'frozen_lexicon_test' });
+    const world = new SimpleWorld({ nStates: 5, seed: 42 });
+    // Train briefly to populate the lexicon a bit
+    for (let i = 0; i < 60; i++) agent.step(world.step());
+    agent.setMode('frozen');
+    const vocabBefore = agent.experience.lexicon.vocabularySize();
+    const entryCountBefore = agent.experience.lexicon._entries.size;
+    for (let i = 0; i < 60; i++) agent.step(world.step());
+    assert.equal(agent.experience.lexicon.vocabularySize(), vocabBefore);
+    assert.equal(agent.experience.lexicon._entries.size, entryCountBefore);
+  });
+
   it('ConsciousAgent setMode invalid', () => {
     const agent = new ConsciousAgent({ agentId: 'bad_mode' });
     assert.throws(() => agent.setMode('invalid'), /Invalid mode/);
@@ -216,6 +231,28 @@ describe('Agent', () => {
     assert.equal(p.confidence, 0.7);
     assert.equal(p.topK(1).length, 1);
     assert.equal(p.topK(10).length, 2);
+  });
+
+  it('ConsciousAgent rng is deterministic (decide + perceive)', () => {
+    // Regression test: agent._rng must actually drive decision-time AND
+    // perception-time randomness (decide() + invent_token in perceive()).
+    // Previously both silently used Math.random()/global random instead
+    // of the agent's configured rng, making ConsciousAgent({ rng }) a no-op.
+    function seedRandom(seed) {
+      let s = seed;
+      return () => { s = (s * 1664525 + 1013904223) & 0x7FFFFFFF; return s / 0x7FFFFFFF; };
+    }
+    const worldA = new SimpleWorld({ nStates: 5, seed: 42 });
+    const worldB = new SimpleWorld({ nStates: 5, seed: 42 });
+    const agentA = new ConsciousAgent({ agentId: 'rng_a', rng: seedRandom(123) });
+    const agentB = new ConsciousAgent({ agentId: 'rng_b', rng: seedRandom(123) });
+
+    const seqA = [], seqB = [];
+    for (let i = 0; i < 200; i++) {
+      seqA.push(agentA.step(worldA.step()).sequenceStr);
+      seqB.push(agentB.step(worldB.step()).sequenceStr);
+    }
+    assert.deepEqual(seqA, seqB);
   });
 
   it('ConsciousAgent.predictNext returns null with no experience', () => {

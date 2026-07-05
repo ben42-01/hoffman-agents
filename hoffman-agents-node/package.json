@@ -1,9 +1,15 @@
 {
   "name": "conscious-agent",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Self-referential structure-learning system — agents that learn by inhabiting worlds",
   "main": "src/index.js",
-  "files": ["src/", "docs/", "examples/", "test/" , ".context/"],
+  "files": [
+    "src/",
+    "docs/",
+    "examples/",
+    "test/",
+    ".context/"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/ben42-01/hoffman-agents.git",
@@ -19,9 +25,12 @@
     "examples:qs": "node examples/02_quantum_signature/quantum_signature.js",
     "examples:weather": "node examples/03_weather_benchmark/weather_benchmark.js",
     "examples:trafficLights": "node examples/04_stop_lights/stop_lights.js",
-    "examples:selfRefAblation":"node examples/05_self_ref_ablation/self_ref_ablation.js",
-    "build:dryRun":"npm pack --dry-run",
-    "build:pack":"npm pack --pack-destination ../.dist",
+    "examples:selfRefAblation": "node examples/05_self_ref_ablation/self_ref_ablation.js",
+    "examples:exchangeSymmetry": "node examples/07_exchange_symmetry/exchange_symmetry.js",
+    "examples:observerGatedCombination": "node examples/08_observer_gated_combination/observer_gated_combination.js",
+    "examples:doubleSlitAnalogy": "node examples/09_double_slit_analogy/double_slit_analogy.js",
+    "build:dryRun": "npm pack --dry-run",
+    "build:pack": "npm pack --pack-destination ../.dist",
     "test": "node test/core.test.js"
   },
   "license": "MIT",
