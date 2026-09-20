@@ -1,8 +1,11 @@
 const crypto = require('crypto');
 const { ExperienceSpace } = require('./experience-space');
 const { perceive } = require('./perceptual-map');
-const { decide, CORE_TOKENS } = require('./decision-map');
+const { decide, buildDecisionKernel, CORE_TOKENS, DEFAULT_LEXICON_ROW } = require('./decision-map');
 const { computeSelfReferenceScore } = require('../core/strange-loop');
+const { mulberry32 } = require('../math/rng');
+const markov = require('../math/markov');
+const { MarkovKernel, StochasticMatrix } = require('../kernels/markov-kernel');
 
 class StepOutput {
   constructor({ step, generation, state, stateLabel, predictionError, sequence, sequenceStr, loopDepth, iLocked, iStability, interrupt, actionDistribution }) {
@@ -54,7 +57,10 @@ class ConsciousAgent {
     pExplore = 0.05,
     mode = 'learning',
     rng = null,
+    seed = null,
     allowableTokens = null,
+    mathVersion = null,
+    lexiconRow = DEFAULT_LEXICON_ROW,
   } = {}) {
     this.agentId = agentId || `CA_${crypto.randomBytes(4).toString('hex')}`;
     this.experience = experience;
@@ -73,24 +79,41 @@ class ConsciousAgent {
     this._lastOutput = ['wait'];
     this._combined = false;
     this._mode = MODES[mode] || 'learning';
-    this._rng = rng || Math.random.bind(Math);
+    this.seed = seed;
+    this._rng = rng || (seed !== null && seed !== undefined ? mulberry32(seed) : Math.random.bind(Math));
     this._allowableTokens = allowableTokens ? new Set(allowableTokens) : null;
+    this.lexiconRow = [...lexiconRow];
+    // Kept for fuse(): parameters and provenance of the agents this one was combined from.
+    this.combinationPrior = null;
+    if (mathVersion) this.experience.setMathVersion(mathVersion);
+    if (this.mathVersion !== 'legacy') this.decisionKernel; // validate p-parameters early
+  }
+
+  get mathVersion() { return this.experience.mathVersion; }
+  setMathVersion(v) { this.experience.setMathVersion(v); }
+
+  // The decision kernel D over ['core', 'lexicon', 'explore', 'idle'].
+  get decisionKernel() {
+    return buildDecisionKernel({ pStable: this.pStable, pLexicon: this.pLexicon, pExplore: this.pExplore, lexiconRow: this.lexiconRow });
   }
 
   static fromConfig(agentId, config = {}) {
     const agentCfg = config.agent || {};
     const stCfg = agentCfg.selfToken || {};
     const { SelfTokenState } = require('../core/self-token');
-    const st = new SelfTokenState({
-      lockThreshold: stCfg.lockThreshold || 0.25,
-      lockConsecutiveRequired: stCfg.lockConsecutiveRequired || 3,
-    });
+    const st = new SelfTokenState(SelfTokenState.lockOptions(stCfg));
     const exp = new ExperienceSpace({ selfToken: st });
     return new ConsciousAgent({
       agentId,
       experience: exp,
-      metaObservationInterval: agentCfg.metaObservationInterval || 20,
-      expressionTemp: agentCfg.expressionTemp || 1.0,
+      metaObservationInterval: agentCfg.metaObservationInterval ?? 20,
+      expressionTemp: agentCfg.expressionTemp ?? 1.0,
+      pStable: agentCfg.pStable ?? 0.8,
+      pLexicon: agentCfg.pLexicon ?? 0.1,
+      pExplore: agentCfg.pExplore ?? 0.05,
+      lexiconRow: agentCfg.lexiconRow ?? DEFAULT_LEXICON_ROW,
+      seed: agentCfg.seed ?? null,
+      mathVersion: agentCfg.mathVersion ?? 'v3',
     });
   }
 
@@ -127,7 +150,8 @@ class ConsciousAgent {
         this.metaObservationInterval,
         isFrozen,
         this._ergodicState,
-        this._rng
+        this._rng,
+        this.generation
       );
     }
 
@@ -141,6 +165,7 @@ class ConsciousAgent {
       pExplore,
       ergodicState: this._ergodicState,
       rng: this._rng,
+      lexiconRow: this.lexiconRow,
     });
     this._ergodicState = nextState;
 
@@ -171,8 +196,8 @@ class ConsciousAgent {
     const stepOutput = new StepOutput({
       step: this.stepCount,
       generation: this.generation,
-      state: this.experience.lastWorldStateId || -1,
-      stateLabel: String(this.experience.lastWorldStateId || '?'),
+      state: this.experience.lastWorldStateId ?? -1,
+      stateLabel: String(this.experience.lastWorldStateId ?? '?'),
       predictionError: this.experience.traceBuffer.predictionErrorMean(5),
       sequence: [...output],
       sequenceStr: output.join(' '),
@@ -180,6 +205,7 @@ class ConsciousAgent {
       iLocked: this.experience.selfToken.locked,
       iStability: this.experience.selfToken.stationaryVariance(),
       actionDistribution,
+      interrupt: this.experience.selfToken.consumeEvent ? this.experience.selfToken.consumeEvent() : null,
     });
 
     if (this._mode === MODES.debug) {
@@ -232,6 +258,54 @@ class ConsciousAgent {
     return new Prediction({ stateId: best.stateId, stateLabel, confidence, topK });
   }
 
+  // Ergodic analysis of the agent's two chains: the decision kernel D (exact)
+  // and the empirical meta-state chain M that the "I" attractor is defined on.
+  ergodicStats() {
+    const meta = this.experience.metaTrie.ergodicDiagnostics();
+    const st = this.experience.selfToken;
+    return {
+      mathVersion: this.mathVersion,
+      decision: this.decisionKernel.diagnostics(),
+      meta,
+      lock: {
+        locked: st.locked,
+        referent: st.referentMetaStateId,
+        criteria: st.lockCriteria && meta.classSize > 0 ? st.lockCriteria(meta).checks : null,
+        history: st.lockHistory ? [...st.lockHistory] : [],
+      },
+      combinationPrior: this.combinationPrior,
+    };
+  }
+
+  // Export the agent's learned dynamics as explicit kernels, in the vocabulary
+  // of Hoffman & Prakash's (X, G, P, D, A, N):
+  //   X - experience states: meta-states of the recurrent class
+  //   P - perception: empirical world-state transition kernel (experience trie)
+  //   M - the empirical meta-state kernel on X
+  //   D - decision kernel over output modes
+  //   A - action: meta-state -> emitted token distribution
+  //   N - step counter
+  toFormal() {
+    const meta = this.experience.metaTrie.ergodicDiagnostics();
+    const { ids: metaIds, counts: metaCounts } = this.experience.metaTrie.transitionCounts();
+    const pos = new Map(metaIds.map((id, i) => [id, i]));
+    const classIdx = meta.states.map(s => pos.get(s));
+    const M = meta.classSize > 0
+      ? new MarkovKernel({ states: meta.states, matrix: markov.normalizeRows(markov.subMatrix(metaCounts, classIdx)).P })
+      : null;
+
+    const P = worldKernel(this.experience.trie);
+
+    const registry = this.experience.metaTrie._tokenRegistry;
+    const rows = [...registry.keys()].filter(id => registry.get(id).size > 0).sort((a, b) => a - b);
+    const cols = [...new Set(rows.flatMap(id => [...registry.get(id).keys()]))].sort();
+    const A = rows.length > 0
+      ? StochasticMatrix.fromCounts({ rows, cols, counts: rows.map(id => cols.map(t => registry.get(id).get(t) || 0)) })
+      : null;
+
+    return { X: meta.states, G: cols, P, M, D: this.decisionKernel, A, N: this.stepCount, diagnostics: meta };
+  }
+
   getOutput() { return [...this._lastOutput]; }
   setWorld(w) { this.world = w; }
 
@@ -282,4 +356,27 @@ class ConsciousAgent {
   }
 }
 
-module.exports = { ConsciousAgent, StepOutput, Prediction };
+// Empirical Markov kernel of world-state transitions (depth-2 trie counts),
+// restricted to states whose outgoing transitions have been observed.
+function worldKernel(trie) {
+  const ids = new Set();
+  const edges = [];
+  for (const [fromStr, node] of Object.entries(trie.root.children)) {
+    for (const [toStr, child] of Object.entries(node.children)) {
+      if (child.visitCount <= 0) continue;
+      const from = parseInt(fromStr), to = parseInt(toStr);
+      edges.push([from, to, child.visitCount]);
+      ids.add(from); ids.add(to);
+    }
+  }
+  if (edges.length === 0) return null;
+  const sorted = [...ids].sort((a, b) => a - b);
+  const idx = new Map(sorted.map((id, i) => [id, i]));
+  const counts = markov.zeros(sorted.length);
+  for (const [f, t, c] of edges) counts[idx.get(f)][idx.get(t)] += c;
+  const kept = markov.pruneUnobservedRows(counts);
+  if (kept.length === 0) return null;
+  return new MarkovKernel({ states: kept.map(i => sorted[i]), matrix: markov.normalizeRows(markov.subMatrix(counts, kept)).P });
+}
+
+module.exports = { ConsciousAgent, StepOutput, Prediction, worldKernel };

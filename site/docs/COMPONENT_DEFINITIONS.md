@@ -134,17 +134,21 @@ Structurally identical to the Experience Trie (Component 2) but:
 - The hash maps this snapshot to a unique integer meta-state ID
 - A dictionary maps each meta-state ID back to the snapshot it was computed from
 
-**How it constructs meta-states:**
+**How it constructs meta-states (v3):**
 ```
 Every N steps (default: N=20, the meta-observation interval):
 
 1. Take current trace buffer
-2. Extract last K=10 state IDs and mean prediction error
-3. Compute meta_state_id = hash((state_id_1, ..., state_id_K, mean_pred_error_rounded_to_2dp))
-4. Record transition: (previous_meta_state_id → current_meta_state_id)
-5. Insert this transition into the meta-trie
+2. Coarse snapshot: last two state IDs mod 8, error bucket of the mean prediction
+   error over the last K=10 steps, and the agent's current output mode
+3. meta_state_id = FNV-1a32(JSON(snapshot)) & 0x0FFFFFFF
+4. Record transition: (previous_meta_state_id → current_meta_state_id),
+   INCLUDING self-transitions (dwell time in an attractor)
+5. Append the id to the meta-state history
 6. Store the snapshot in the meta-state registry
 ```
+The lock flag is not part of the id (2.x hashed it in, splitting the chain at lock
+time). See `MATHEMATICAL_MODEL.md` §3.
 
 **Key operations:**
 Same as Experience Trie, plus:
@@ -157,11 +161,21 @@ observe_self(trace_buffer: TraceBuffer) → int
 get_meta_state_snapshot(meta_state_id: int) → dict
     Return the trace buffer snapshot that generated this meta-state.
 
+transition_counts() → (ids, counts)
+    Count matrix N(m → m') over native (non-inherited) meta-states.
+
+ergodic_diagnostics() → dict
+    1. Prune states whose outgoing transitions were never observed (repeatedly)
+       — never treat an unknown row as absorbing.
+    2. Find communicating classes; select the closed (recurrent) class the agent
+       most recently occupied.
+    3. On that irreducible class: stationary distribution π (lazy-chain power
+       iteration, linear-solve fallback), period, |λ₂|, relaxation and mixing
+       time, entropy, KL(π‖uniform), dominant state, dominance = π_max − 1/n,
+       occupancy of recent history.
+
 stationary_distribution() → dict[int, float]
-    Compute the stationary distribution over meta-states.
-    Uses the visit counts to build a transition probability matrix.
-    Solves π = πP for the stationary distribution π.
-    Returns dict mapping meta_state_id to stationary probability.
+    π on the recurrent class (the "pi" of ergodic_diagnostics()).
 
 dominant_meta_state() → int
     Return the meta_state_id with highest stationary probability.
@@ -185,33 +199,46 @@ token: str = "I"
     Pre-assigned before any vocabulary binding begins.
 
 referent_meta_state_id: int | None
-    The meta-state ID this token is bound to.
-    None until "I" locks.
+    The meta-state ID this token is bound to. None while unlocked.
 
 stationary_prob: float
-    Current stationary probability of the referent meta-state.
-    Rises over time as the meta-trie densifies.
+    Stationary probability of the dominant meta-state of the recurrent class.
 
 locked: bool
-    True once the "I" attractor has stabilized.
-    Once True, never set back to False.
+    True while the "I" attractor is established. Can unlock (hysteresis).
 
 lock_generation: int | None
-    The generation at which locking occurred.
-    None until locked.
+    The generation at which the most recent lock occurred.
 
-lock_threshold: float = 0.25
-    The stationary probability above which locking can occur.
+min_transitions: int = 20
+min_transitions_per_state: float = 2
+    Evidence: transitions required inside the recurrent class, in total and per state.
 
-consecutive_above_threshold: int = 0
-    How many consecutive generations has stationary_prob been above threshold.
-    Must reach lock_consecutive_required before locking.
+lock_margin: float = 0.15
+    Dominance required: π_max − 1/n (uniform baseline on the class).
+
+kl_threshold: float | None = None
+    Optional alternative concentration test on normalised KL(π‖uniform).
+
+min_occupancy: float = 0.6
+    Fraction of recent self-observations that must lie in the recurrent class.
 
 lock_consecutive_required: int = 3
-    Generations above threshold required before locking.
+    Consecutive observations meeting all criteria before locking.
+
+unlock_margin: float = 0.05
+unlock_consecutive_required: int = 3
+    Hysteresis: unlock after this many observations below unlock_margin
+    (or occupancy < min_occupancy / 2), only while evidence holds.
+
+lock_history: list[dict]
+    lock / unlock events {event, generation, referent, stationary_prob}.
 
 stability_history: list[float]
     Last 20 stationary_prob values. Used to compute stability score.
+
+lock_threshold: float = 0.25
+    2.x rule (π_max > threshold). Used only with math_version="legacy".
 
 protection_radius: int = 2
     Nodes in the meta-trie within this depth of referent_meta_state_id
@@ -221,27 +248,26 @@ protection_radius: int = 2
 **Key operations:**
 ```
 update(meta_trie: MetaTrie, generation: int) → None
-    1. Recompute stationary distribution of meta_trie
-    2. Get dominant_meta_state and its stationary_prob
-    3. Update self.stationary_prob
-    4. Append to stability_history
-    5. If not locked:
-       If stationary_prob > lock_threshold:
-           increment consecutive_above_threshold
-           if consecutive_above_threshold >= lock_consecutive_required:
-               lock() — set locked=True, lock_generation=generation,
-                        referent_meta_state_id=dominant_meta_state
-       Else:
-           reset consecutive_above_threshold to 0
-    6. If locked:
-       Verify referent is still dominant (may drift slightly)
-       Update stability_score
+    d = meta_trie.ergodic_diagnostics()
+    If not locked:
+        If lock_criteria(d) all hold — evidence, ergodic (converged and aperiodic),
+        dominance, occupancy, stable dominant state:
+            increment consecutive_above_threshold
+            if it reaches lock_consecutive_required: lock onto d.dominant
+        Else: reset the counter
+    If locked:
+        If evidence holds and (dominance < unlock_margin or occupancy too low):
+            increment consecutive_below_threshold; unlock when it reaches
+            unlock_consecutive_required
+        Else: follow the dominant state as referent
+    Lock/unlock events are recorded and surfaced once via StepOutput.interrupt.
 
+lock_criteria(d) → {met, checks}
 is_locked() → bool
 
 stability_score() → float
-    Standard deviation of last 20 stationary_prob values, inverted.
-    High = stable. Low = still drifting.
+    1 − standard deviation of the last 20 stationary_prob values.
+    (stationary_variance() is a deprecated alias.)
 
 protected_nodes(meta_trie: MetaTrie) → set[int]
     Return all meta-state IDs within protection_radius of referent.
@@ -611,40 +637,21 @@ def json_to_array(s: str, dtype=np.float32, shape=None) -> np.ndarray:
 ```
 
 **The stationary distribution computation in Component 3:**
+
+The full specification (pruning of unobserved rows, recurrent-class selection, lazy-chain
+power iteration, period and mixing estimates, and the lock criteria built on them) is in
+`MATHEMATICAL_MODEL.md` §4–§5. In short:
+
 ```python
-def stationary_distribution(meta_trie) -> dict[int, float]:
-    # Build transition matrix from meta-trie visit counts
-    meta_states = list(all_meta_state_ids(meta_trie))
-    n = len(meta_states)
-    if n == 0: return {}
-    idx = {s: i for i, s in enumerate(meta_states)}
-    
-    P = np.zeros((n, n))
-    for state_id in meta_states:
-        node = meta_trie.lookup([state_id])
-        if node and node.children:
-            total = sum(c.visit_count for c in node.children.values())
-            for child_state, child_node in node.children.items():
-                if child_state in idx:
-                    P[idx[state_id], idx[child_state]] = child_node.visit_count / total
-    
-    # Handle rows that sum to zero (absorbing states)
-    for i in range(n):
-        if P[i].sum() == 0:
-            P[i, i] = 1.0  # self-loop
-    
-    # Power iteration to find stationary distribution
-    pi = np.ones(n) / n
-    for _ in range(1000):
-        pi_new = pi @ P
-        if np.max(np.abs(pi_new - pi)) < 1e-8:
-            break
-        pi = pi_new
-    
-    return {meta_states[i]: float(pi[i]) for i in range(n)}
+ids, C = meta_trie.transition_counts()          # N(m -> m'), self-loops included
+kept = prune_unobserved_rows(C)                 # never make an unknown row absorbing
+R = closed class containing the most recent meta-state
+P = normalize_rows(C[R, R])
+pi = stationary(P)                              # power iteration on (P + I) / 2
 ```
 
----
+The 2.x version (unobserved rows as self-loops, plain power iteration) is kept only for
+`math_version="legacy"`.
 
 ---
 

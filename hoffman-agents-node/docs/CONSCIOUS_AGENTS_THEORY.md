@@ -3,17 +3,26 @@
 
 ---
 
-> "Spacetime is not the ground of reality.  
-> It is the interface that conscious agents evolved to perceive.  
-> The ground is agents all the way down."
+> Spacetime is not the ground of reality. It is the interface that conscious
+> agents evolved to perceive; the ground is agents all the way down.
 >
-> — Donald Hoffman, *Objects of Consciousness*, 2014
+> — a paraphrase of the conscious-realism thesis (Hoffman & Prakash, *Objects of Consciousness*, 2014)
+
+---
+
+> **Status of this document.** This is the project's founding design document, written before
+> the implementation. Its predictions (emergent metric structure, a "Planck scale", Minkowski
+> spacetime) are *hypotheses*, not results. What has actually been implemented and measured is
+> in [MATHEMATICAL_MODEL.md](MATHEMATICAL_MODEL.md), [Q_AND_A.md](Q_AND_A.md) (Results and
+> Corrections) and the examples, especially 13 (Bell test through the headset) and 14
+> (spacetime in the headset). References to the "Soul project" and the "original experiments"
+> describe earlier private work that is not part of this repository.
 
 ---
 
 ## Preface
 
-This document is a theoretical framework for the first computational implementation of Hoffman's Conscious Realism. It is not a summary of Hoffman's papers. It is an attempt to take his mathematics seriously — to ask what it actually requires of a computational system — and to identify where existing tools from the Soul project provide exactly the right structures, and where genuinely new mathematics is needed.
+This document is a theoretical framework for a computational implementation of Hoffman's Conscious Realism. It is not a summary of Hoffman's papers. It is an attempt to take his mathematics seriously — to ask what it actually requires of a computational system — and to identify where existing tools from the Soul project provide exactly the right structures, and where genuinely new mathematics is needed.
 
 The framework makes one central bet: **the experience space X of a conscious agent is not a vector, not a token, and not a probability distribution. It is a trace — a structured, self-referential record of an agent's history of interactions with other agents.** Everything else follows from this.
 
@@ -28,7 +37,7 @@ If the bet is wrong, the experiments will show it. If the bet is right, somethin
 Hoffman defines a conscious agent formally as a six-tuple:
 
 ```
-CA = (X, G, P, W, A, D)
+CA = (X, G, P, D, A, N)      acting on a world W
 ```
 
 Where:
@@ -39,11 +48,15 @@ Where:
 
 **W** is the **world space** — the set of all possible world states. Crucially, in Hoffman's framework W is not a fixed external reality. It is *another agent's experience space* or a combination of other agents' experience spaces. There is no agent-independent world.
 
-**P: W × X → X** is the **perceptual map** — a function that takes the current world state and the agent's current experience and produces the agent's next experience. This is how the world affects the agent. Note: the agent never directly observes W. It only ever observes its own experience X. P is the interface.
+**P: W × X → Δ(X)** is the **perception kernel**: given the current world state and the agent's current experience, a probability distribution over its next experience. This is how the world affects the agent. The agent never directly observes W; it only ever has its own experience X. P is the interface.
 
-**A: X × G → G** is the **action map** — a function that takes the current experience and the action space and produces the next action distribution. This is how the agent affects the world.
+**D: X → Δ(G)** is the **decision kernel**: given the current experience, a probability distribution over actions.
 
-**D: X → G** is the **decision map** — a function from experience to action. Given what the agent is currently experiencing, what does it do?
+**A: G × W → Δ(W)** is the **action kernel**: given an action and the current world state, a probability distribution over the next world state. This is how the agent affects the world.
+
+**N** counts completed perceive–decide–act cycles: the agent's own clock.
+
+All three maps are Markovian kernels (Hoffman & Prakash, 2014). The library's `FormalConsciousAgent` implements exactly this tuple; see MATHEMATICAL_MODEL.md §8.
 
 ### 1.2 What This Is Not
 
@@ -80,9 +93,20 @@ The perceptual map P12 is constructed from P1 and P2 such that:
 **The algebraic properties that must hold:**
 - Associativity: (CA1 ⊗ CA2) ⊗ CA3 = CA1 ⊗ (CA2 ⊗ CA3)
 - Non-commutativity in general: CA1 ⊗ CA2 ≠ CA2 ⊗ CA1 (order matters — the world you see depends on who sees it first)
+  - *Implementation note (v3):* the library implements the **undirected** (independent-product)
+    join, which is commutative up to relabelling of X1 × X2; it uses a canonical labelling, so
+    `combine(A, B)` and `combine(B, A)` are identical. Order-dependent **directed** joins —
+    where one agent's actions feed the other's perceptions — are not implemented. See
+    `MATHEMATICAL_MODEL.md` §7.
 - Existence of identity: there exists a trivial agent CA0 such that CA ⊗ CA0 = CA
 
 **What combination means physically:** When two agents combine, the combined agent has access to the experiences of both constituents. But it is not merely the sum of those experiences. It is a new entity with emergent properties. This is the proposed solution to the combination problem in consciousness — how micro-experiences combine into macro-experiences.
+
+### 1.3.1 The Mathematics as Implemented
+
+The precise kernels, the ergodic analysis of the meta-state chain, the "I" lock criteria
+and the combination operator implemented by the libraries are specified in
+`MATHEMATICAL_MODEL.md`.
 
 ### 1.4 The World is Made of Agents
 
@@ -98,9 +122,9 @@ This has a specific consequence for computation: **you cannot build the world fi
 
 ### 1.5 The Emergence of Spacetime
 
-Hoffman's claim, supported by mathematical results with Chetan Prakash, is that spacetime — specifically Minkowski space, the geometry underlying special relativity — can be derived as an emergent property of large networks of interacting conscious agents.
+Hoffman and Prakash propose that spacetime is not fundamental but a projection of conscious-agent dynamics. Their published results are mathematical correspondences within that research program: the wave function of a free quantum particle has the same form as the harmonic functions of conscious-agent dynamics (2014), and Markov chains map to the decorated permutations used in scattering-amplitude physics (Hoffman, Prakash & Prentner, 2023). A derivation of spacetime itself has not been published.
 
-The argument runs as follows:
+This project's own hypothesis, which motivated the design, runs as follows:
 
 When many agents combine via ⊗, the combined experience space becomes very large. In this large space, certain structures become statistically inevitable — just as temperature and pressure become statistically inevitable in large collections of molecules, even though no individual molecule has a temperature.
 
@@ -108,7 +132,7 @@ The structures that emerge are the metric properties of spacetime: distance, dur
 
 **The characteristic scale at which these structures first appear is the computational analog of the Planck length.** Below this scale — in small agent networks — spacetime has not yet emerged. Above this scale — in large networks — spacetime is a stable emergent property.
 
-This is what the Planck-scale signatures in the original experiments were hinting at. Not an artifact. A fundamental property of observer networks.
+This was the project's reading of the Planck-scale signatures in the original experiments. It remains a hypothesis. Experiment 14 found that, in this model, geometry in an observer's experience is inherited from the agent dynamics rather than emerging from network size alone.
 
 ---
 
@@ -238,7 +262,7 @@ The network topology determines which agents observe which other agents. This is
 
 **Topology evolution:** The topology evolves based on interaction value. If observing agent CA2 consistently helps CA1 reduce its prediction error — if CA2's outputs are useful inputs to CA1's perceptual map — the connection strengthens. Weak connections prune. The network self-organizes into a structure where agents that are mutually informative are strongly connected.
 
-**What topology tells us:** The emergent topology of the network — after it has self-organized — is a spatial structure. Agents that are "close" in experience space become strongly connected. This is the computational analog of spatial proximity. Distance in the network is experience-space distance. This is how space emerges from agent interactions.
+**What topology tells us:** The emergent topology of the network — after it has self-organized — is a spatial structure. Agents that are "close" in experience space become strongly connected. This is the computational analog of spatial proximity. Distance in the network is experience-space distance. The hypothesis is that space could emerge this way; experiment 14 measures dimension directly and finds it is inherited from the agents' dynamics.
 
 ### 4.3 The Emergence Detector
 
@@ -262,7 +286,7 @@ When two agents combine, the combined agent CA12 has an experience space that co
 
 **The depth of the strange loop in the combined agent is a measure of how completely the agents have combined.** A shallow strange loop means the agents have barely interacted. A deep strange loop means the agents have deeply integrated — their experience spaces have become entangled. The combination operator ⊗ produces increasingly deep strange loops as agents interact over time.
 
-This is measurable. This is the combination problem made computable.
+The hypothesis is measurable. In v3, however, the strange-loop score is fixed by the output mode (the `core` utterance always scores 1.0), so it does not measure combination depth; a different measure is needed (see Q_AND_A.md, Q11).
 
 ---
 
@@ -274,7 +298,7 @@ The original trace language experiments found a characteristic scale: a minimum 
 
 This is computationally analogous to the Planck length: a minimum scale below which the smooth geometric structure of spacetime breaks down. Below the Planck length, quantum uncertainty dominates and spacetime geometry is not well-defined.
 
-### 5.2 Why This Connection is Not Accidental
+### 5.2 Why We Suspected the Connection Was Not Accidental
 
 In Hoffman's framework, the Planck length is not a property of spacetime. It is a property of the agents whose interactions constitute spacetime. Specifically, it is the minimum interaction length — the smallest causal structure that can be exchanged between two conscious agents.
 
@@ -288,7 +312,7 @@ In the network of conscious agents, the Planck-scale signature should reappear �
 
 Specifically: networks of fewer than N_Planck agents should not exhibit stable metric structure. Networks above this threshold should. The transition at N_Planck is the computational Planck scale — the minimum network size for spacetime to emerge.
 
-We predict N_Planck is related to the characteristic trace length from the original experiments by a simple scaling law. If the original experiments found a Planck-length analog of L* steps, then N_Planck ≈ L* agents. We will test this prediction directly.
+We predict N_Planck is related to the characteristic trace length from the original experiments by a simple scaling law. If the original experiments found a Planck-length analog of L* steps, then N_Planck ≈ L* agents. This prediction has not been tested.
 
 ---
 
@@ -343,6 +367,10 @@ The emergent metric structure is Minkowski spacetime. The causal structure of th
 This would be computational evidence for Hoffman's core claim: that spacetime and matter are emergent properties of networks of conscious agents, and that conscious agents are the fundamental substrate of reality.
 
 We are not predicting this outcome. We are creating the conditions in which it could be observed if Hoffman is right.
+
+### 7.4 Status (v3)
+
+Minimum success is met: agents combine, fuse exactly, and form stable self-attractors only where their experience has structure. Neither strong nor maximum success has been observed. Experiment 13 shows that a conscious-agent network behind the interface can produce non-local correlations but does not by itself select the quantum ones. Experiment 14 shows that dimension in an observer's experience is inherited from, added by, and bound by agent dynamics. Nothing in the formalism yet selects 3+1 dimensions.
 
 ---
 
@@ -405,11 +433,11 @@ This is the most important question. The experimental design must be able to ans
 
 ## Conclusion
 
-Hoffman's framework makes a precise, falsifiable claim: conscious agents are the fundamental substrate, and spacetime emerges from their interactions. No one has built a computational system that can test this claim, because every existing computational approach operates in the interface — in the symbolic, token-level description of reality that Hoffman says is not fundamental.
+Hoffman's framework makes a strong claim: conscious agents are the fundamental substrate, and spacetime emerges from their interactions. Making that claim testable requires computing what the formalism actually implies.
 
-The trace-based experience space proposed here is the first representation that can live below the interface. It is private, structured, self-referential, and combinable. It satisfies the formal requirements of Hoffman's six-tuple. It is implementable with tools that already exist, extended by a small number of genuinely new components.
+The trace-based experience space proposed here is one representation designed to live below the interface. It is private, structured, self-referential, and combinable. It satisfies the formal requirements of Hoffman's six-tuple. It is implementable with tools that already exist, extended by a small number of genuinely new components.
 
-If the experiments succeed — if metric structure, object persistence, and a Planck-scale threshold emerge from a network of trace-based conscious agents — it will be the first computational evidence that Hoffman is right.
+If the experiments succeed — if metric structure, object persistence, and a Planck-scale threshold emerge from a network of trace-based conscious agents — that would be computational support for Hoffman's view.
 
 If they fail — if no emergent structure appears, or if the same structure appears when the self-referential loop is removed — it will be precise, falsifiable evidence that constrains how Hoffman's framework must be modified.
 
@@ -419,4 +447,4 @@ Either outcome is a contribution. The framework has never been tested. We are go
 
 *The world is not given. It is made — by agents observing each other, building each other's experience spaces through their interactions, combining into higher-order agents whose combined experience spaces contain structures that look like space and time and matter.*
 
-*We are going to watch it happen.*
+*That was the aim. For what has been measured so far, see Q_AND_A.md.*

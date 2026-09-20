@@ -76,21 +76,21 @@ The crystallized agents themselves form a new population at Level 5. Their colle
 
 ### Hoffman's 6-tuple and the hierarchy
 
-In Hoffman's formalism, each conscious agent is defined by (X, G, P, W, A, D) — experience space, action space, perception map, world, action map, and decision process. The hierarchy of agents (Level 0 → Level N) is not just a stack of increasingly complex agents; it's a **ladder of observation**, where each level's function is to *perceive the level below* and *act on the level above*.
+In Hoffman's formalism, each conscious agent is defined by (X, G, P, D, A, N): experience space, action space, and perception, decision and action kernels acting on a world W, plus a step counter. The hierarchy of agents (Level 0 → Level N) is not just a stack of increasingly complex agents; it's a **ladder of observation**, where each level's function is to *perceive the level below* and *act on the level above*.
 
 The realizer mechanism is exactly this: a Level N agent's perception map reads the collective dynamics of Level N-1 agents. Its decision map produces crystallization actions (combine, split, ignore). Its world is the population of lower-level agents. This is a direct computational instantiation of Hoffman's formalism, applied recursively.
 
-### Connection to the CERN shadow detection
+### Surprise as a detector
 
-The CERN experiment (reported by the developer, not in this repo) used the same core mechanism — prediction error as a surprise signal — to detect structural anomalies in LHC collision data. The "shadow" was a topological defect in the agent's learned manifold: a place where the Standard Model algebra failed to close.
+Prediction error works as a surprise signal: regions where an agent's learned model repeatedly fails mark structure the model does not capture. The hierarchical realizer extends this from a single agent observing data to a population of agents observing each other. The "holes" detected at Level 4 (structural absences in data) become the patterned substrate that Level 5 observes. The same mechanism — spectral geometry of surprise — operates at every level, just at different scales.
 
-The hierarchical realizer extends this from a single agent observing data to a population of agents observing each other. The "holes" detected at Level 4 (structural absences in data) become the patterned substrate that Level 5 observes. The same mechanism — spectral geometry of surprise — operates at every level, just at different scales.
+### The missing ingredient: refusal / exclusion (speculative)
 
-### The missing ingredient: refusal / exclusion / fermions
+The terms "boson-like" and "fermion-like" below are loose analogies for symmetric vs exclusive combination, not physical claims.
 
-Experiment 07 showed definitively that `combine()` is exactly exchange-symmetric — it cannot produce fermion-like exclusion behavior. Experiment 08 showed that replacing pure union with an act of perception (observer-gated combination) can introduce principled asymmetry, but only in structured relationships (veteran/novice on the same world), not for identical or totally alien agents.
+Experiment 07 showed that `combine()` is exactly exchange-symmetric (by construction), so it cannot produce exclusion-like behaviour. Experiment 08 showed that replacing pure union with an act of perception (observer-gated combination) can introduce principled asymmetry, but only in structured relationships (veteran/novice on the same world), not for identical or totally alien agents.
 
-The implication: the "refusal" that makes fermions different from bosons — the structural exclusion that gives matter its solidity — is not an incidental property of combination. It's a separate, observer-dependent phenomenon that must be *recognized* and *instantiated* by a higher-level observer, not merely *discovered* in the lower level's dynamics. The hierarchical realizer is the natural architecture for this recognition-and-instantiation: a Level 5 observer detects that certain Level 4 agents' internal models are *incompatible* (high mutual surprise, cannot merge), and instantiates that incompatibility as a structural constraint — a refusal — rather than a smooth union.
+A speculative reading: exclusion would not be an incidental property of combination, but a separate, observer-dependent phenomenon that must be *recognized* and *instantiated* by a higher-level observer, not merely *discovered* in the lower level's dynamics. The hierarchical realizer is the natural architecture for this recognition-and-instantiation: a Level 5 observer detects that certain Level 4 agents' internal models are *incompatible* (high mutual surprise, cannot merge), and instantiates that incompatibility as a structural constraint — a refusal — rather than a smooth union.
 
 ## Open Questions (for the next session)
 
@@ -106,7 +106,7 @@ The implication: the "refusal" that makes fermions different from bosons — the
 
 | Experiment | What it Found | Connection to Realizer |
 |---|---|---|
-| 07 exchange_symmetry | combine() is exactly exchange-symmetric | Lower-level agents are pure bosons; hierarchy needs higher-level mechanism for fermion-like exclusion |
+| 07 exchange_symmetry | combine() is exactly exchange-symmetric (by construction) | Exclusion-like behaviour would need a separate, higher-level mechanism |
 | 08 observer_gated | Perception-based asymmetry emerges from structured relationships | The "observer" component that mediates combination is the same mechanism a realizer uses to read across a population |
 | 09 double_slit | Complex eigenvalues in cyclic Markov chains produce oscillatory dynamics | The spectral geometry of the similarity manifold is the same mathematical family — complex eigenvalues at the population level |
 | 10 (this) | Spectral clustering can detect structure in collective agent dynamics | First directional prototype — needs proper world model and larger populations to be conclusive |

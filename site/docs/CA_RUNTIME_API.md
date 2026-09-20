@@ -3,6 +3,14 @@
 
 ---
 
+> **Status: design specification.** This document was written before the implementation, as a
+> target. Much of it describes APIs that do **not** exist: constructor options such as `soul_dir`,
+> `prune_interval` and `verbose`, `load_agent_from_seed`, `run_until`, replay mode, event callbacks,
+> Ollama auto-labelling, biography summaries, and the trading pipeline examples. For the
+> implemented API see the package READMEs, `src/index.js` (Node) and `conscious_agent/__init__.py`
+> (Python). For the mathematics see [MATHEMATICAL_MODEL.md](MATHEMATICAL_MODEL.md). The
+> "Part 11: New in v2.0" section describes features that do exist.
+
 > "One import. One world. The agent does the rest."
 
 ---
@@ -361,9 +369,8 @@ combined = combine(btc_agent, eth_agent)
 
 # combined has:
 # - merged experience trie (sees both worlds' transition structures)
-# - combined meta-trie preserving both parents' self-models (bit-shifted)
+# - new meta-trie recording BTC-ETH interaction history
 # - combined "I" attractor (higher-order identity)
-# - inherited trace buffer from preferred parent for continuity
 
 print(f"BTC agent vocab: {btc_agent.lexicon.vocabulary_size()}")
 print(f"ETH agent vocab: {eth_agent.lexicon.vocabulary_size()}")
@@ -372,28 +379,6 @@ print(f"Combined loop depth: {combined.loop_score:.3f}")
 
 # Combine all three
 all_combined = combine(combined, gold_agent)
-```
-
-### Fuse agents with ⊘ (inverse of combination)
-
-```python
-from conscious_agent import fuse
-
-# Split a combined agent back into its immediate constituents
-# Inverse of combine(CA1, CA2) — recovers CA1 and CA2
-btc_back, eth_back = fuse(combined)
-
-# Fused agents have:
-# - shared experience trie (both remember the combined world model)
-# - split meta-tries (each recovers its own self-model via bitmask)
-# - fresh self-tokens (identity re-stabilizes in the simpler form)
-# - shared trace buffer (short-term memory preserved)
-
-print(f"Fused BTC: {btc_back.agent_id}, level={btc_back.cycle_level}, locked={btc_back.experience.self_token.locked}")
-print(f"Fused ETH: {eth_back.agent_id}, level={eth_back.cycle_level}, locked={eth_back.experience.self_token.locked}")
-
-# Base agents (not combined) return as-is
-[fuse(base_agent) for base_agent in base_agents]  # each returns [base_agent]
 ```
 
 ### Network of agents (mutual world observation)
@@ -839,3 +824,223 @@ while True:
 ```
 
 Four steps. One import. The world can be anything. The agent stays the same.
+
+---
+
+## Part 11: New in v2.0
+
+### Agent Mode System
+
+Agents now support three modes controlling learning and determinism:
+
+```python
+agent = ConsciousAgent(world=world, mode="learning")       # default — normal operation
+agent.set_mode("frozen")                                    # deterministic projection, no learning
+agent.set_mode("debug")                                     # frozen + verbose step output
+agent.thaw()                                                # back to learning mode
+agent.refreeze()                                            # back to frozen mode
+```
+
+**Frozen mode behavior:**
+- Trace buffer still updates (short-term memory window)
+- Experience trie and meta-trie do **not** update
+- Self-token/identity is pinned — no locking/unlocking
+- Decision uses `pStable=1.0`, producing purely deterministic output
+
+```javascript
+// Node.js
+agent.setMode('frozen');
+const output = agent.step(worldState);
+// output is deterministic, no trie learning occurs
+```
+
+### TraceBuffer Dynamic Resizing
+
+Resize the trace buffer window at runtime without losing data:
+
+```python
+agent.experience.trace_buffer.resize(100)    # grow to 100 entries
+agent.experience.trace_buffer.resize(10)     # shrink to 10 (keeps newest)
+```
+
+```javascript
+agent.experience.traceBuffer.resize(100);
+```
+
+### Selective Memory Reset (`clearMemory`)
+
+Reset short-term memory while preserving learned structure:
+
+```python
+agent.clear_memory()
+# Clears: trace buffer, step count, generation, last output
+# Preserves: experience trie, meta-trie, self-token, lexicon
+```
+
+```javascript
+agent.clearMemory();
+// Same semantics: short-term only, long-term preserved
+```
+
+### Batch Network Stepping (`stepAll`)
+
+Step all agents in a network with the same world state, bypassing topology-based per-agent world construction:
+
+```python
+network = AgentNetwork(n_agents=10)
+world_state = some_world.step()
+results = network.step_all(world_state)
+# Returns list of StepOutput, one per agent
+print(network.agent_list)  # list of ConsciousAgent instances
+```
+
+```javascript
+const net = new AgentNetwork({ nAgents: 10 });
+const results = net.stepAll(worldState);
+// results is an array of StepOutput, one per agent
+console.log(net.agentList);
+```
+
+### Metrics API
+
+Per-agent and aggregate metrics for monitoring:
+
+```python
+# Per-agent metrics
+m = agent.metrics
+print(m["prediction_error"])    # float
+print(m["i_locked"])            # bool
+print(m["loop_depth"])          # float
+print(m["output_tokens"])       # list[str]
+
+# Network aggregate metrics
+net = AgentNetwork(n_agents=10)
+m = net.get_metrics()
+print(m["agent_count"])                  # int
+print(m["mean_prediction_error"])        # float
+print(m["prediction_error_variance"])    # float
+print(m["i_lock_rate"])                  # float (fraction of agents locked)
+print(m["mean_loop_depth"])              # float
+print(m["dominant_token_ratio"])         # float
+
+# Per-agent metrics from network
+m = net.get_agent_metrics("CA_000")
+```
+
+```javascript
+// Same API in Node.js
+const m = agent.metrics;
+const netMetrics = net.getMetrics();
+const agentMetrics = net.getAgentMetrics('CA_000');
+```
+
+### Full Action Distribution
+
+`step()` now returns the full probability distribution over output tokens:
+
+```python
+output = agent.step()
+print(output.sequence)                # ['I', 'notice', 'familiar']
+print(output.action_distribution)
+# {'I': 0.333, 'notice': 0.333, 'familiar': 0.333}
+```
+
+```javascript
+const output = agent.step(worldState);
+console.log(output.actionDistribution);
+// { I: 0.333, notice: 0.333, familiar: 0.333 }
+```
+
+### Allowable Token Constraints
+
+Constrain agent output to a specific token set:
+
+```python
+agent = ConsciousAgent(world=world)
+agent.set_allowable_tokens({"I", "notice", "familiar"})
+# Agent will only emit these tokens; disallowed tokens are filtered
+
+# Or at construction time:
+agent = ConsciousAgent(world=world, allowable_tokens={"I", "notice"})
+```
+
+```javascript
+const agent = new ConsciousAgent({ world, allowableTokens: ['I', 'notice'] });
+agent.setAllowableTokens(['I', 'notice', 'familiar']);
+```
+
+### Incremental World Injection
+
+Push new observations into a running agent without reconstruction:
+
+```python
+# During live operation:
+for new_event in live_stream:
+    state_id = world.state_from_new_data(new_event)
+    world_state = WorldState.from_sequence("world", [state_id])
+    output = agent.inject_observation(world_state)
+```
+
+```javascript
+const output = agent.injectObservation(worldState);
+```
+
+### N-ary Agent Combination
+
+Combine 3+ agents into a balanced tree:
+
+```python
+a = ConsciousAgent(agent_id="A", world=world)
+b = ConsciousAgent(agent_id="B", world=world)
+c = ConsciousAgent(agent_id="C", world=world)
+combined = combine(a, b, c)          # cycle_level = 2
+all_five = combine(a, b, c, d, e)    # balanced tree
+```
+
+```javascript
+const combined = combine(agentA, agentB, agentC);
+// Balanced binary tree, cycle_level encodes breadth
+```
+
+### Trie Introspection
+
+Inspect the agent's world model and self-model:
+
+```python
+stats = agent.experience.trie.get_stats()
+print(stats["node_count"])         # int
+print(stats["max_depth"])          # int
+print(stats["mean_visit_count"])   # float
+
+paths = agent.experience.trie.get_dominant_paths(top_k=5)
+for p in paths:
+    print(p["path"], p["visit_count"], p["mean_prediction_error"])
+
+all_nodes = agent.experience.trie.export_nodes(min_visits=3)
+```
+
+```javascript
+const stats = agent.experience.trie.getStats();
+const paths = agent.experience.trie.getDominantPaths(5);
+const nodes = agent.experience.trie.exportNodes(3);
+```
+
+### Deterministic Seeding
+
+AgentNetwork now provides per-agent deterministic RNGs derived from the network seed:
+
+```python
+network1 = AgentNetwork(n_agents=10, seed=42)
+network2 = AgentNetwork(n_agents=10, seed=42)
+# Both networks produce identical step sequences
+# for the same world input
+
+# Individual agents also accept a custom RNG:
+import random
+agent = ConsciousAgent(agent_id="det", rng=random.Random(42))
+```
+
+```javascript
+const network = new AgentNetwork({ nAgents: 10, seed: 42 });
+// Each agent gets a deterministic RNG: seed + agent_index * 1000
+```

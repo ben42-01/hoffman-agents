@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Conscious Agents — Hoffman's Conscious Realism, Engineered</title>
+<title>Conscious Agents — Hoffman's formalism, executable</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
@@ -33,17 +33,13 @@
         <svg viewBox="0 0 20 20" width="18" height="18"><path d="M4 2h12a1 1 0 011 1v14a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1zm1 2v12h10V4H5zm2 2h6v1H7V6zm0 2h6v1H7V8zm0 2h4v1H7v-1z" fill="currentColor"/></svg>
         Documentation
       </li>
-      <li data-route="monitor">
-        <svg viewBox="0 0 20 20" width="18" height="18"><path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 5a1 1 0 011-1h12a1 1 0 011 1v1a1 1 0 01-1 1H4a1 1 0 01-1-1V9zm0 4a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3z" fill="currentColor"/></svg>
-        Server Monitor
-      </li>
-      <li data-route="network">
-        <svg viewBox="0 0 20 20" width="18" height="18"><path d="M10 2a3 3 0 100 6 3 3 0 000-6zM4.5 12.5a3 3 0 100 6 3 3 0 000-6zm11 0a3 3 0 100 6 3 3 0 000-6zM10 8a1 1 0 01.707.293l3.5 3.5a1 1 0 01-1.414 1.414L10 10.414l-2.793 2.793a1 1 0 01-1.414-1.414l3.5-3.5A1 1 0 0110 8z" fill="currentColor"/></svg>
-        Agent Network
+      <li data-route="how">
+        <svg viewBox="0 0 20 20" width="18" height="18"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm-1 4l5 4-5 4V6z" fill="currentColor"/></svg>
+        How an Agent Works
       </li>
     </ul>
     <div class="sidebar-footer">
-      <div class="version">v2.1.2</div>
+      <div class="version">v3.0.0</div>
       <a href="https://github.com/ben42-01/hoffman-agents" target="_blank" class="gh-link">
         <svg viewBox="0 0 20 20" width="16" height="16"><path d="M10 0C4.477 0 0 4.477 0 10c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0110 4.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.934.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C17.14 18.163 20 14.418 20 10c0-5.523-4.477-10-10-10z" fill="currentColor"/></svg>
         GitHub
@@ -59,12 +55,12 @@
         </div>
         <div class="hero-overlay">
           <h1>Conscious Agents</h1>
-          <p class="hero-subtitle">A computational implementation of <em>Hoffman's Conscious Realism</em></p>
-          <p class="hero-quote">"Spacetime is not the ground of reality. It is the interface that conscious agents evolved to perceive. The ground is agents all the way down."</p>
-          <p class="hero-attribution">— Donald Hoffman</p>
+          <p class="hero-subtitle">An executable model of <em>Hoffman's conscious-agent formalism</em>, in Node.js and Python</p>
+          <p class="hero-quote">Spacetime is not the ground of reality but an interface; the ground is a network of conscious agents.</p>
+          <p class="hero-attribution">The conscious-realism thesis (Hoffman &amp; Prakash, 2014), paraphrased</p>
           <div class="hero-actions">
             <button class="btn btn-primary" data-nav="docs">Explore the Docs</button>
-            <button class="btn btn-secondary" data-nav="monitor">See the Simulation</button>
+            <button class="btn btn-secondary" data-nav="how">How an Agent Works</button>
           </div>
         </div>
       </div>
@@ -73,34 +69,49 @@
         <h2>What Makes a Conscious Agent?</h2>
         <div class="feature-grid">
           <div class="feature-card">
-            <div class="feature-icon">(X, G, P, W, A, D)</div>
+            <div class="feature-icon">(X, G, P, D, A, N)</div>
             <h3>The Six-Tuple</h3>
-            <p>Every agent is formally defined by Hoffman's six-tuple: an experience space, an action space, and the maps between them. No neural networks. No reward signals. Just pure agent dynamics.</p>
+            <p>An experience space, an action space, perception, decision and action kernels, and a counter. <code>FormalConsciousAgent</code> implements the tuple exactly, including the joint dynamics, stationary distribution and mixing.</p>
           </div>
           <div class="feature-card">
             <div class="feature-icon">I</div>
             <h3>"I" Lock</h3>
-            <p>Agents develop a stable self-model through meta-cognition. After observing their own traces, they form an identity attractor — a computational "I" that persists across time.</p>
+            <p>Learning agents also model their own dynamics: a Markov chain over their own self-observations. The "I" locks when that chain has a stable attractor, never in structureless worlds, and unlocks if the attractor dissolves.</p>
           </div>
           <div class="feature-card">
             <div class="feature-icon">⊗</div>
             <h3>Combination</h3>
-            <p>Two agents can combine into a higher-order agent via the ⊗ operator. The result has its own private experience space, built from the merged models of its constituents.</p>
+            <p>Agents combine into higher-order agents. ⊗ is associative and commutative, <code>fuse()</code> inverts it exactly, and the independent product M₁ ⊗ M₂ is available as a prior.</p>
           </div>
           <div class="feature-card">
-            <div class="feature-icon">M</div>
-            <h3>Strange Loops</h3>
-            <p>Self-reference creates strange loops — recursive patterns in the agent's output. The depth of these loops measures how deeply an agent reflects on its own cognition.</p>
+            <div class="feature-icon">CHSH</div>
+            <h3>Bell Test Through the Headset</h3>
+            <p>Grant a network of agents behind spacetime. The best Bell value an observer can see is exactly 2 + 2·δ(Qᵏ), set by how fast the network mixes. It reaches the PR box (4), passes the quantum limit, and fades to classical. Nothing in the kernels singles out quantum correlations (experiment 13).</p>
           </div>
           <div class="feature-card">
-            <div class="feature-icon">T</div>
-            <h3>Experience Trie</h3>
-            <p>Long-term memory is a compressed prefix tree of state transitions. The agent builds a world model not by storing data, but by learning the structure of its own experience.</p>
+            <div class="feature-icon">dₛ</div>
+            <h3>Spacetime in the Headset</h3>
+            <p>An agent that sees only opaque symbols recovers its world's dimension from experience. Under ⊗, dimensions add exactly; interaction binds them and creates an arrow of time. Geometry is inherited from agent dynamics, not generated (experiment 14).</p>
           </div>
           <div class="feature-card">
-            <div class="feature-icon">∩</div>
-            <h3>Private Experiences</h3>
-            <p>Each agent has a unique internal vocabulary. State IDs are hashes — no two agents share the same internal representation. Experience is, by design, private.</p>
+            <div class="feature-icon">P<sub>S</sub></div>
+            <h3>Time in the Traces, and at Infinity</h3>
+            <p>An observer that sees part of the network experiences exactly its trace chain, with its own clock and its own arrow of time (experiment 15). As n → ∞, an agent's clock converges to Einstein's proper time; every finite network keeps a preferred frame (experiment 18).</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">σ</div>
+            <h3>Trace Logic &amp; Decorated Permutations</h3>
+            <p>Hoffman's map to the combinatorics behind the amplituhedron matches the paper's own table (14 permutations for 3-state agents, not the stated 17). It discards probabilities and depends on how experiences are numbered. Trace logic is locally Boolean and globally not a lattice (experiment 16).</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">ψ</div>
+            <h3>Quantum Agents</h3>
+            <p>With quantum channels as kernels, combined agents reach the quantum limit 2√2 exactly, never more, and cannot signal. The quantum structure does this work. Markov agents are the fully decohered case: CHSH drops to exactly 2 (experiment 17).</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">=</div>
+            <h3>Reproducible, Two Languages</h3>
+            <p>Seeded agents produce identical numbers in Node.js and Python, checked step by step in both test suites. Every experiment has controls, and claims that did not survive are listed openly in the Q&amp;A corrections.</p>
           </div>
         </div>
       </section>
@@ -116,9 +127,9 @@
 from conscious_agent.worlds import CoinTossWorld
 
 world = CoinTossWorld(n_coins=4)
-agent = ConsciousAgent(world=world, agent_id="my_agent")
-outputs = agent.run(n_steps=1000)
-print(f'"I" locked: {agent.is_i_locked}')</code></pre>
+agent = ConsciousAgent(agent_id="my_agent", seed=1, world=world)
+agent.run(2000)
+print(agent.ergodic_stats()["lock"])  # lock state and criteria</code></pre>
         </div>
       </section>
 
@@ -127,17 +138,17 @@ print(f'"I" locked: {agent.is_i_locked}')</code></pre>
         <div class="impl-grid">
           <div class="impl-card">
             <h3>Python</h3>
-            <p>v2.1.2 — Full implementation with numpy/scipy for spectral decomposition and matrix operations.</p>
-            <code>pip install conscious-agent</code>
+            <p>v3.0.0. Full implementation on numpy and scipy.</p>
+            <code>pip install "git+https://github.com/ben42-01/hoffman-agents.git@main#subdirectory=hoffman-agents-python"</code>
           </div>
           <div class="impl-card">
             <h3>Node.js</h3>
-            <p>v2.1.2 — Zero-dependency port using Float64Array for matrix operations. Full API parity with Python.</p>
-            <code>npm install conscious-agent</code>
+            <p>v3.0.0. No dependencies, and identical results to Python.</p>
+            <code>npm install github:ben42-01/hoffman-agents</code>
           </div>
           <div class="impl-card">
             <h3>React Native</h3>
-            <p>v1.0.0 — Mobile adapter for iOS and Android via React Native, wrapping the core Node.js library.</p>
+            <p>v1.0.0. Mobile adapter for iOS and Android. It still implements the 2.x math.</p>
             <code>npx expo install conscious-agent-react-native</code>
           </div>
         </div>
@@ -159,72 +170,99 @@ print(f'"I" locked: {agent.is_i_locked}')</code></pre>
       </div>
     </div>
 
-    <div id="page-monitor" class="page">
-      <div class="monitor-header">
-        <h2>Server Monitor</h2>
-        <p class="monitor-subtitle">7 Agent Worlds monitoring critical infrastructure domains</p>
-        <div class="monitor-controls">
-          <button id="monitorPause" class="btn btn-small">Pause</button>
-          <button id="monitorReset" class="btn btn-small">Reset</button>
-        </div>
-      </div>
-      <div class="monitor-layout">
-        <div class="monitor-grid" id="monitorGrid"></div>
-        <div class="monitor-canvas-panel">
-          <canvas id="particleBrain"></canvas>
-          <div class="monitor-summary" id="monitorSummary"></div>
-        </div>
-      </div>
-    </div>
+    <div id="page-how" class="page">
+      <div class="how">
+        <header class="how-header">
+          <h2>How a conscious agent works</h2>
+          <p>Hoffman &amp; Prakash define a conscious agent as a six-tuple <b>(X, G, P, D, A, N)</b>: an experience space X, an action space G, and three Markov kernels. P maps world and experience to the next experience, D maps experience to action, and A maps action and world to the next world. N counts completed cycles. This page runs one agent step by step. Every number is computed from the matrices shown, with a seeded random number generator.</p>
+        </header>
 
-    <div id="page-network" class="page">
-      <div class="network-header">
-        <h2>Agent Network</h2>
-        <p class="network-subtitle">400 agents perceive each other, form identities, and combine into higher-order consciousness</p>
-        <div class="network-controls">
-          <button id="networkPause" class="btn btn-small">Pause</button>
-          <button id="networkReset" class="btn btn-small">Reset</button>
-        </div>
-      </div>
-      <div class="network-layout">
-        <canvas id="networkCanvas"></canvas>
-        <div class="network-stats" id="networkStats"></div>
-      </div>
-      <div class="network-info">
-        <div class="info-card">
-          <h3>What's Happening?</h3>
-          <p>Each particle is a <strong>conscious agent</strong> — a tiny mind. Agents can combine recursively, forming higher and higher orders of consciousness.</p>
-          <ul>
-            <li><span class="dot-gray"></span> <strong>Grey</strong> — Unlocked. Exploring, no stable identity.</li>
-            <li><span class="dot-red"></span> <strong>Red</strong> — High prediction error. Confused world model.</li>
-            <li><span class="dot-green"></span> <strong>Green (L0)</strong> — I-Locked. Stable self-model formed.</li>
-            <li><span class="dot-purple"></span> <strong>Purple (L1, Fused)</strong> — Two locked agents combined via ⊗. First-order higher consciousness.</li>
-            <li><span class="dot-gold"></span> <strong>Gold (L2, United)</strong> — Two L1 agents combined. Contains 4 original agents.</li>
-            <li><span class="dot-cyan"></span> <strong>Cyan (L3, Coherent)</strong> — Two L2 agents combined. Contains 8 agents.</li>
-            <li><span class="dot-white"></span> <strong>White (L4, Planck)</strong> — Two L3 agents combined. Contains 16+ agents. Nearing the fundamental scale.</li>
-          </ul>
-        </div>
-        <div class="info-card">
-          <h3>Why Does This Matter?</h3>
-          <p>Hoffman's theory says <strong>consciousness is fundamental</strong> — spacetime and matter are just interfaces that agents evolved to perceive. The combination operator ⊗ is associative: <em>(A ⊗ B) ⊗ C = A ⊗ (B ⊗ C)</em>, meaning agents can chain upward without limit.</p>
-          <p>This simulation tests that prediction. As agents combine into higher levels, they form a hierarchy of consciousness. The <strong>Planck probe</strong> experiment in our docs found no upper threshold — lock rate stays at 100% even at 1024 agents.</p>
-          <ol>
-            <li><strong>Perceive</strong> — Each agent watches its neighbors' outputs</li>
-            <li><strong>Model</strong> — It builds a compressed internal model (an Experience Trie)</li>
-            <li><strong>Lock</strong> — Once the model stabilizes, the agent forms an "I" identity</li>
-            <li><strong>Combine</strong> — Two agents of the same level merge into one at the next level. Recursively.</li>
-          </ol>
-          <p class="info-pullquote">"The ground is agents all the way down." — Donald Hoffman</p>
-        </div>
-        <div class="info-card">
-          <h3>What To Watch For</h3>
-          <ul>
-            <li><strong>Cascade effect</strong> — As more agents combine, the remaining ones combine faster. Watch it accelerate.</li>
-            <li><strong>Ripples</strong> in the cloud = a combination event. Higher levels make bigger ripples.</li>
-            <li><strong>Color cascade</strong> — Purple → Gold → Cyan → White as recursive combination builds up.</li>
-            <li><strong>Planck endgame</strong> — Can the entire network unify into a single white-hot Planck agent?</li>
-          </ul>
-        </div>
+        <section class="how-card">
+          <div class="how-phases">
+            <div class="how-phase"><span>1</span> Perceive <code>P</code></div>
+            <div class="how-phase"><span>2</span> Decide <code>D</code></div>
+            <div class="how-phase"><span>3</span> Act <code>A</code></div>
+          </div>
+          <div class="how-controls">
+            <button id="howStep" class="btn btn-primary btn-compact">Step</button>
+            <button id="howPlay" class="btn-small">Play</button>
+            <label class="how-inline">speed
+              <select id="howSpeed"><option value="slow">slow</option><option value="normal" selected>normal</option><option value="fast">fast</option></select>
+            </label>
+            <button id="howRun1k" class="btn-small">Run 1,000 cycles</button>
+            <button id="howRun10k" class="btn-small">Run 10,000</button>
+            <button id="howReset" class="btn-small">Reset</button>
+          </div>
+          <div class="how-grid">
+            <svg id="howStage" viewBox="0 0 620 300" role="img" aria-label="The agent: world states, experiences and actions, with the kernel that was just used highlighted"></svg>
+            <div class="how-math">
+              <h3 id="howStepTitle">Step 1 · Perceive</h3>
+              <div class="how-formula" id="howFormula"></div>
+              <p id="howStepText" class="how-text"></p>
+              <div class="how-kernel-name" id="howKernelName"></div>
+              <div id="howMatrix"></div>
+              <div id="howDraw" class="how-draw"></div>
+            </div>
+          </div>
+          <ol id="howLog" class="how-log"></ol>
+        </section>
+
+        <section class="how-card">
+          <h3>Change the agent</h3>
+          <p class="how-text">Each slider changes one kernel. The long-run behaviour below is recomputed exactly and the run restarts.</p>
+          <div class="how-sliders">
+            <label>Perception stickiness (P leans toward staying in the same experience) <span id="howStickVal"></span>
+              <input type="range" id="howStick" min="0" max="0.95" step="0.05" value="0"></label>
+            <label>P(move | calm) (a row of D) <span id="howMoveCalmVal"></span>
+              <input type="range" id="howMoveCalm" min="0" max="1" step="0.05" value="0.2"></label>
+            <label>P(move | alert) (a row of D) <span id="howMoveAlertVal"></span>
+              <input type="range" id="howMoveAlert" min="0" max="1" step="0.05" value="0.8"></label>
+            <label>Action reliability (A[move] switches the world with this probability) <span id="howRelVal"></span>
+              <input type="range" id="howRel" min="0" max="1" step="0.05" value="1"></label>
+          </div>
+          <button id="howDefaults" class="btn-small">Restore defaults</button>
+        </section>
+
+        <section class="how-card">
+          <h3>The long run: one Markov chain on experience × world</h3>
+          <p class="how-text">Put the three steps together and the pair (experience, world) evolves as a single Markov chain:</p>
+          <div class="how-formula">Q((x, w), (x′, w′)) = P[w](x, x′) · Σ<sub>g</sub> D(x′, g) · A[g](w, w′)</div>
+          <div id="howQ"></div>
+          <p class="how-text" id="howLambda"></p>
+          <p class="how-text">When Q is ergodic, it has one stationary distribution π = πQ, and the ergodic theorem says the fraction of time spent in each state converges to π. Run cycles above and watch it happen.</p>
+          <div class="how-charts">
+            <figure>
+              <figcaption>Time in each state (x|w): exact π vs this run</figcaption>
+              <div class="how-legend"><span class="sw exact"></span> exact π <span class="sw sim"></span> simulated</div>
+              <svg id="howBars" viewBox="0 0 560 240" role="img" aria-label="Bar chart comparing the exact stationary distribution with simulated frequencies"></svg>
+              <div id="howPiTable"></div>
+            </figure>
+            <figure>
+              <figcaption>Distance between this run and π (total variation)</figcaption>
+              <svg id="howTv" viewBox="0 0 560 200" role="img" aria-label="Line chart of total variation distance to the stationary distribution against the number of cycles"></svg>
+              <p class="how-text" id="howTvNow"></p>
+            </figure>
+          </div>
+          <div id="howTip" class="how-tip" role="status"></div>
+        </section>
+
+        <section class="how-card">
+          <h3>Combining agents: the product ⊗</h3>
+          <p class="how-text">Two agents that perceive the same world independently combine into one agent. Its experience space is the product X × X, and its perception kernel is the Kronecker product P ⊗ P: every entry of the first matrix multiplies a full copy of the second. Shown here for w = left, with the current settings.</p>
+          <div class="how-kron-row">
+            <div><div class="how-kernel-name">P[left]</div><div id="howKronFactor"></div></div>
+            <div class="how-op">⊗</div>
+            <div><div class="how-kernel-name">P[left]</div><div id="howKronFactor2" class="how-mirror"></div></div>
+            <div class="how-op">=</div>
+            <div><div class="how-kernel-name">P[left] ⊗ P[left] (4 × 4; shading marks the blocks)</div><div id="howKron"></div></div>
+          </div>
+          <p class="how-text">In the library, independent combination adds dimensions exactly: three combined one-dimensional agents form a three-dimensional space (experiment 14). Interaction between agents is what breaks the product structure.</p>
+        </section>
+
+        <section class="how-card how-note">
+          <h3>What this shows, and what it does not</h3>
+          <p class="how-text">The six-tuple is exact mathematics. Running it shows what the formalism implies: which long-run behaviour a given set of kernels produces, how quickly it is reached, and how combination composes agents. It does not show that the agent is conscious, which is a question about the theory, not something a simulation can settle. The library's experiments ask sharper questions. <a href="https://github.com/ben42-01/hoffman-agents/tree/main/hoffman-agents-node/examples/13_bell_through_the_headset" target="_blank" rel="noopener">Experiment 13</a> asks which correlations a network of agents behind spacetime can produce; <a href="https://github.com/ben42-01/hoffman-agents/tree/main/hoffman-agents-node/examples/14_spacetime_in_the_headset" target="_blank" rel="noopener">experiment 14</a> asks where dimension in an observer's experience comes from.</p>
+        </section>
       </div>
     </div>
   </div>
@@ -237,6 +275,7 @@ print(f'"I" locked: {agent.is_i_locked}')</code></pre>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.1/marked.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="how.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

@@ -85,15 +85,20 @@ def _serialize_meta_trie(mt: MetaTrie) -> dict:
         "snapshot_window": mt._snapshot_window,
         "max_depth": mt.trie.max_depth,
         "token_registry": token_registry,
+        "math_version": mt.math_version,
+        "history": list(mt._history),
+        "provenance": [[mid, dict(p)] for mid, p in mt._provenance.items()],
+        "provenance_tree": mt._provenance_tree,
     }
 
 
-def _deserialize_meta_trie(data: dict) -> MetaTrie:
+def _deserialize_meta_trie(data: dict, math_version: str = "legacy") -> MetaTrie:
     mt = MetaTrie(
         snapshot_window=data.get("snapshot_window", 10),
         max_depth=data.get("max_depth", 10),
+        math_version=math_version,
     )
-    mt._trie = _deserialize_trie(data["trie"])
+    mt._trie = _deserialize_trie(data.get("trie", {"nodes": []}))
     for mid_str, snap_data in data.get("registry", {}).items():
         mid = int(mid_str)
         mt._registry[mid] = type("snap", (), {
@@ -105,38 +110,18 @@ def _deserialize_meta_trie(data: dict) -> MetaTrie:
     token_registry = data.get("token_registry", {})
     if token_registry:
         mt._token_registry = {int(k): dict(v) for k, v in token_registry.items()}
+    mt._history = list(data.get("history", []))
+    mt._provenance = {int(mid): dict(p) for mid, p in data.get("provenance", [])}
+    mt._provenance_tree = data.get("provenance_tree", {})
     return mt
 
 
 def _serialize_self_token(st: SelfTokenState) -> dict:
-    return {
-        "token": st.token,
-        "referent_meta_state_id": st.referent_meta_state_id,
-        "stationary_prob": st.stationary_prob,
-        "locked": st.locked,
-        "lock_generation": st.lock_generation,
-        "lock_threshold": st.lock_threshold,
-        "consecutive_above_threshold": st.consecutive_above_threshold,
-        "lock_consecutive_required": st.lock_consecutive_required,
-        "stability_history": list(st.stability_history),
-        "protection_radius": st.protection_radius,
-    }
+    return st.to_dict()
 
 
 def _deserialize_self_token(data: dict) -> SelfTokenState:
-    st = SelfTokenState(
-        token=data.get("token", "I"),
-        referent_meta_state_id=data.get("referent_meta_state_id"),
-        stationary_prob=data.get("stationary_prob", 0.0),
-        locked=data.get("locked", False),
-        lock_generation=data.get("lock_generation"),
-        lock_threshold=data.get("lock_threshold", 0.25),
-        consecutive_above_threshold=data.get("consecutive_above_threshold", 0),
-        lock_consecutive_required=data.get("lock_consecutive_required", 3),
-        protection_radius=data.get("protection_radius", 2),
-    )
-    st.stability_history = list(data.get("stability_history", []))
-    return st
+    return SelfTokenState.from_dict(data)
 
 
 def _serialize_trace_buffer(buf: TraceBuffer) -> dict:
@@ -150,6 +135,7 @@ def _serialize_trace_buffer(buf: TraceBuffer) -> dict:
             "prediction_correct": e.prediction_correct,
             "prediction_error": e.prediction_error,
             "token": e.token,
+            **({"surprisal": e.surprisal} if getattr(e, "surprisal", None) is not None else {}),
         })
     return {"maxlen": buf.maxlen, "events": events}
 
@@ -157,7 +143,7 @@ def _serialize_trace_buffer(buf: TraceBuffer) -> dict:
 def _deserialize_trace_buffer(data: dict) -> TraceBuffer:
     buf = TraceBuffer(maxlen=data["maxlen"])
     for ed in data["events"]:
-        buf.append(TraceEvent(
+        e = TraceEvent(
             from_state=ed["from_state"],
             to_state=ed["to_state"],
             timestamp=ed["timestamp"],
@@ -165,13 +151,24 @@ def _deserialize_trace_buffer(data: dict) -> TraceBuffer:
             prediction_correct=ed["prediction_correct"],
             prediction_error=ed["prediction_error"],
             token=ed.get("token"),
-        ))
+        )
+        if "surprisal" in ed:
+            e.surprisal = ed["surprisal"]
+        buf.append(e)
     return buf
 
 
-def serialize(agent: ConsciousAgent, path: str) -> None:
-    state = {
+# format_version 3 adds math_version, decision parameters, meta-chain history,
+# combination provenance and the v3 lock state. Files without format_version
+# were written by 2.x and load with math_version 'legacy'.
+FORMAT_VERSION = 3
+
+
+def to_state(agent: ConsciousAgent) -> dict:
+    return {
         "ca_version": "1.0",
+        "format_version": FORMAT_VERSION,
+        "math_version": agent.math_version,
         "agent_id": agent.agent_id,
         "generation": agent.generation,
         "step": agent.step_count,
@@ -196,31 +193,33 @@ def serialize(agent: ConsciousAgent, path: str) -> None:
             "constituent_ids": list(agent.constituent_ids),
             "leaf_constituent_ids": sorted(agent.leaf_constituent_ids),
             "combined": agent._combined,
+            "combination_prior": agent.combination_prior,
+        },
+        "decision": {
+            "p_stable": agent.p_stable,
+            "p_lexicon": agent.p_lexicon,
+            "p_explore": agent.p_explore,
+            "lexicon_row": list(agent.lexicon_row),
+            "ergodic_state": agent._ergodic_state,
         },
     }
 
-    path = str(path)
-    tmp_path = str(Path(path).parent / f"tmp_{uuid.uuid4().hex}.json")
-    with open(tmp_path, "w") as f:
-        json.dump(state, f, indent=2, cls=_NumpyEncoder)
-    os.replace(tmp_path, path)
 
-
-def deserialize(path: str) -> ConsciousAgent:
-    with open(path) as f:
-        state = json.load(f)
-
+def from_state(state: dict) -> ConsciousAgent:
     comp = state.get("components", {})
+    math_version = state.get("math_version", "v3") if state.get("format_version", 0) >= 3 else "legacy"
     exp = ExperienceSpace(
         trace_buffer=_deserialize_trace_buffer(comp.get("trace_buffer", {"maxlen": 50, "events": []})),
         trie=_deserialize_trie(comp.get("experience_trie", {"max_depth": 10, "nodes": []})),
-        meta_trie=_deserialize_meta_trie(comp.get("meta_trie", {})),
+        meta_trie=_deserialize_meta_trie(comp.get("meta_trie", {}), math_version),
         self_token=_deserialize_self_token(comp.get("self_token", {})),
         lexicon=ExperienceLexicon.from_dict(comp.get("lexicon", {"entries": []})),
         last_world_state_id=comp.get("last_world_state_id"),
+        math_version=math_version,
     )
 
     meta = state.get("metadata", {})
+    decision = state.get("decision", {})
     agent = ConsciousAgent(
         agent_id=state.get("agent_id", "unknown"),
         experience=exp,
@@ -230,22 +229,37 @@ def deserialize(path: str) -> ConsciousAgent:
         constituent_ids=tuple(meta.get("constituent_ids", [])),
         leaf_constituent_ids=frozenset(meta.get("leaf_constituent_ids", [])),
         cycle_level=meta.get("cycle_level", 0),
+        p_stable=decision.get("p_stable", 0.80),
+        p_lexicon=decision.get("p_lexicon", 0.10),
+        p_explore=decision.get("p_explore", 0.05),
+        lexicon_row=tuple(decision.get("lexicon_row", (0.70, 0.15, 0.10, 0.05))),
+        math_version=math_version,
     )
     agent._combined = meta.get("combined", False)
+    agent.combination_prior = meta.get("combination_prior")
+    if decision.get("ergodic_state"):
+        agent._ergodic_state = decision["ergodic_state"]
     return agent
 
 
+def serialize(agent: ConsciousAgent, path: str) -> None:
+    state = to_state(agent)
+    path = str(path)
+    tmp_path = str(Path(path).parent / f"tmp_{uuid.uuid4().hex}.json")
+    with open(tmp_path, "w") as f:
+        json.dump(state, f, indent=2, cls=_NumpyEncoder)
+    os.replace(tmp_path, path)
+
+
+def deserialize(path: str) -> ConsciousAgent:
+    with open(path) as f:
+        return from_state(json.load(f))
+
+
 def clone(agent: ConsciousAgent, new_id: str | None = None) -> ConsciousAgent:
-    import tempfile
-    with tempfile.NamedTemporaryFile(suffix=".json", delete=False, mode="w") as f:
-        tmp = f.name
-    try:
-        serialize(agent, tmp)
-        cloned = deserialize(tmp)
-        cloned.agent_id = new_id or f"{agent.agent_id}_clone"
-        return cloned
-    finally:
-        os.unlink(tmp)
+    cloned = from_state(json.loads(json.dumps(to_state(agent), cls=_NumpyEncoder)))
+    cloned.agent_id = new_id or f"{agent.agent_id}_clone"
+    return cloned
 
 
 def fingerprint(agent: ConsciousAgent) -> str:

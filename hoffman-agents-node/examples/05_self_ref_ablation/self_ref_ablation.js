@@ -1,89 +1,80 @@
 /**
- * Self-Reference ON/OFF Contrast — The Cleanest Causal Result
+ * Self-Reference Ablation: does the "I" lock track structure?
  *
- * One parameter changes everything:
- *   ON (threshold=0.25): 100% agents lock "I"
- *   OFF (threshold=1.5):   0% agents ever lock
+ * Three conditions, 8 seeded agents each, 1000 steps:
  *
- * Without the "I" attractor mechanism, agents don't develop identity.
+ *   A. structured world, lock ON    - a repeating 10-state cycle
+ *   B. structured world, lock OFF   - lockMargin = 2, so dominance (<= 1) can never qualify
+ *   C. structureless world, lock ON - a fresh random state from 10 each step
+ *
+ * B is an ablation by construction: without the lock the agent only ever says
+ * "wait", so B cannot fail. It shows that the lock gates expression, nothing more.
+ * The informative comparison is A vs C: if the lock also fired in C, it would
+ * not be tracking anything about the agent's experience.
+ *
+ * The v3 rule needs evidence (>= 20 meta-transitions, i.e. >= 400 steps at the
+ * default observation interval) before it can lock. 2.x behaviour is available
+ * with { mathVersion: 'legacy' }; under it condition C locks too (at step 61).
  */
-const { ConsciousAgent, WorldState, SelfTokenState, ExperienceSpace } = require('../../src/index');
+const { ConsciousAgent, WorldState, SelfTokenState, ExperienceSpace, mulberry32 } = require('../../src/index');
 
-function strangeLoopScore(agent) {
-  const out = agent._lastOutput;
-  const nI = out.filter(t => t === 'I').length;
-  return nI === 0 ? 0 : Math.min(0.5 * nI, 2);
-}
+const N_AGENTS = 8;
+const N_STEPS = 1000;
 
-function runCondition(name, lockThreshold, nAgents = 8, nSteps = 500) {
-  console.log(`\n  ── ${name} ──`);
-  const agents = [];
-  for (let i = 0; i < nAgents; i++) {
-    const st = new SelfTokenState({ lockThreshold });
-    const exp = new ExperienceSpace({ selfToken: st });
-    agents.push(new ConsciousAgent({ agentId: `Agent_${String(i).padStart(2, '0')}`, experience: exp }));
-  }
+function runCondition(name, { lockMargin, structured }) {
+  const agents = Array.from({ length: N_AGENTS }, (_, i) => new ConsciousAgent({
+    agentId: `Agent_${String(i).padStart(2, '0')}`,
+    seed: i + 1,
+    experience: new ExperienceSpace({ selfToken: new SelfTokenState({ lockMargin }) }),
+  }));
+  const worldRng = mulberry32(99);
+  const locked = new Set();
+  let nonTrivial = 0, loop = 0, counted = 0;
 
-  const lockGenerations = new Set();
-  const outputsLog = {};
-
-  for (let step = 0; step < nSteps; step++) {
-    for (let i = 0; i < agents.length; i++) {
-      const ws = WorldState.fromSequence('world', [`state_${step % 10}`]);
-      const out = agents[i].step(ws);
-      if (!outputsLog[agents[i].agentId]) outputsLog[agents[i].agentId] = [];
-      outputsLog[agents[i].agentId].push(out.sequenceStr);
-      if (out.iLocked) lockGenerations.add(agents[i].agentId);
+  for (let step = 0; step < N_STEPS; step++) {
+    const state = structured ? step % 10 : Math.floor(worldRng() * 10);
+    const ws = WorldState.fromSequence('world', [`state_${state}`]);
+    for (const agent of agents) {
+      const out = agent.step(ws);
+      if (out.iLocked) locked.add(agent.agentId);
+      if (step >= N_STEPS - 100) {
+        counted++;
+        if (out.sequenceStr !== 'wait') nonTrivial++;
+        loop += out.loopDepth;
+      }
     }
   }
 
-  const lockRate = lockGenerations.size / nAgents;
-  const loopScores = [];
-  for (const aid of Object.keys(outputsLog).sort()) {
-    const recent = outputsLog[aid].slice(-100);
-    const score = recent.reduce((s, seq) => s + strangeLoopScore({ _lastOutput: seq.split(' ') }), 0) / Math.max(recent.length, 1);
-    loopScores.push(score);
-  }
-  const meanLoop = loopScores.reduce((a, b) => a + b, 0) / loopScores.length;
-
-  let nonTrivial = 0, total = 0;
-  for (const seqs of Object.values(outputsLog)) {
-    for (const s of seqs.slice(-100)) { total++; if (s !== 'wait') nonTrivial++; }
-  }
-  const outputSync = nonTrivial / Math.max(total, 1);
-
-  console.log(`    Agents:          ${nAgents}`);
-  console.log(`    Lock threshold:  ${lockThreshold}`);
-  console.log(`    Lock rate:       ${(lockRate * 100).toFixed(0)}%`);
-  console.log(`    Mean loop depth: ${meanLoop.toFixed(3)}`);
-  console.log(`    Non-trivial out: ${(outputSync * 100).toFixed(1)}%`);
-
-  return { lockRate, meanLoopDepth: meanLoop, outputSyncRatio: outputSync, locked: lockGenerations.size, unlocked: nAgents - lockGenerations.size };
+  const r = { name, lockRate: locked.size / N_AGENTS, nonTrivial: nonTrivial / counted, loop: loop / counted };
+  console.log(`\n  ── ${name} ──`);
+  console.log(`    lock rate:          ${(r.lockRate * 100).toFixed(0)}%`);
+  console.log(`    non-"wait" output:  ${(r.nonTrivial * 100).toFixed(1)}% of the last 100 steps`);
+  console.log(`    mean loop score:    ${r.loop.toFixed(3)}`);
+  return r;
 }
 
 function main() {
   const t0 = Date.now();
-  console.log('='.repeat(62));
-  console.log('Self-Reference ON/OFF Contrast');
-  console.log('='.repeat(62));
-  console.log('\nThe same world, same architecture — one parameter changes everything.\n');
+  console.log('='.repeat(66));
+  console.log('Self-reference ablation: does the "I" lock track structure?');
+  console.log('='.repeat(66));
 
-  const on = runCondition('Self-Reference ON  (threshold=0.25)', 0.25);
-  const off = runCondition('Self-Reference OFF (threshold=1.5)', 1.5);
+  const A = runCondition('A. structured world, lock ON', { lockMargin: 0.15, structured: true });
+  const B = runCondition('B. structured world, lock OFF (by construction)', { lockMargin: 2, structured: true });
+  const C = runCondition('C. structureless world, lock ON', { lockMargin: 0.15, structured: false });
 
-  console.log(`\n  Done in ${((Date.now() - t0) / 1000).toFixed(1)}s\n`);
-  console.log('='.repeat(62));
-  console.log('Result Summary');
-  console.log('='.repeat(62));
-  console.log(`  Lock rate:        ON ${(on.lockRate*100).toFixed(0)}%  OFF ${(off.lockRate*100).toFixed(0)}%`);
-  console.log(`  Mean loop depth:  ON ${on.meanLoopDepth.toFixed(3)}  OFF ${off.meanLoopDepth.toFixed(3)}`);
-  console.log(`  Non-trivial out:  ON ${(on.outputSyncRatio*100).toFixed(0)}%  OFF ${(off.outputSyncRatio*100).toFixed(0)}%`);
-
-  if (on.lockRate === 1 && off.lockRate === 0) {
-    console.log('\n  ✓ Absolute contrast — self-reference is causally necessary');
+  console.log('\n' + '='.repeat(66));
+  console.log('Summary');
+  console.log('='.repeat(66));
+  console.log(`  lock rate:  A ${(A.lockRate * 100).toFixed(0)}%   B ${(B.lockRate * 100).toFixed(0)}%   C ${(C.lockRate * 100).toFixed(0)}%`);
+  if (A.lockRate === 1 && C.lockRate === 0) {
+    console.log('\n  The lock fires where the agent\'s experience has a stable attractor (A) and not where it has');
+    console.log('  none (C): it tracks structure. B confirms only that the lock gates output, which is true by');
+    console.log('  construction and says nothing about whether self-reference matters for anything else.');
   } else {
-    console.log(`\n  ~ Partial contrast (${(on.lockRate*100).toFixed(0)}% vs ${(off.lockRate*100).toFixed(0)}%)`);
+    console.log(`\n  Mixed result: A ${(A.lockRate * 100).toFixed(0)}% vs C ${(C.lockRate * 100).toFixed(0)}%.`);
   }
+  console.log(`\n  Done in ${((Date.now() - t0) / 1000).toFixed(1)}s\n`);
 }
 
 main();

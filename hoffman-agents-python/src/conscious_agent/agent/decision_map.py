@@ -3,8 +3,9 @@ from __future__ import annotations
 import random
 from typing import Literal
 
-import numpy as np
-
+from ..kernels.markov_kernel import MarkovKernel
+from ..legacy import decision as legacy
+from ..math.signature import build_transition_signature
 from .experience_space import ExperienceSpace
 
 OutputState = Literal["core", "lexicon", "explore", "idle"]
@@ -13,21 +14,44 @@ CORE_TOKENS = ["I", "notice", "familiar", "different", "wait"]
 
 SIGNATURE_MATCH_THRESHOLD = 0.3
 
+# Output (decision) states; their dynamics is the Markov kernel D.
+DECISION_STATES: tuple[str, ...] = ("core", "lexicon", "explore", "idle")
+DEFAULT_LEXICON_ROW: tuple[float, ...] = (0.70, 0.15, 0.10, 0.05)
 
-def _build_transition_signature(
-    prev_id: int | None,
-    curr_id: int,
-    embedding_dim: int,
-) -> np.ndarray:
-    sig = np.zeros(embedding_dim, dtype=np.float64)
-    if prev_id is not None:
-        combined = hash(f"{prev_id}->{curr_id}")
-        sig[combined % embedding_dim] = 1.0
-    sig[curr_id % embedding_dim] = 1.0
-    norm = np.linalg.norm(sig)
-    if norm > 0:
-        sig = sig / norm
-    return sig
+
+def build_decision_kernel(
+    p_stable: float = 0.80,
+    p_lexicon: float = 0.10,
+    p_explore: float = 0.05,
+    lexicon_row=DEFAULT_LEXICON_ROW,
+) -> MarkovKernel:
+    """Decision kernel D over DECISION_STATES.
+
+      from core / explore / idle : [p_stable, p_lexicon, p_explore, 1 - sum]
+      from lexicon               : lexicon_row
+    """
+    for name, v in (("p_stable", p_stable), ("p_lexicon", p_lexicon), ("p_explore", p_explore)):
+        if not 0.0 <= v <= 1.0:
+            raise ValueError(f"{name} must be in [0, 1], got {v}")
+    p_idle = 1.0 - p_stable - p_lexicon - p_explore
+    if p_idle < -1e-9:
+        raise ValueError(f"p_stable + p_lexicon + p_explore must be <= 1, got {p_stable + p_lexicon + p_explore}")
+    base = [p_stable, p_lexicon, p_explore, max(0.0, p_idle)]
+    return MarkovKernel(list(DECISION_STATES), [base, list(lexicon_row), base, base])
+
+
+_kernel_cache: dict[tuple, MarkovKernel] = {}
+
+
+def _cached_kernel(p_stable, p_lexicon, p_explore, lexicon_row) -> MarkovKernel:
+    key = (p_stable, p_lexicon, p_explore, tuple(lexicon_row))
+    k = _kernel_cache.get(key)
+    if k is None:
+        k = build_decision_kernel(p_stable, p_lexicon, p_explore, lexicon_row)
+        if len(_kernel_cache) > 256:
+            _kernel_cache.clear()
+        _kernel_cache[key] = k
+    return k
 
 
 def _sample_lexicon_label(experience: ExperienceSpace, vocab_size: int = 5,
@@ -52,7 +76,8 @@ def _sample_lexicon_label(experience: ExperienceSpace, vocab_size: int = 5,
         recent = experience.trace_buffer.get_recent(2)
         if len(recent) >= 2:
             prev_id = recent[-2].to_state
-        query_sig = _build_transition_signature(prev_id, curr_id, experience.lexicon.embedding_dim)
+        query_sig = build_transition_signature(prev_id, curr_id, experience.lexicon.embedding_dim,
+                                               experience.math_version)
         best_label, best_dist = experience.lexicon.nearest_label(query_sig)
         if best_label and best_dist < SIGNATURE_MATCH_THRESHOLD:
             entry = experience.lexicon.lookup_by_label(best_label)
@@ -84,27 +109,8 @@ def _sample_lexicon_label(experience: ExperienceSpace, vocab_size: int = 5,
 def _next_state(current: OutputState, p_stable: float, p_lexicon: float,
                 p_explore: float,
                 rng: random.Random = random._inst) -> OutputState:
-    r = rng.random()
-    if current == "lexicon":
-        if r < 0.70:
-            return "core"
-        r -= 0.70
-        if r < 0.15:
-            return "lexicon"
-        r -= 0.15
-        if r < 0.10:
-            return "explore"
-        return "idle"
-    else:
-        if r < p_stable:
-            return "core"
-        r -= p_stable
-        if r < p_lexicon:
-            return "lexicon"
-        r -= p_lexicon
-        if r < p_explore:
-            return "explore"
-        return "idle"
+    """Deprecated 2.x helper; v3 samples from build_decision_kernel()."""
+    return legacy.next_state(current, p_stable, p_lexicon, p_explore, rng)
 
 
 def decide(
@@ -115,12 +121,18 @@ def decide(
     p_explore: float = 0.05,
     ergodic_state: OutputState | None = None,
     rng: random.Random = random._inst,
+    lexicon_row=DEFAULT_LEXICON_ROW,
+    kernel: MarkovKernel | None = None,
 ) -> tuple[list[str], OutputState]:
     if not experience.self_token.is_locked():
         return (["wait"], "idle")
 
     state = ergodic_state if ergodic_state is not None else "core"
-    next_state_val = _next_state(state, p_stable, p_lexicon, p_explore, rng)
+    if experience.math_version == "legacy":
+        next_state_val = legacy.next_state(state, p_stable, p_lexicon, p_explore, rng)
+    else:
+        k = kernel or _cached_kernel(p_stable, p_lexicon, p_explore, lexicon_row)
+        next_state_val = k.sample(state, rng)
 
     if next_state_val == "core":
         tokens = [experience.self_token.token, "notice"]

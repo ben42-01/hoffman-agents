@@ -1,0 +1,6232 @@
+{
+  "ca_version": "1.0",
+  "agent_id": "CA_legacy_py",
+  "generation": 6,
+  "step": 120,
+  "components": {
+    "trace_buffer": {
+      "maxlen": 50,
+      "events": [
+        {
+          "from_state": 12545187431289002861,
+          "to_state": 4374050462121703708,
+          "timestamp": 70,
+          "prediction": 2168735276991228038,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 4374050462121703708,
+          "to_state": 13278768095660215096,
+          "timestamp": 71,
+          "prediction": 6614752758443029410,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 13278768095660215096,
+          "to_state": 1892839458052889381,
+          "timestamp": 72,
+          "prediction": 12545187431289002861,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 1892839458052889381,
+          "to_state": 10201509257391197334,
+          "timestamp": 73,
+          "prediction": 5868732167670606788,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 10201509257391197334,
+          "to_state": 8052065759191066160,
+          "timestamp": 74,
+          "prediction": -1,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 8052065759191066160,
+          "to_state": 9101932761796536238,
+          "timestamp": 75,
+          "prediction": 4128492815568385468,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 9101932761796536238,
+          "to_state": 9827426417736464869,
+          "timestamp": 76,
+          "prediction": 13816849685762669897,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 9827426417736464869,
+          "to_state": 9827426417736464869,
+          "timestamp": 77,
+          "prediction": 15541746280888681020,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 9827426417736464869,
+          "to_state": 9749077897204531636,
+          "timestamp": 78,
+          "prediction": 15541746280888681020,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 9749077897204531636,
+          "to_state": 11738928293499851363,
+          "timestamp": 79,
+          "prediction": 9827426417736464869,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 11738928293499851363,
+          "to_state": 7201912531840440252,
+          "timestamp": 80,
+          "prediction": 5299649777271468650,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 7201912531840440252,
+          "to_state": 14631726202024824742,
+          "timestamp": 81,
+          "prediction": 13316312859269406233,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 14631726202024824742,
+          "to_state": 3309487375985918029,
+          "timestamp": 82,
+          "prediction": -1,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 3309487375985918029,
+          "to_state": 9023906107732634997,
+          "timestamp": 83,
+          "prediction": 2630491923404905871,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 9023906107732634997,
+          "to_state": 4763537717669893082,
+          "timestamp": 84,
+          "prediction": 191103207918997951,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 4763537717669893082,
+          "to_state": 12763039177836920400,
+          "timestamp": 85,
+          "prediction": 4992639156535371965,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 12763039177836920400,
+          "to_state": 7201912531840440252,
+          "timestamp": 86,
+          "prediction": -1,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 7201912531840440252,
+          "to_state": 10594577789798113408,
+          "timestamp": 87,
+          "prediction": 13316312859269406233,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 10594577789798113408,
+          "to_state": 4992639156535371965,
+          "timestamp": 88,
+          "prediction": 9101932761796536238,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 4992639156535371965,
+          "to_state": 16540367864675315722,
+          "timestamp": 89,
+          "prediction": 13585467467752591234,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 16540367864675315722,
+          "to_state": 11738928293499851363,
+          "timestamp": 90,
+          "prediction": -1,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 11738928293499851363,
+          "to_state": 13816849685762669897,
+          "timestamp": 91,
+          "prediction": 5299649777271468650,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 13816849685762669897,
+          "to_state": 3022319460376777027,
+          "timestamp": 92,
+          "prediction": 9101932761796536238,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 3022319460376777027,
+          "to_state": 12951232751459444897,
+          "timestamp": 93,
+          "prediction": 13278768095660215096,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 12951232751459444897,
+          "to_state": 11738928293499851363,
+          "timestamp": 94,
+          "prediction": 12951232751459444897,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 11738928293499851363,
+          "to_state": 10201509257391197334,
+          "timestamp": 95,
+          "prediction": 5299649777271468650,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 10201509257391197334,
+          "to_state": 12763039177836920400,
+          "timestamp": 96,
+          "prediction": 8052065759191066160,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 12763039177836920400,
+          "to_state": 13316312859269406233,
+          "timestamp": 97,
+          "prediction": 7201912531840440252,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 13316312859269406233,
+          "to_state": 2630491923404905871,
+          "timestamp": 98,
+          "prediction": 9749077897204531636,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 2630491923404905871,
+          "to_state": 1892839458052889381,
+          "timestamp": 99,
+          "prediction": 2630491923404905871,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 1892839458052889381,
+          "to_state": 2003499023939921564,
+          "timestamp": 100,
+          "prediction": 5868732167670606788,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 2003499023939921564,
+          "to_state": 8052065759191066160,
+          "timestamp": 101,
+          "prediction": 8052065759191066160,
+          "prediction_correct": true,
+          "prediction_error": 0.0,
+          "token": null
+        },
+        {
+          "from_state": 8052065759191066160,
+          "to_state": 4374050462121703708,
+          "timestamp": 102,
+          "prediction": 4128492815568385468,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 4374050462121703708,
+          "to_state": 13316312859269406233,
+          "timestamp": 103,
+          "prediction": 6614752758443029410,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 13316312859269406233,
+          "to_state": 13816849685762669897,
+          "timestamp": 104,
+          "prediction": 9749077897204531636,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 13816849685762669897,
+          "to_state": 17859001073545325356,
+          "timestamp": 105,
+          "prediction": 9101932761796536238,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 17859001073545325356,
+          "to_state": 13278768095660215096,
+          "timestamp": 106,
+          "prediction": -1,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 13278768095660215096,
+          "to_state": 11738928293499851363,
+          "timestamp": 107,
+          "prediction": 12545187431289002861,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 11738928293499851363,
+          "to_state": 5299649777271468650,
+          "timestamp": 108,
+          "prediction": 5299649777271468650,
+          "prediction_correct": true,
+          "prediction_error": 0.0,
+          "token": null
+        },
+        {
+          "from_state": 5299649777271468650,
+          "to_state": 10594577789798113408,
+          "timestamp": 109,
+          "prediction": 2003499023939921564,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 10594577789798113408,
+          "to_state": 15541746280888681020,
+          "timestamp": 110,
+          "prediction": 9101932761796536238,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 15541746280888681020,
+          "to_state": 4124558801865004386,
+          "timestamp": 111,
+          "prediction": 10594577789798113408,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 4124558801865004386,
+          "to_state": 11738928293499851363,
+          "timestamp": 112,
+          "prediction": 9386266556559533853,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 11738928293499851363,
+          "to_state": 12417976749016910666,
+          "timestamp": 113,
+          "prediction": 5299649777271468650,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 12417976749016910666,
+          "to_state": 17870639168910209548,
+          "timestamp": 114,
+          "prediction": -1,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 17870639168910209548,
+          "to_state": 2003499023939921564,
+          "timestamp": 115,
+          "prediction": 4992639156535371965,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 2003499023939921564,
+          "to_state": 4064373471342997405,
+          "timestamp": 116,
+          "prediction": 8052065759191066160,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 4064373471342997405,
+          "to_state": 9023906107732634997,
+          "timestamp": 117,
+          "prediction": 17870639168910209548,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 9023906107732634997,
+          "to_state": 12951232751459444897,
+          "timestamp": 118,
+          "prediction": 191103207918997951,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        },
+        {
+          "from_state": 12951232751459444897,
+          "to_state": 1892839458052889381,
+          "timestamp": 119,
+          "prediction": 12951232751459444897,
+          "prediction_correct": false,
+          "prediction_error": 1.0,
+          "token": null
+        }
+      ]
+    },
+    "experience_trie": {
+      "max_depth": 10,
+      "nodes": [
+        {
+          "path": [
+            13316312859269406233
+          ],
+          "visit_count": 8,
+          "prediction_errors": [
+            0.5,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 0.875,
+          "word_binding": null
+        },
+        {
+          "path": [
+            13316312859269406233,
+            9749077897204531636
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            13316312859269406233,
+            4128492815568385468
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            13316312859269406233,
+            2630491923404905871
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            13316312859269406233,
+            13816849685762669897
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            9749077897204531636
+          ],
+          "visit_count": 4,
+          "prediction_errors": [
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            9749077897204531636,
+            9827426417736464869
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            9749077897204531636,
+            11738928293499851363
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            9827426417736464869
+          ],
+          "visit_count": 6,
+          "prediction_errors": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            9827426417736464869,
+            15541746280888681020
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            9827426417736464869,
+            9827426417736464869
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            9827426417736464869,
+            9749077897204531636
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            15541746280888681020
+          ],
+          "visit_count": 4,
+          "prediction_errors": [
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            15541746280888681020,
+            10594577789798113408
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            15541746280888681020,
+            4124558801865004386
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            10594577789798113408
+          ],
+          "visit_count": 6,
+          "prediction_errors": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            10594577789798113408,
+            9101932761796536238
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            10594577789798113408,
+            4992639156535371965
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            10594577789798113408,
+            15541746280888681020
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            9101932761796536238
+          ],
+          "visit_count": 12,
+          "prediction_errors": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            9101932761796536238,
+            13816849685762669897
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            9101932761796536238,
+            13585467467752591234
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            9101932761796536238,
+            2630491923404905871
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            9101932761796536238,
+            2168735276991228038
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            9101932761796536238,
+            191103207918997951
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            9101932761796536238,
+            9827426417736464869
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            13816849685762669897
+          ],
+          "visit_count": 6,
+          "prediction_errors": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            13816849685762669897,
+            9101932761796536238
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            13816849685762669897,
+            3022319460376777027
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            13816849685762669897,
+            17859001073545325356
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            13585467467752591234
+          ],
+          "visit_count": 4,
+          "prediction_errors": [
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            13585467467752591234,
+            4014059852968263309
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            13585467467752591234,
+            4064373471342997405
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            4014059852968263309
+          ],
+          "visit_count": 2,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            4014059852968263309,
+            3022319460376777027
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            3022319460376777027
+          ],
+          "visit_count": 8,
+          "prediction_errors": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            3022319460376777027,
+            13278768095660215096
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            3022319460376777027,
+            9386266556559533853
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            3022319460376777027,
+            4124558801865004386
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            3022319460376777027,
+            12951232751459444897
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            13278768095660215096
+          ],
+          "visit_count": 6,
+          "prediction_errors": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            13278768095660215096,
+            12545187431289002861
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            13278768095660215096,
+            1892839458052889381
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            13278768095660215096,
+            11738928293499851363
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            12545187431289002861
+          ],
+          "visit_count": 6,
+          "prediction_errors": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            12545187431289002861,
+            2168735276991228038
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            12545187431289002861,
+            4374050462121703708
+          ],
+          "visit_count": 2,
+          "prediction_errors": [
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            2168735276991228038
+          ],
+          "visit_count": 4,
+          "prediction_errors": [
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            2168735276991228038,
+            7201912531840440252
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            2168735276991228038,
+            4763537717669893082
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            7201912531840440252
+          ],
+          "visit_count": 6,
+          "prediction_errors": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            7201912531840440252,
+            13316312859269406233
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            7201912531840440252,
+            14631726202024824742
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            7201912531840440252,
+            10594577789798113408
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            4128492815568385468
+          ],
+          "visit_count": 4,
+          "prediction_errors": [
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            4128492815568385468,
+            5868732167670606788
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            4128492815568385468,
+            9101932761796536238
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            5868732167670606788
+          ],
+          "visit_count": 4,
+          "prediction_errors": [
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            5868732167670606788,
+            9101932761796536238
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            5868732167670606788,
+            3022319460376777027
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            2630491923404905871
+          ],
+          "visit_count": 10,
+          "prediction_errors": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            2630491923404905871,
+            2630491923404905871
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            2630491923404905871,
+            4763537717669893082
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            2630491923404905871,
+            11738928293499851363
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            2630491923404905871,
+            14541132743536532460
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            2630491923404905871,
+            1892839458052889381
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            4763537717669893082
+          ],
+          "visit_count": 6,
+          "prediction_errors": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            4763537717669893082,
+            4992639156535371965
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            4763537717669893082,
+            9694928054240253023
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            4763537717669893082,
+            12763039177836920400
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            4992639156535371965
+          ],
+          "visit_count": 6,
+          "prediction_errors": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            4992639156535371965,
+            13585467467752591234
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            4992639156535371965,
+            17870639168910209548
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            4992639156535371965,
+            16540367864675315722
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            4064373471342997405
+          ],
+          "visit_count": 4,
+          "prediction_errors": [
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            4064373471342997405,
+            17870639168910209548
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            4064373471342997405,
+            9023906107732634997
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            17870639168910209548
+          ],
+          "visit_count": 8,
+          "prediction_errors": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            17870639168910209548,
+            4992639156535371965
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            17870639168910209548,
+            5299649777271468650
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            17870639168910209548,
+            312981191383605028
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            17870639168910209548,
+            2003499023939921564
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            5299649777271468650
+          ],
+          "visit_count": 6,
+          "prediction_errors": [
+            1.0,
+            1.0,
+            0.0
+          ],
+          "mean_prediction_error": 0.6666666666666666,
+          "word_binding": null
+        },
+        {
+          "path": [
+            5299649777271468650,
+            2003499023939921564
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            5299649777271468650,
+            3309487375985918029
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            5299649777271468650,
+            10594577789798113408
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            2003499023939921564
+          ],
+          "visit_count": 6,
+          "prediction_errors": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            2003499023939921564,
+            8052065759191066160
+          ],
+          "visit_count": 2,
+          "prediction_errors": [
+            1.0,
+            0.0
+          ],
+          "mean_prediction_error": 0.5,
+          "word_binding": null
+        },
+        {
+          "path": [
+            2003499023939921564,
+            4064373471342997405
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            8052065759191066160
+          ],
+          "visit_count": 6,
+          "prediction_errors": [
+            1.0,
+            1.0,
+            0.0
+          ],
+          "mean_prediction_error": 0.6666666666666666,
+          "word_binding": null
+        },
+        {
+          "path": [
+            8052065759191066160,
+            4128492815568385468
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            8052065759191066160,
+            9101932761796536238
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            8052065759191066160,
+            4374050462121703708
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            9694928054240253023
+          ],
+          "visit_count": 6,
+          "prediction_errors": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            9694928054240253023,
+            12545187431289002861
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            9694928054240253023,
+            1687769029912030458
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            9694928054240253023,
+            1892839458052889381
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            4374050462121703708
+          ],
+          "visit_count": 8,
+          "prediction_errors": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            4374050462121703708,
+            6614752758443029410
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            4374050462121703708,
+            2630491923404905871
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            4374050462121703708,
+            13278768095660215096
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            4374050462121703708,
+            13316312859269406233
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            6614752758443029410
+          ],
+          "visit_count": 2,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            6614752758443029410,
+            17160922598332498045
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            17160922598332498045
+          ],
+          "visit_count": 2,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            17160922598332498045,
+            9023906107732634997
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            9023906107732634997
+          ],
+          "visit_count": 6,
+          "prediction_errors": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            9023906107732634997,
+            191103207918997951
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            9023906107732634997,
+            4763537717669893082
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            9023906107732634997,
+            12951232751459444897
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            191103207918997951
+          ],
+          "visit_count": 4,
+          "prediction_errors": [
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            191103207918997951,
+            3022319460376777027
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            191103207918997951,
+            9694928054240253023
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            9386266556559533853
+          ],
+          "visit_count": 4,
+          "prediction_errors": [
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            9386266556559533853,
+            9101932761796536238
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            9386266556559533853,
+            9694928054240253023
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            1687769029912030458
+          ],
+          "visit_count": 2,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            1687769029912030458,
+            4374050462121703708
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            11738928293499851363
+          ],
+          "visit_count": 12,
+          "prediction_errors": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            11738928293499851363,
+            5299649777271468650
+          ],
+          "visit_count": 2,
+          "prediction_errors": [
+            1.0,
+            0.0
+          ],
+          "mean_prediction_error": 0.5,
+          "word_binding": null
+        },
+        {
+          "path": [
+            11738928293499851363,
+            7201912531840440252
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            11738928293499851363,
+            13816849685762669897
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            11738928293499851363,
+            10201509257391197334
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            11738928293499851363,
+            12417976749016910666
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            3309487375985918029
+          ],
+          "visit_count": 6,
+          "prediction_errors": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            3309487375985918029,
+            2630491923404905871
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            3309487375985918029,
+            14541132743536532460
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            3309487375985918029,
+            9023906107732634997
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            14541132743536532460
+          ],
+          "visit_count": 4,
+          "prediction_errors": [
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            14541132743536532460,
+            17870639168910209548
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            14541132743536532460,
+            1892839458052889381
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            312981191383605028
+          ],
+          "visit_count": 2,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            312981191383605028,
+            8432406153158125399
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            8432406153158125399
+          ],
+          "visit_count": 2,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            8432406153158125399,
+            12951232751459444897
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            12951232751459444897
+          ],
+          "visit_count": 8,
+          "prediction_errors": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            12951232751459444897,
+            12951232751459444897
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            12951232751459444897,
+            3309487375985918029
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            12951232751459444897,
+            11738928293499851363
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            12951232751459444897,
+            1892839458052889381
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            1892839458052889381
+          ],
+          "visit_count": 9,
+          "prediction_errors": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            1892839458052889381,
+            5868732167670606788
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            1892839458052889381,
+            12545187431289002861
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            1892839458052889381,
+            10201509257391197334
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            1892839458052889381,
+            2003499023939921564
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            4124558801865004386
+          ],
+          "visit_count": 4,
+          "prediction_errors": [
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            4124558801865004386,
+            9386266556559533853
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            4124558801865004386,
+            11738928293499851363
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            10201509257391197334
+          ],
+          "visit_count": 4,
+          "prediction_errors": [
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            10201509257391197334,
+            8052065759191066160
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            10201509257391197334,
+            12763039177836920400
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            14631726202024824742
+          ],
+          "visit_count": 2,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            14631726202024824742,
+            3309487375985918029
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            12763039177836920400
+          ],
+          "visit_count": 4,
+          "prediction_errors": [
+            1.0,
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            12763039177836920400,
+            7201912531840440252
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            12763039177836920400,
+            13316312859269406233
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            16540367864675315722
+          ],
+          "visit_count": 2,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            16540367864675315722,
+            11738928293499851363
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            17859001073545325356
+          ],
+          "visit_count": 2,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            17859001073545325356,
+            13278768095660215096
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            12417976749016910666
+          ],
+          "visit_count": 2,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        },
+        {
+          "path": [
+            12417976749016910666,
+            17870639168910209548
+          ],
+          "visit_count": 1,
+          "prediction_errors": [
+            1.0
+          ],
+          "mean_prediction_error": 1.0,
+          "word_binding": null
+        }
+      ]
+    },
+    "meta_trie": {
+      "trie": {
+        "max_depth": 10,
+        "nodes": [
+          {
+            "path": [
+              253818717
+            ],
+            "visit_count": 1,
+            "prediction_errors": [],
+            "mean_prediction_error": 0.0,
+            "word_binding": null
+          },
+          {
+            "path": [
+              253818717,
+              188994628
+            ],
+            "visit_count": 1,
+            "prediction_errors": [
+              0.0
+            ],
+            "mean_prediction_error": 0.0,
+            "word_binding": null
+          },
+          {
+            "path": [
+              188994628
+            ],
+            "visit_count": 1,
+            "prediction_errors": [],
+            "mean_prediction_error": 0.0,
+            "word_binding": null
+          },
+          {
+            "path": [
+              188994628,
+              62674110
+            ],
+            "visit_count": 1,
+            "prediction_errors": [
+              0.0
+            ],
+            "mean_prediction_error": 0.0,
+            "word_binding": null
+          },
+          {
+            "path": [
+              62674110
+            ],
+            "visit_count": 1,
+            "prediction_errors": [],
+            "mean_prediction_error": 0.0,
+            "word_binding": null
+          },
+          {
+            "path": [
+              62674110,
+              62654759
+            ],
+            "visit_count": 1,
+            "prediction_errors": [
+              0.0
+            ],
+            "mean_prediction_error": 0.0,
+            "word_binding": null
+          },
+          {
+            "path": [
+              62654759
+            ],
+            "visit_count": 1,
+            "prediction_errors": [],
+            "mean_prediction_error": 0.0,
+            "word_binding": null
+          },
+          {
+            "path": [
+              62654759,
+              214207243
+            ],
+            "visit_count": 1,
+            "prediction_errors": [
+              0.0
+            ],
+            "mean_prediction_error": 0.0,
+            "word_binding": null
+          }
+        ]
+      },
+      "registry": {
+        "253818717": {
+          "state_ids": [
+            13278768095660215096,
+            12545187431289002861,
+            2168735276991228038,
+            7201912531840440252,
+            13316312859269406233,
+            4128492815568385468,
+            5868732167670606788,
+            9101932761796536238,
+            2630491923404905871,
+            2630491923404905871
+          ],
+          "mean_prediction_error": 1.0,
+          "timestamp": 20
+        },
+        "188994628": {
+          "state_ids": [
+            4128492815568385468,
+            9101932761796536238,
+            2168735276991228038,
+            4763537717669893082,
+            9694928054240253023,
+            12545187431289002861,
+            4374050462121703708,
+            6614752758443029410,
+            17160922598332498045,
+            9023906107732634997
+          ],
+          "mean_prediction_error": 1.0,
+          "timestamp": 40
+        },
+        "62674110": {
+          "state_ids": [
+            5299649777271468650,
+            3309487375985918029,
+            2630491923404905871,
+            14541132743536532460,
+            17870639168910209548,
+            312981191383605028,
+            8432406153158125399,
+            12951232751459444897,
+            12951232751459444897,
+            3309487375985918029
+          ],
+          "mean_prediction_error": 1.0,
+          "timestamp": 60
+        },
+        "62654759": {
+          "state_ids": [
+            13278768095660215096,
+            1892839458052889381,
+            10201509257391197334,
+            8052065759191066160,
+            9101932761796536238,
+            9827426417736464869,
+            9827426417736464869,
+            9749077897204531636,
+            11738928293499851363,
+            7201912531840440252
+          ],
+          "mean_prediction_error": 1.0,
+          "timestamp": 80
+        },
+        "214207243": {
+          "state_ids": [
+            13816849685762669897,
+            3022319460376777027,
+            12951232751459444897,
+            11738928293499851363,
+            10201509257391197334,
+            12763039177836920400,
+            13316312859269406233,
+            2630491923404905871,
+            1892839458052889381,
+            2003499023939921564
+          ],
+          "mean_prediction_error": 1.0,
+          "timestamp": 100
+        }
+      },
+      "last_meta_state": 214207243,
+      "snapshot_window": 10,
+      "max_depth": 10,
+      "token_registry": {
+        "253818717": {
+          "wait": 20
+        },
+        "188994628": {
+          "wait": 20
+        },
+        "62674110": {
+          "I": 35,
+          "notice": 20,
+          "suh": 1,
+          "different": 15,
+          "xow": 1,
+          "xor": 2,
+          "taw": 1
+        },
+        "62654759": {
+          "I": 32,
+          "notice": 16,
+          "different": 16,
+          "wait": 4
+        },
+        "214207243": {
+          "I": 36,
+          "notice": 20,
+          "muj": 1,
+          "different": 16,
+          "boz": 1,
+          "xow": 1,
+          "gix": 1
+        }
+      }
+    },
+    "self_token": {
+      "token": "I",
+      "referent_meta_state_id": 214207243,
+      "stationary_prob": 1.0,
+      "locked": true,
+      "lock_generation": 60,
+      "lock_threshold": 0.25,
+      "consecutive_above_threshold": 3,
+      "lock_consecutive_required": 3,
+      "stability_history": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "protection_radius": 2
+    },
+    "lexicon": {
+      "embedding_dim": 64,
+      "association_threshold": 0.15,
+      "entries": [
+        {
+          "label": "p:b8cd0bfe1eb81e19",
+          "output_token": "huf",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 0.5,
+          "integration_depth": 0.2663264827585778,
+          "encounter_count": 0,
+          "generation_bound": 0,
+          "step_bound": 0,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:874baeb1d67d01b4",
+          "output_token": "maw",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2665930758344122,
+          "encounter_count": 0,
+          "generation_bound": 1,
+          "step_bound": 1,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:886208424d78b9e5",
+          "output_token": "vos",
+          "trace_signature": [
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2668599357701824,
+          "encounter_count": 0,
+          "generation_bound": 2,
+          "step_bound": 2,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:d7af5fe6159e423c",
+          "output_token": "kaw",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2671270628330154,
+          "encounter_count": 0,
+          "generation_bound": 3,
+          "step_bound": 3,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:9307805e0a28e080",
+          "output_token": "bot",
+          "trace_signature": [
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2673944572903057,
+          "encounter_count": 0,
+          "generation_bound": 4,
+          "step_bound": 4,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:7e508f9f6c5f67ae",
+          "output_token": "bom",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2676621194097154,
+          "encounter_count": 0,
+          "generation_bound": 5,
+          "step_bound": 5,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:bfbf4f959ad9fd49",
+          "output_token": "lug",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2679300494591746,
+          "encounter_count": 0,
+          "generation_bound": 6,
+          "step_bound": 6,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:bc8946aedb04cf82",
+          "output_token": "pab",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2684667144213028,
+          "encounter_count": 0,
+          "generation_bound": 8,
+          "step_bound": 8,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:37b4ce2b3b547e8d",
+          "output_token": "bub",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.268735449871174,
+          "encounter_count": 0,
+          "generation_bound": 9,
+          "step_bound": 9,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:29f16f8949821143",
+          "output_token": "set",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.26900445432549946,
+          "encounter_count": 0,
+          "generation_bound": 10,
+          "step_bound": 10,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:b847a93aa49e0b38",
+          "output_token": "bul",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.26927372805355304,
+          "encounter_count": 0,
+          "generation_bound": 11,
+          "step_bound": 11,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:ae19758062ad1b6d",
+          "output_token": "voy",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.26954327132487793,
+          "encounter_count": 0,
+          "generation_bound": 12,
+          "step_bound": 12,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:1e18e53e74eba886",
+          "output_token": "lil",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2698130844092872,
+          "encounter_count": 0,
+          "generation_bound": 13,
+          "step_bound": 13,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:63f2554a53c897bc",
+          "output_token": "lon",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.27008316757686407,
+          "encounter_count": 0,
+          "generation_bound": 14,
+          "step_bound": 14,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:394b5a5791b4b5bc",
+          "output_token": "boy",
+          "trace_signature": [
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2706241452432052,
+          "encounter_count": 0,
+          "generation_bound": 16,
+          "step_bound": 16,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:5171ecd007ea2bc4",
+          "output_token": "gen",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2708950402834887,
+          "encounter_count": 0,
+          "generation_bound": 17,
+          "step_bound": 17,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:24816277a7155d8f",
+          "output_token": "gix",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2714376441341128,
+          "encounter_count": 0,
+          "generation_bound": 19,
+          "step_bound": 19,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:421b7c50dfe393da",
+          "output_token": "tuk",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2719813348224228,
+          "encounter_count": 0,
+          "generation_bound": 21,
+          "step_bound": 21,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:45496adc58ff28bd",
+          "output_token": "niz",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.27225358841083364,
+          "encounter_count": 0,
+          "generation_bound": 22,
+          "step_bound": 22,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:38678e2361ebaf9d",
+          "output_token": "wus",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2727989134387978,
+          "encounter_count": 0,
+          "generation_bound": 24,
+          "step_bound": 24,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:f80143a43413320c",
+          "output_token": "zaw",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.273071985424222,
+          "encounter_count": 0,
+          "generation_bound": 25,
+          "step_bound": 25,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:498c2364c83e726a",
+          "output_token": "lot",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2738928425472289,
+          "encounter_count": 0,
+          "generation_bound": 28,
+          "step_bound": 28,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:1bcddbbf4dc7e69c",
+          "output_token": "jiy",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2741670095567857,
+          "encounter_count": 0,
+          "generation_bound": 29,
+          "step_bound": 29,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:6fbeaf2574ab6630",
+          "output_token": "rav",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2744414510077935,
+          "encounter_count": 0,
+          "generation_bound": 30,
+          "step_bound": 30,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:868b4db30bf5945f",
+          "output_token": "xaj",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2758177845092939,
+          "encounter_count": 0,
+          "generation_bound": 35,
+          "step_bound": 35,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:3cb3bfb87865b91c",
+          "output_token": "xor",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.31025677540513025,
+          "encounter_count": 1,
+          "generation_bound": 37,
+          "step_bound": 37,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:5bcc52965c0833a2",
+          "output_token": "waw",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.27664689553184973,
+          "encounter_count": 0,
+          "generation_bound": 38,
+          "step_bound": 38,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:ee27d82e4395007d",
+          "output_token": "diz",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2769238193512009,
+          "encounter_count": 0,
+          "generation_bound": 39,
+          "step_bound": 39,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:7d3b5acb55e1ad75",
+          "output_token": "zoj",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2772010203715725,
+          "encounter_count": 0,
+          "generation_bound": 40,
+          "step_bound": 40,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:2a6ef5ae77311bf",
+          "output_token": "jul",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.27747849887044296,
+          "encounter_count": 0,
+          "generation_bound": 41,
+          "step_bound": 41,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:8242b7b3dedc271d",
+          "output_token": "bey",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2780342894149835,
+          "encounter_count": 0,
+          "generation_bound": 43,
+          "step_bound": 43,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:176c28fd92cfecfa",
+          "output_token": "yes",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.27914921248597013,
+          "encounter_count": 0,
+          "generation_bound": 47,
+          "step_bound": 47,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:a2e90d1661d75263",
+          "output_token": "xiz",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2799883378143882,
+          "encounter_count": 0,
+          "generation_bound": 50,
+          "step_bound": 50,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:2deda93bea47c04d",
+          "output_token": "rom",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.28054915557638543,
+          "encounter_count": 0,
+          "generation_bound": 52,
+          "step_bound": 52,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:c9cc7b30224bdbec",
+          "output_token": "yub",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.281111096658606,
+          "encounter_count": 0,
+          "generation_bound": 54,
+          "step_bound": 54,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:457eebc3dcc5f24",
+          "output_token": "suh",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2816741633110648,
+          "encounter_count": 0,
+          "generation_bound": 56,
+          "step_bound": 56,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:7505ecb830cee757",
+          "output_token": "xuk",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2819561194304953,
+          "encounter_count": 0,
+          "generation_bound": 57,
+          "step_bound": 57,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:b3bc0591a22528a1",
+          "output_token": "taw",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2822383577882836,
+          "encounter_count": 0,
+          "generation_bound": 58,
+          "step_bound": 58,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:1a44b7755a15db25",
+          "output_token": "xow",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.32,
+          "encounter_count": 1,
+          "generation_bound": 62,
+          "step_bound": 62,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:393d6060a05fd562",
+          "output_token": "yup",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2842219527342424,
+          "encounter_count": 0,
+          "generation_bound": 65,
+          "step_bound": 65,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:8d930a9ea3a94c96",
+          "output_token": "fab",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2865059945470679,
+          "encounter_count": 0,
+          "generation_bound": 73,
+          "step_bound": 73,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:cb0e557562770fa6",
+          "output_token": "muj",
+          "trace_signature": [
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2888083911947419,
+          "encounter_count": 0,
+          "generation_bound": 81,
+          "step_bound": 81,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:b11f6c82c15cfe50",
+          "output_token": "wog",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2899665186297251,
+          "encounter_count": 0,
+          "generation_bound": 85,
+          "step_bound": 85,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:e58b30f03442300a",
+          "output_token": "gix",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.2911292901789258,
+          "encounter_count": 0,
+          "generation_bound": 89,
+          "step_bound": 89,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:f7d7eadaf7fd2b2c",
+          "output_token": "boz",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.32,
+          "encounter_count": 1,
+          "generation_bound": 105,
+          "step_bound": 105,
+          "labeling_source": "proto",
+          "associated_labels": []
+        },
+        {
+          "label": "p:ac55840f5a368b4a",
+          "output_token": "fin",
+          "trace_signature": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7071067811865476,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_error_peak": 1.0,
+          "integration_depth": 0.29820449400449817,
+          "encounter_count": 0,
+          "generation_bound": 113,
+          "step_bound": 113,
+          "labeling_source": "proto",
+          "associated_labels": []
+        }
+      ]
+    },
+    "last_world_state_id": 1892839458052889381
+  },
+  "config": {
+    "trace_buffer_length": 50,
+    "trie_max_depth": 10,
+    "meta_observation_interval": 20,
+    "lock_threshold": 0.25,
+    "lock_consecutive_required": 3,
+    "protection_radius": 2
+  },
+  "metadata": {
+    "cycle_level": 0,
+    "constituent_ids": [],
+    "leaf_constituent_ids": [],
+    "combined": false
+  }
+}

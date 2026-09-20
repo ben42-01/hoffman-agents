@@ -1,10 +1,10 @@
 from __future__ import annotations
 
+import math
 import random
 
-import numpy as np
-
-from ..core import TraceEvent, TraceBuffer, ExperienceLexicon, LexiconEntry, invent_token, is_invented_token
+from ..core import TraceEvent, LexiconEntry, invent_token, is_invented_token
+from ..math.signature import build_transition_signature
 from .world_state import WorldState
 from .experience_space import ExperienceSpace
 
@@ -17,17 +17,31 @@ def perceive(
     frozen: bool = False,
     ergodic_state: str = "idle",
     rng: random.Random = random._inst,
+    generation: int | None = None,
 ) -> ExperienceSpace:
+    """Perception kernel P: fold one world observation into the experience space.
+
+    v3: state ids are 32-bit (identical to Node) and the prediction error is
+    1 - p(actual | previous) under the Witten-Bell transition estimate, a graded
+    surprise in [0, 1]; the surprisal -ln p is recorded on the trace event.
+    """
     if not world:
         return experience
 
-    world_state_id = world.get_state_id()
+    v3 = experience.math_version != "legacy"
+    world_state_id = world.get_state_id(bits=32) if v3 else world.get_state_id()
 
     previous_id = experience.last_world_state_id
+    surprisal = None
     if previous_id is not None:
         prediction = experience.trie.predict_next([previous_id])
         prediction_correct = prediction == world_state_id if prediction is not None else False
-        prediction_error = _compute_prediction_error(prediction, world_state_id)
+        if v3:
+            p = experience.trie.transition_probability(previous_id, world_state_id)
+            prediction_error = min(1.0, max(0.0, 1.0 - p))
+            surprisal = -math.log(p)
+        else:
+            prediction_error = _compute_prediction_error(prediction, world_state_id)
     else:
         prediction = None
         prediction_correct = False
@@ -42,22 +56,30 @@ def perceive(
         prediction_error=prediction_error,
         token=None,
     )
+    if v3:
+        event.surprisal = surprisal
 
     experience.trace_buffer.append(event)
 
     if not frozen:
         experience.trie.insert([event.to_state], prediction_error)
         if event.from_state >= 0:
-            experience.trie.insert([event.from_state, event.to_state], prediction_error)
+            if v3:
+                experience.trie.insert_transition(event.from_state, event.to_state, prediction_error)
+            else:
+                experience.trie.insert([event.from_state, event.to_state], prediction_error)
 
         _update_lexicon(experience, world, world_state_id, prediction_error, step, rng)
 
         if step > 0 and step % meta_observation_interval == 0:
-            meta_id = experience.meta_trie.observe_self(
+            experience.meta_trie.observe_self(
                 experience.trace_buffer, timestamp=step,
                 ergodic_state=ergodic_state, is_locked=experience.self_token.locked,
             )
-            experience.self_token.update(experience.meta_trie, generation=step)
+            experience.self_token.update(
+                experience.meta_trie,
+                generation=generation if (v3 and generation is not None) else step,
+            )
 
         if step > 0 and step % (meta_observation_interval * 3) == 0:
             _check_bind_proto_word(experience, world_state_id, step, rng)
@@ -73,6 +95,13 @@ def _compute_prediction_error(
     if prediction is None:
         return 1.0
     return 0.0 if prediction == actual else 1.0
+
+
+def _signature(experience: ExperienceSpace, world_state_id: int):
+    return build_transition_signature(
+        experience.last_world_state_id, world_state_id,
+        experience.lexicon.embedding_dim, experience.math_version,
+    )
 
 
 def _update_lexicon(
@@ -97,15 +126,11 @@ def _update_lexicon(
                 existing.integration_depth = min(existing.integration_depth + 0.05, 1.0)
                 experience.lexicon.update_integration(existing.label, True)
             else:
-                sig = _build_transition_signature(
-                    experience.last_world_state_id, world_state_id,
-                    experience.lexicon.embedding_dim,
-                )
                 label = f"adopted:{token}"
                 entry = experience.lexicon.bind(
                     label=label,
                     output_token=token,
-                    trace_signature=sig,
+                    trace_signature=_signature(experience, world_state_id),
                     prediction_error_peak=prediction_error,
                     source="adopted",
                     generation=step,
@@ -121,16 +146,11 @@ def _update_lexicon(
     if experience.lexicon.lookup_by_label(label) is not None:
         return
 
-    sig = _build_transition_signature(
-        experience.last_world_state_id, world_state_id,
-        experience.lexicon.embedding_dim,
-    )
-
     output_token = invent_token(rng)
     entry = experience.lexicon.bind(
         label=label,
         output_token=output_token,
-        trace_signature=sig,
+        trace_signature=_signature(experience, world_state_id),
         prediction_error_peak=prediction_error,
         source="proto",
         generation=step,
@@ -147,20 +167,9 @@ def _decay_lexicon(experience: ExperienceSpace) -> None:
             entry.integration_depth = 0.01
 
 
-def _build_transition_signature(
-    prev_id: int | None,
-    curr_id: int,
-    embedding_dim: int,
-) -> np.ndarray:
-    sig = np.zeros(embedding_dim, dtype=np.float64)
-    if prev_id is not None:
-        combined = hash(f"{prev_id}->{curr_id}")
-        sig[combined % embedding_dim] = 1.0
-    sig[curr_id % embedding_dim] = 1.0
-    norm = np.linalg.norm(sig)
-    if norm > 0:
-        sig = sig / norm
-    return sig
+def _build_transition_signature(prev_id, curr_id, embedding_dim, math_version="legacy"):
+    """Deprecated: use conscious_agent.math.build_transition_signature."""
+    return build_transition_signature(prev_id, curr_id, embedding_dim, math_version)
 
 
 def _lookup_by_output_token(experience: ExperienceSpace, token: str) -> LexiconEntry | None:
@@ -182,16 +191,11 @@ def _check_bind_proto_word(
         if experience.lexicon.lookup_by_label(label) is not None:
             return
 
-        sig = _build_transition_signature(
-            experience.last_world_state_id, world_state_id,
-            experience.lexicon.embedding_dim,
-        )
-
         output_token = invent_token(rng)
         experience.lexicon.bind(
             label=label,
             output_token=output_token,
-            trace_signature=sig,
+            trace_signature=_signature(experience, world_state_id),
             prediction_error_peak=recent_errors,
             source="proto",
             generation=step,

@@ -1,8 +1,19 @@
 {
   "name": "conscious-agent",
-  "version": "2.1.2",
+  "version": "3.0.0",
   "description": "Self-referential structure-learning system — agents that learn by inhabiting worlds",
   "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./worlds": "./src/world/index.js",
+    "./io": "./src/io/index.js",
+    "./bell": "./src/analysis/bell.js",
+    "./markov": "./src/math/markov.js",
+    "./trace": "./src/math/trace.js",
+    "./quantum": "./src/quantum/qubits.js",
+    "./package.json": "./package.json",
+    "./src/*": "./src/*"
+  },
   "files": [
     "src/",
     "docs/",
@@ -31,7 +42,16 @@
     "examples:doubleSlitAnalogy": "node examples/09_double_slit_analogy/double_slit_analogy.js",
     "build:dryRun": "npm pack --dry-run",
     "build:pack": "npm pack --pack-destination ../.dist",
-    "test": "node test/core.test.js"
+    "test": "node --test test/core.test.js test/markov.test.js test/ilock.test.js test/combination.test.js test/legacy.test.js test/parity.test.js test/analysis.test.js test/trace.test.js test/trace-logic.test.js test/quantum.test.js test/relativity.test.js",
+    "examples:colorFusion": "node examples/11_color_fusion/color_fusion.js",
+    "examples:ergodicDiagnostics": "node examples/12_ergodic_diagnostics/ergodic_diagnostics.js",
+    "examples:bellThroughTheHeadset": "node examples/13_bell_through_the_headset/bell_through_the_headset.js",
+    "examples:spacetimeInTheHeadset": "node examples/14_spacetime_in_the_headset/spacetime_in_the_headset.js",
+    "examples:timeInTheTraces": "node examples/15_time_in_the_traces/time_in_the_traces.js",
+    "examples:traceLogic": "node examples/16_trace_logic_and_decorated_permutations/trace_logic.js",
+    "examples:quantumAgents": "node examples/17_quantum_agents/quantum_agents.js",
+    "examples:relativityAtInfinity": "node examples/18_relativity_at_infinity/relativity_at_infinity.js",
+    "examples:colorFusion:dashboard": "node examples/11_color_fusion/color_fusion.js > examples/11_color_fusion/color_fusion.json"
   },
   "license": "MIT",
   "keywords": [

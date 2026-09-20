@@ -11,14 +11,23 @@ Quick start:
 
     outputs = agent.run(n_steps=1000)
     print(f'"I" locked: {agent.experience.self_token.locked}')
+    print(agent.ergodic_stats()["lock"])
+
+Math versions: agents use the v3 ergodic dynamics by default. Pass
+math_version="legacy" to reproduce 2.x behaviour exactly.
 """
 
-__version__ = "2.1.2"
+__version__ = "3.0.0"
 
 from .agent import ConsciousAgent, SimpleWorld, WorldState, EnvironmentState, sequence_to_state_id, StepOutput, Prediction, ExperienceSpace
 from .world import World, WorldBuilder, SelfWorld, CoinTossWorld, Normalizer, FeatureSpec, build_world_from_dataframe
 from .network import AgentNetwork, Topology, InteractionCycle, Connection
-from .combination import combine, trivial_agent, experience_space_distance, fuse
+from .combination import combine, trivial_agent, experience_space_distance, fuse, product_kernel, meta_kernel
+from .agent.decision_map import build_decision_kernel, DECISION_STATES
+from .kernels import MarkovKernel, StochasticMatrix, FormalConsciousAgent
+from .math import markov, trace, Mulberry32, mulberry32, fnv1a32
+from .analysis import bell, decorated
+from .quantum import qubits as quantum
 from .io import serialize, deserialize, clone, clone_agent, fingerprint, save_agent, load_agent, load_latest
 from .core import (
     TraceBuffer,
@@ -71,6 +80,22 @@ __all__ = [
     "combine",
     "trivial_agent",
     "experience_space_distance",
+    "fuse",
+    "product_kernel",
+    "meta_kernel",
+    "build_decision_kernel",
+    "DECISION_STATES",
+    "MarkovKernel",
+    "StochasticMatrix",
+    "FormalConsciousAgent",
+    "markov",
+    "trace",
+    "bell",
+    "decorated",
+    "quantum",
+    "Mulberry32",
+    "mulberry32",
+    "fnv1a32",
     "serialize",
     "deserialize",
     "clone",

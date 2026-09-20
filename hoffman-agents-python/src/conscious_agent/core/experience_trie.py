@@ -40,6 +40,46 @@ class ExperienceTrie:
             node.visit_count += 1
         node.add_prediction_error(prediction_error)
 
+    def insert_transition(self, frm: int, to: int, prediction_error: float = 0.0) -> None:
+        """Record one transition frm -> to without re-counting a visit to ``frm``.
+
+        insert([frm, to]) increments both nodes, which double-counts the depth-1
+        visit when insert([to]) is also called every step.
+        """
+        parent = self._root.children.get(frm)
+        if parent is None:
+            parent = self._root.children[frm] = TrieNode(state_id=frm, depth=1)
+        child = parent.children.get(to)
+        if child is None:
+            child = parent.children[to] = TrieNode(state_id=to, depth=2)
+        child.visit_count += 1
+        child.add_prediction_error(prediction_error)
+
+    def transition_probability(self, frm: int, to: int, n_states: int | None = None) -> float:
+        """Witten-Bell estimate of P(to | frm) from depth-2 counts.
+
+        seen successor: c(to) / (N + u); unseen: u / (N + u) shared by the K - u
+        unseen states (N transitions out of frm, u distinct successors, K possible
+        successors = known states + 1). After n identical transitions p = n/(n+1),
+        independent of the size of the state space.
+        """
+        k = max(n_states if n_states is not None else len(self._root.children) + 1, 1)
+        parent = self._root.children.get(frm)
+        total = distinct = hit = 0
+        if parent is not None:
+            for sid, child in parent.children.items():
+                if child.visit_count <= 0:
+                    continue
+                total += child.visit_count
+                distinct += 1
+                if sid == to:
+                    hit = child.visit_count
+        if total == 0:
+            return 1.0 / k
+        if hit > 0:
+            return hit / (total + distinct)
+        return distinct / (total + distinct) / max(k - distinct, 1)
+
     def lookup(self, path: list[int]) -> TrieNode | None:
         node = self._root
         for state_id in path:

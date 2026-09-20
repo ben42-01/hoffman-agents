@@ -3,6 +3,14 @@
 
 ---
 
+> **Status: design specification.** This document was written before the implementation, as a
+> target. Much of it describes APIs that do **not** exist: constructor options such as `soul_dir`,
+> `prune_interval` and `verbose`, `load_agent_from_seed`, `run_until`, replay mode, event callbacks,
+> Ollama auto-labelling, biography summaries, and the trading pipeline examples. For the
+> implemented API see the package READMEs, `src/index.js` (Node) and `conscious_agent/__init__.py`
+> (Python). For the mathematics see [MATHEMATICAL_MODEL.md](MATHEMATICAL_MODEL.md). The
+> "Part 11: New in v2.0" section describes features that do exist.
+
 > "One import. One world. The agent does the rest."
 
 ---

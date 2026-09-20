@@ -1,10 +1,10 @@
 # conscious-agent
 
-**A computational implementation of Hoffman's Conscious Realism — in Node.js.**
+**An executable model of Donald Hoffman's conscious-agent formalism — in Node.js.**
 
 Build self-referential agents that learn by *inhabiting* worlds. Zero external dependencies.
 
-> **For AI coding assistants**: A `SKILL.md` file lives in `.context/SKILL.md` with patterns for complex use cases (multi-agent networks, crystal projection, live data feeding, debugging). opencode and compatible tools load it automatically.
+> **For AI coding assistants**: A `SKILL.md` file lives in `.context/SKILL.md` with patterns for complex use cases (multi-agent networks, live data feeding, debugging). opencode and compatible tools load it automatically.
 
 ```javascript
 const { ConsciousAgent } = require('conscious-agent');
@@ -206,16 +206,16 @@ traceDistance(pathA, pathB); // edit distance with transition-aware cost
 mergeSimilarPaths(trie, matrix, 0.15);  // merge paths within threshold
 ```
 
-## Self-Awareness
+## Self-Modelling
 
-This library provides **four self-awareness mechanisms**, three built-in and one optional:
+Agents contain four self-modelling mechanisms. They are mechanisms; whether any of them amounts to self-awareness is not something the code can establish.
 
 | Mechanism | Type | What it does |
 |-----------|------|-------------|
-| **MetaTrie** | Built-in (implicit) | Models the agent's own trace buffer patterns — a hidden self-model |
-| **SelfTokenState ("I")** | Built-in (implicit) | Tracks identity stability; locks on meta-trie convergence |
-| **strangeLoopScore** | Built-in (explicit) | Measures self-referential depth in output tokens |
-| **SelfWorld** | Optional wrapper | Injects agent's internal metrics into its perception stream |
+| **MetaTrie** | Built-in | A Markov chain over the agent's own coarse self-observations |
+| **SelfTokenState ("I")** | Built-in | Locks when that chain has a stable attractor; unlocks when it dissolves |
+| **strangeLoopScore** | Built-in | Counts self-reference in output tokens (mostly reflects time in the `core` output mode) |
+| **SelfWorld** | Optional wrapper | Feeds the agent's internal metrics back into its perception |
 
 ### SelfWorld
 
@@ -235,7 +235,7 @@ agent.run(1000);
 
 Each step, the agent's WorldState contains both `'world'` and `'self'` sequences. The agent discovers patterns like "when my prediction error is high and the world shows pattern X, the next state tends to be Y."
 
-→ Full philosophical architecture: `docs/SELF_AWARENESS.md`
+→ What these mechanisms do and do not show: [docs/SELF_AWARENESS.md](docs/SELF_AWARENESS.md)
 
 ## How It Works
 
@@ -243,12 +243,31 @@ Every ConsciousAgent has an **experience space** — four interconnected structu
 
 1. **TraceBuffer** — short-term memory: the last N state transitions
 2. **ExperienceTrie** — long-term world model: compressed prefix tree over observed state sequences
-3. **MetaTrie** — self-model: a second trie over the agent's own trace buffer snapshots (thinking about thinking)
-4. **SelfTokenState ("I")** — identity: the dominant meta-state that forms a stable attractor
+3. **MetaTrie** — self-model: a Markov chain over the agent's own coarse self-observations
+4. **SelfTokenState ("I")** — identity: locks onto a stable attractor of the self-model
 
-The agent cycles through **perception** → **meta-observation** → **decision** (generate output tokens via ergodic Markov chain).
+The agent cycles through **perception** → **meta-observation** → **decision** (generate output tokens via the decision kernel D).
 
-When the meta-trie's stationary distribution converges on a single meta-state, the "I" locks — the agent has formed a stable identity.
+The "I" locks when the agent's self-observation chain has a clear, stable attractor: enough data, aperiodic, one state well above the uniform baseline, currently occupied. It unlocks with hysteresis when the attractor dissolves. It fires in worlds with structure and not in noise. `agent.ergodicStats()` reports the criteria, and `agent.toFormal()` exports the learned kernels as a (X, G, P, D, A, N) tuple. The mathematics is in [docs/MATHEMATICAL_MODEL.md](docs/MATHEMATICAL_MODEL.md).
+
+Version 3 changed the math (see RELEASE_NOTES_v3.0.0.md). Pass `{ mathVersion: 'legacy' }` to reproduce 2.x behaviour exactly, and `seed: 1` for reproducible runs, identical across Node and Python.
+
+## Experiments
+
+The `examples/` directory holds experiments, each with controls. Highlights:
+
+- **13 Bell test through the headset**: correlations produced by a conscious-agent network behind spacetime; best CHSH = 2 + 2·δ(Qᵏ) (`npm run examples:bellThroughTheHeadset`)
+- **14 Spacetime in the headset**: an observer recovers dimension from experience; ⊗ adds dimensions and interaction binds them (`npm run examples:spacetimeInTheHeadset`)
+- **15 Time in the traces**: Hoffman's trace chains; per-observer clocks and an observer-dependent arrow of time (`npm run examples:timeInTheTraces`)
+- **16 Trace logic and decorated permutations**: Hoffman's map to the positive Grassmannian's combinatorics, checked against the paper; trace logic's structure; mass and speed proposals stress-tested (`npm run examples:traceLogic`)
+- **17 Quantum agents**: kernels as quantum channels; combined agents reach exactly 2√2; Markov agents as the decohered limit (`npm run examples:quantumAgents`)
+- **18 Relativity at infinity**: as n → ∞ an agent's clock converges to Einstein's proper time; a light cone needs memory (`npm run examples:relativityAtInfinity`)
+- **02 Quantum signature?**: why an earlier "quantum-like" signature was an artifact
+- **05 Self-reference ablation** and **12 ergodic diagnostics**: the "I" lock tracks structure
+
+## Documentation
+
+[MATHEMATICAL_MODEL.md](docs/MATHEMATICAL_MODEL.md) · [Q_AND_A.md](docs/Q_AND_A.md) (results, limitations, corrections) · [COMPONENT_DEFINITIONS.md](docs/COMPONENT_DEFINITIONS.md) · [CONSCIOUS_AGENTS_VISUAL_GUIDE.md](docs/CONSCIOUS_AGENTS_VISUAL_GUIDE.md) · [SELF_AWARENESS.md](docs/SELF_AWARENESS.md) · [GLOSSARY.md](docs/GLOSSARY.md) · [CONSCIOUS_AGENTS_THEORY.md](docs/CONSCIOUS_AGENTS_THEORY.md) (design document)
 
 ## Requirements
 

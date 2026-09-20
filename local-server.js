@@ -18,16 +18,30 @@ const MIME = {
   '.woff2': 'font/woff2',
 };
 
+// Resolve a request to a file path. Checks site/ first, then the Node and
+// Python lib roots (for examples, docs, etc.), ensuring directory traversal safety.
+const LIB_DIRS = [
+  SITE_DIR,
+  path.join(__dirname, 'hoffman-agents-node'),
+  path.join(__dirname, 'hoffman-agents-python'),
+];
+
+function resolvePath(url) {
+  if (url === '/') url = '/index.html';
+  for (const base of LIB_DIRS) {
+    const p = path.join(base, url);
+    if (p.startsWith(base) && fs.existsSync(p)) return p;
+  }
+  return null;
+}
+
 const server = http.createServer((req, res) => {
   let url = req.url.split('?')[0];
-  if (url === '/') url = '/index.html';
+  const filePath = resolvePath(url);
 
-  const filePath = path.join(SITE_DIR, url);
-
-  // Security: prevent directory traversal
-  if (!filePath.startsWith(SITE_DIR)) {
-    res.writeHead(403);
-    return res.end('Forbidden');
+  if (!filePath) {
+    res.writeHead(404);
+    return res.end('Not Found');
   }
 
   const ext = path.extname(filePath);
@@ -35,14 +49,8 @@ const server = http.createServer((req, res) => {
 
   fs.readFile(filePath, (err, data) => {
     if (err) {
-      if (err.code === 'ENOENT') {
-        res.writeHead(404);
-        res.end('Not Found');
-      } else {
-        res.writeHead(500);
-        res.end('Internal Server Error');
-      }
-      return;
+      res.writeHead(500);
+      return res.end('Internal Server Error');
     }
     res.writeHead(200, { 'Content-Type': contentType });
     res.end(data);

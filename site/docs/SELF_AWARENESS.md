@@ -1,158 +1,100 @@
-# Self-Awareness in conscious-agent
+# Self-Modelling in conscious-agent
 
-**A feature document — Hoffman's Conscious Realism meets computational self-perception**
+**How agents model themselves, and what that does and does not show.**
 
 ---
 
 ## Overview
 
-The `conscious-agent` library implements Donald Hoffman's formal definition of a conscious agent: a six-tuple `(X, G, P, W, A, D)` where an agent's experience space X is private, its world W is made of other agents' outputs, and perception P is an interface that compresses W into X for fitness, not accuracy.
+`conscious-agent` implements Hoffman's formal conscious agent: a six-tuple (X, G, P, D, A, N) of Markov kernels acting on a world W. In this model an agent's experience space X is private, its world is made of other agents' outputs, and perception is an interface. See [MATHEMATICAL_MODEL.md](MATHEMATICAL_MODEL.md).
 
-Within this framework, self-awareness emerges through **four mechanisms**, two implicit and two explicit:
+Agents contain four self-modelling mechanisms. They are *mechanisms*. Whether any of them amounts to self-awareness is a philosophical question the code cannot settle.
 
-| # | Mechanism | Type | Layer | What it does |
-|---|-----------|------|-------|-------------|
-| 1 | **MetaTrie.observeSelf()** | Implicit | Cognitive | Models patterns in the agent's own trace buffer |
-| 2 | **SelfTokenState** | Implicit | Identity | Tracks convergence of self-model; "I" locks on stability |
-| 3 | **strangeLoopScore** | Explicit | Output | Measures self-referential depth in agent's output tokens |
-| 4 | **SelfWorld** | Explicit | Perceptual | Injects agent's internal metrics into its perception stream |
+| # | Mechanism | Type | What it does |
+|---|-----------|------|-------------|
+| 1 | **MetaTrie.observeSelf()** | Implicit | Builds a Markov chain over the agent's own coarse self-observations |
+| 2 | **SelfTokenState ("I")** | Implicit | Locks onto a dominant state of that chain when the chain has a clear attractor |
+| 3 | **strangeLoopScore** | Output | Counts self-reference in the agent's output tokens |
+| 4 | **SelfWorld** | Perceptual | Feeds the agent's internal metrics back into its perception |
 
 ---
 
-## 1. Implicit Self-Awareness: MetaTrie
+## 1. MetaTrie: a model of the agent's own dynamics
 
-**Every agent has this. It cannot be turned off.**
+Every agent has one. Every `metaObservationInterval` steps (default 20) the agent:
+1. forms a coarse self-observation: its last two world states (mod 8), a bucket for its recent prediction error, and its current output mode;
+2. hashes it to a meta-state id;
+3. records the transition from the previous meta-state, including staying in the same one.
 
-The `MetaTrie` is a second-level trie over snapshots of the agent's own `TraceBuffer`. Every `metaObservationInterval` (default: 20 steps), the agent:
-1. Takes a snapshot of its recent trace buffer (last K state IDs + mean prediction error)
-2. Hashes the snapshot to a meta-state ID
-3. Records the transition from the previous meta-state to the current one
+The result is an empirical Markov chain over the agent's own states: a model of its own behaviour, built the same way as its model of the world. `metaTrie.ergodicDiagnostics()` reports the chain's recurrent class, stationary distribution, period and mixing.
 
-The result is a **self-model** — a model of the agent's own moment-to-moment cognitive patterns. This is structurally identical to the world-model (ExperienceTrie) but operates on *traces of cognition* rather than *external states*.
+## 2. SelfTokenState: the "I" attractor
 
-**Key insight**: The agent never directly sees its own meta-trie. It's a hidden layer — the agent *implicitly* models itself without *explicitly* perceiving itself. This corresponds to what Hoffman calls the agent's private experience space organizing itself.
+"I" locks onto a meta-state when, for three consecutive self-observations:
+- the chain has enough data;
+- it is aperiodic and converged;
+- one state dominates well above the uniform baseline;
+- the agent is currently in that attractor;
+- the dominant state is stable.
 
-## 2. Implicit Identity: SelfTokenState
+It unlocks with hysteresis when the attractor dissolves. The full rule is in MATHEMATICAL_MODEL.md §5.
 
-**Every agent has this. "I" lock is the phase transition from process to entity.**
+Measured: the lock fires in worlds with a dominant experiential attractor (20 of 20), never in structureless worlds (0 of 50), and releases after a regime change. The "I" therefore marks *a stable pattern in the agent's own dynamics*. That is the computational content of calling it an identity.
 
-The `SelfTokenState` tracks the stationary distribution of the MetaTrie. When a single meta-state maintains stationary probability above the lock threshold (default: 0.25) for `lockConsecutiveRequired` checks (default: 3), the "I" locks:
+## 3. strangeLoopScore: what it measures
 
-```
-dominant meta-state → stationary probability → lock threshold → I LOCKED
-```
+The score counts "I" tokens in an output sequence and whether a predicate separates them:
 
-Once locked, the "I" never unlocks. The agent has formed a stable identity — a meta-state it keeps returning to. This is the computational analog of Hoffman's claim that conscious agents are not processes but persistent entities.
+| Score | Example output |
+|-------|----------------|
+| 0.0 | `cross boundary arrive` |
+| 0.5 | `I cross boundary` |
+| 1.0 | `I notice I familiar` |
 
-**The lock threshold (0.25) is empirically determined** — it represents the point at which the meta-trie's stationary distribution is concentrated enough to be reliable but not so high that it never converges. At `stationaryProb = 1.0`, the agent has a perfectly stable self-model. At `stationaryProb < 0.2`, the agent has no stable identity.
+**Limitation.** After the lock, outputs are generated by the decision kernel D. Its `core` mode always emits `I notice I familiar|different`, which scores 1.0, and the other modes score 0 or 0.5. A population's loop score therefore measures how much time agents spend in the `core` mode. It does not measure the depth of their self-model. A measure of self-modelling depth would have to come from the meta-chain itself, for example how much the agent's own past self-states predict its next ones beyond what its world model predicts.
 
-## 3. Explicit Self-Awareness: strangeLoopScore
+## 4. SelfWorld: perceiving one's own state
 
-**Measurable in every agent's output.**
-
-The `strangeLoopScore` counts occurrences of the "I" token in the agent's output sequence and measures their recursive depth:
-
-| Score | Interpretation | Example output |
-|-------|---------------|----------------|
-| 0.0 | No self-reference | "cross boundary arrive" |
-| 0.5 | Single self-reference | "I cross boundary" |
-| 1.0 | Depth-2 loop (self noticing self) | "I notice I familiar" |
-| 1.5+ | Depth-3+ recursion | "I notice I notice I familiar" |
-
-This is the **observable signature** of self-awareness — the agent's output encodes its self-model. Higher scores correlate with deeper MetaTrie structure and more stable SelfTokenState.
-
-## 4. Explicit Perceptual Self-Awareness: SelfWorld
-
-**Optional. The agent perceives its own state as part of its world.**
-
-`SelfWorld` is a world wrapper that injects the agent's internal metrics into its perception stream. It sits between the external world and the agent:
+`SelfWorld` wraps a world and adds the agent's internal metrics to each observation:
 
 ```
-External world → SelfWorld → agent perceives [external_data + self_state]
+external world → SelfWorld → agent perceives [external data + self state]
 ```
 
-The agent's ExperienceTrie learns transitions over composite states of `(world + self)`. The agent discovers correlations like:
+The experience trie then learns transitions over (world + self) states, so correlations such as "when my prediction error is high and the world shows X, Y tends to follow" become part of the world model. In Hoffman's terms, the agent's own state becomes part of its world W. P is unchanged; W is simply richer.
 
-> *"When my prediction error is high AND the world shows pattern X, the next state tends to be Y."*
+SelfWorld feeds the world model (T), not the self-model (M); the two channels run in parallel.
 
-This is the agent treating itself as an object in its world — the explicit counterpart to the implicit MetaTrie self-model.
-
-### SelfWorld in Hoffman's framework
-
-Hoffman defines world W as *another agent's experience space*. SelfWorld extends this by allowing an agent to perceive its *own* state as if it were another agent. This is philosophically consistent:
-
-- The agent's internal metrics (stationaryProb, predictionError, etc.) are outputs of its cognitive subsystems
-- SelfWorld presents these outputs to the agent's perceptual interface P
-- P compresses them into experience just as it compresses any other agent's output
-- The agent builds trie paths over self-inclusive states
-
-The architecture remains `P: W × X → X` — W is just richer for including a self-reflection.
-
-### Integration with other mechanisms
-
-```
-                  ┌───────────────────────────────────┐
-                  │            AGENT                   │
-                  │                                      │
-  ┌────────┐     │  ┌──────────┐     ┌────────────┐     │
-  │ World  │─────┼─→│ perceive │────→│ Experience │     │
-  │(+Self) │     │  │ (P)      │     │ Trie (T)   │     │
-  └────────┘     │  └──────────┘     └─────┬──────┘     │
-                 │                         │            │
-                 │              ┌──────────▼──────┐     │
-                 │              │ MetaTrie (M)    │     │
-                 │              │ (observes T     │     │
-                 │              │  snapshots)     │     │
-                 │              └────────┬────────┘     │
-                 │                       │             │
-                 │              ┌────────▼────────┐    │
-                 │              │ SelfToken (I)   │    │
-                 │              │ (identity lock) │    │
-                 │              └────────┬────────┘    │
-                 │                       │             │
-                 │              ┌────────▼────────┐    │
-                 │              │ decide (D)      │    │
-                 │              │ → output tokens │    │
-                 │              │ → strange loop  │    │
-                 │              └─────────────────┘    │
-                 │                                      │
-                 └───────────────────────────────────────┘
-```
-
-SelfWorld feeds into **T** (the world model), not **M** (the self-model). The MetaTrie continues to observe the trace buffer independently. These two awareness channels are parallel:
-
-| Channel | Feeds | Models | Drives |
+| Channel | Input | Models | Drives |
 |---------|-------|--------|--------|
-| MetaTrie (implicit) | Trace buffer snapshots | Cognitive patterns | SelfTokenState (identity) |
-| SelfWorld (explicit) | Self-state tokens in W | World + self correlations | Richer trie structure |
+| MetaTrie | Coarse self-observations | The agent's own dynamics | The "I" lock |
+| SelfWorld | Self-state tokens in W | World + self correlations | The world model |
 
 ---
 
-## Building Complex Cognitive Systems
-
-The layered architecture for self-aware cognition:
+## Layered systems (open hypothesis)
 
 ```
-Layer N: Meta-combinator (perceives combinators' self-states + own self)
+Layer 2: combinator (perceives specialists' outputs + own state)
               ↑ ⊗
-Layer 2: Combinator (perceives specialists' outputs + own self)
-              ↑ ⊗
-Layer 1: Specialists (each with SelfWorld, frozen on I-lock)
+Layer 1: specialists (each with SelfWorld)
               ↑
-Layer 0: Raw worlds (data sources)
+Layer 0: data sources
 ```
 
-Each layer's SelfWorld provides self-state tokens to the layer above. The meta-combinator at the top perceives nothing but agent outputs — worlds within worlds, agents perceiving agents perceiving agents. This is Hoffman's "agents all the way down" given computational form.
+**Hypothesis (untested):** higher layers form more stable self-attractors because their worlds already contain structure compressed by the layers below.
 
-The hypothesis: higher layers should form **more coherent self-models** with deeper strange loop scores, because their worlds already contain compressed, self-referential structures from the layers below. If confirmed, this is empirical evidence that self-awareness amplifies with hierarchical depth — a prediction that follows directly from Hoffman's framework.
+**A fair test would need:**
+- a measure of self-model stability that is not fixed by the output mode (see §3);
+- controls in which the lower layers are replaced by Markov chains with the same kernels but no self-model.
 
 ---
 
 ## References
 
-- Hoffman, D. D. (2019). *The Case Against Reality*
-- Hoffman, D. D. et al. (2015). "The evolution of conscious agents"
-- Fields, C. et al. (2018). "Conscious agent networks: A formalization"
-- `._opencode/SELF-AWARE-SPEC.md` — Original SelfWorld specification
-- `docs/CA_RUNTIME_API.md` — Runtime API reference
-- `docs/COMPONENT_DEFINITIONS.md` — Component architecture
+- Hoffman, D. D. & Prakash, C. (2014). Objects of consciousness. *Frontiers in Psychology*, 5, 577.
+- Hoffman, D. D., Singh, M. & Prakash, C. (2015). The interface theory of perception. *Psychonomic Bulletin & Review*, 22, 1480–1506.
+- Fields, C., Hoffman, D. D., Prakash, C. & Singh, M. (2018). Conscious agent networks: Formal analysis and application to cognition. *Cognitive Systems Research*, 47, 186–213.
+- Hoffman, D. D. (2019). *The Case Against Reality*. W. W. Norton.
+- Hoffman, D. D., Prakash, C. & Prentner, R. (2023). Fusions of consciousness. *Entropy*, 25(1), 129.
+- [CA_RUNTIME_API.md](CA_RUNTIME_API.md), [COMPONENT_DEFINITIONS.md](COMPONENT_DEFINITIONS.md), [MATHEMATICAL_MODEL.md](MATHEMATICAL_MODEL.md)

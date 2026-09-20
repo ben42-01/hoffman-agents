@@ -5,9 +5,10 @@ Two agents experience the same hidden Markov world through different
 interfaces. The "Interface" agent sees a compressed grouping (5 groups
 of 4 states), while the "Truth" agent sees all 20 raw states.
 
-Hoffman's claim: the Interface agent predicts BETTER because it discards
-irrelevant within-group variation. Perception hides truth to optimize
-for fitness.
+Hypothesis (a predictive analogue of Hoffman's interface theory): the
+Interface agent predicts better because it discards irrelevant within-group
+variation. Hoffman's fitness-beats-truth theorem itself concerns evolutionary
+selection between perceptual strategies, which this does not test.
 
 Expected result:
   Interface CA improvement >> Truth CA improvement
@@ -121,7 +122,8 @@ def run_experiment():
 
     if iface_imp > truth_imp:
         print(f"\n  ✓ RESULT: Interface dominates — less information → better prediction")
-        print(f"    This is Hoffman's core claim: perception hides truth to optimize for fitness.")
+        print(f"    Consistent with the interface hypothesis in this world (a predictive analogue of")
+        print(f"    Hoffman's fitness-beats-truth theorem, not a test of the theorem itself).")
     else:
         print(f"\n  ✗ RESULT: Expected Interface > Truth, got opposite")
 

@@ -38,16 +38,18 @@ hoffman-agents-node/
 │   │   ├── index.js                # Re-exports
 │   │   ├── world-builder.js        # WorldBuilder, World, CoinTossWorld, Normalizer, FeatureSpec, buildWorldFromDataFrame
 │   │   └── self-world.js           # SelfWorld wrapper
-│   └── meaning/
-│       ├── index.js                # Re-exports
-│       └── shared-meaning.js       # SharedMeaningTracker
-├── test/
-│   └── core.test.js                # 47 tests covering all modules
-├── examples/
-│   ├── 01_fitness_beats_truth/
-│   ├── 02_quantum_signature/
-│   ├── 03_weather_benchmark/
-│   └── 04_stop_lights/             # Web UI dashboard
+│   ├── meaning/
+│   │   ├── index.js                # Re-exports
+│   │   └── shared-meaning.js       # SharedMeaningTracker
+│   ├── math/                       # v3: markov.js (stationary, period, mixing, spectral dimension,
+│   │                               #     irreversibility, dobrushin), rng.js (mulberry32, fnv1a32), signature.js
+│   ├── kernels/                    # v3: MarkovKernel, StochasticMatrix, FormalConsciousAgent (X, G, P, D, A, N)
+│   ├── analysis/                   # v3: bell.js (CHSH, quantum-set test, signalling)
+│   └── legacy/                     # 2.x math for mathVersion: 'legacy'
+├── test/                           # core, markov, ilock, combination, legacy, parity (needs python), analysis
+│                                   # fixtures/ holds the 2.1.2 golden run and .soul file
+├── examples/                       # 01-14; see each README. 13 Bell test through the headset,
+│                                   # 14 spacetime in the headset, 12 ergodic diagnostics, 02 quantum signature?
 ├── docs/
 │   ├── CONSCIOUS_AGENTS_THEORY.md
 │   ├── COMPONENT_DEFINITIONS.md

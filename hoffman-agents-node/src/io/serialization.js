@@ -9,9 +9,16 @@ const { ExperienceLexicon } = require('../core/experience-lexicon');
 const { ConsciousAgent } = require('../agent/conscious-agent');
 const { ExperienceSpace } = require('../agent/experience-space');
 
-function serialize(agent, filePath) {
-  const state = {
+// formatVersion 3 adds mathVersion, decision parameters, meta-chain history,
+// combination provenance and the v3 lock state. Files without formatVersion
+// were written by 2.x and load with mathVersion 'legacy'.
+const FORMAT_VERSION = 3;
+
+function toState(agent) {
+  return {
     caVersion: '1.0',
+    formatVersion: FORMAT_VERSION,
+    mathVersion: agent.mathVersion,
     agentId: agent.agentId,
     generation: agent.generation,
     step: agent.stepCount,
@@ -36,17 +43,32 @@ function serialize(agent, filePath) {
       constituentIds: [...agent.constituentIds].sort(),
       leafConstituentIds: [...agent.leafConstituentIds].sort(),
       combined: agent._combined,
+      combinationPrior: agent.combinationPrior,
+    },
+    decision: {
+      pStable: agent.pStable,
+      pLexicon: agent.pLexicon,
+      pExplore: agent.pExplore,
+      lexiconRow: [...agent.lexiconRow],
+      ergodicState: agent._ergodicState,
     },
   };
+}
 
+function serialize(agent, filePath) {
+  const state = toState(agent);
   const tmpPath = filePath + '.tmp.' + crypto.randomUUID();
   fs.writeFileSync(tmpPath, JSON.stringify(state, null, 2));
   fs.renameSync(tmpPath, filePath);
 }
 
 function deserialize(filePath) {
-  const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  return fromState(JSON.parse(fs.readFileSync(filePath, 'utf8')));
+}
+
+function fromState(data) {
   const comp = data.components || {};
+  const mathVersion = data.formatVersion >= 3 ? (data.mathVersion || 'v3') : 'legacy';
 
   const exp = new ExperienceSpace({
     traceBuffer: deserializeTraceBuffer(comp.traceBuffer || { maxlen: 50, events: [] }),
@@ -55,6 +77,7 @@ function deserialize(filePath) {
     selfToken: deserializeSelfToken(comp.selfToken || {}),
     lexicon: ExperienceLexicon.fromDict(comp.lexicon || { entries: [] }),
     lastWorldStateId: comp.lastWorldStateId !== undefined ? comp.lastWorldStateId : null,
+    mathVersion,
   });
 
   const meta = data.metadata || {};
@@ -67,22 +90,24 @@ function deserialize(filePath) {
     constituentIds: new Set(meta.constituentIds || []),
     leafConstituentIds: new Set(meta.leafConstituentIds || []),
     cycleLevel: meta.cycleLevel || 0,
+    ...(data.decision ? {
+      pStable: data.decision.pStable,
+      pLexicon: data.decision.pLexicon,
+      pExplore: data.decision.pExplore,
+      lexiconRow: data.decision.lexiconRow,
+    } : {}),
+    mathVersion,
   });
   agent._combined = meta.combined || false;
+  agent.combinationPrior = meta.combinationPrior || null;
+  if (data.decision && data.decision.ergodicState) agent._ergodicState = data.decision.ergodicState;
   return agent;
 }
 
 function clone(agent, newId) {
-  const tmpDir = fs.mkdtempSync('/tmp/ca-clone-');
-  const tmpFile = path.join(tmpDir, 'clone.json');
-  try {
-    serialize(agent, tmpFile);
-    const cloned = deserialize(tmpFile);
-    cloned.agentId = newId || `${agent.agentId}_clone`;
-    return cloned;
-  } finally {
-    try { fs.rmSync(tmpDir, { recursive: true }); } catch (_) {}
-  }
+  const cloned = fromState(JSON.parse(JSON.stringify(toState(agent))));
+  cloned.agentId = newId || `${agent.agentId}_clone`;
+  return cloned;
 }
 
 function fingerprint(agent) {
@@ -170,6 +195,10 @@ function serializeMetaTrie(mt) {
     snapshotWindow: mt._snapshotWindow,
     maxDepth: mt.trie.maxDepth,
     tokenRegistry,
+    mathVersion: mt.mathVersion,
+    history: [...mt._history],
+    provenance: [...mt._provenance].map(([id, p]) => [id, { ...p }]),
+    provenanceTree: mt._provenanceTree,
   };
 }
 
@@ -186,7 +215,10 @@ function deserializeMetaTrie(data) {
     });
   }
 
-  mt._lastMetaState = data.lastMetaState || null;
+  mt._lastMetaState = data.lastMetaState ?? null;
+  mt._history = [...(data.history || [])];
+  mt._provenance = new Map((data.provenance || []).map(([id, p]) => [id, { ...p }]));
+  mt._provenanceTree = data.provenanceTree || {};
 
   for (const [midStr, counts] of Object.entries(data.tokenRegistry || {})) {
     const mid = parseInt(midStr);
@@ -199,34 +231,11 @@ function deserializeMetaTrie(data) {
 }
 
 function serializeSelfToken(st) {
-  return {
-    token: st.token,
-    referentMetaStateId: st.referentMetaStateId,
-    stationaryProb: st.stationaryProb,
-    locked: st.locked,
-    lockGeneration: st.lockGeneration,
-    lockThreshold: st.lockThreshold,
-    consecutiveAboveThreshold: st.consecutiveAboveThreshold,
-    lockConsecutiveRequired: st.lockConsecutiveRequired,
-    stabilityHistory: [...st.stabilityHistory],
-    protectionRadius: st.protectionRadius,
-  };
+  return st.toJSON();
 }
 
 function deserializeSelfToken(data) {
-  const st = new SelfTokenState({
-    token: data.token || 'I',
-    referentMetaStateId: data.referentMetaStateId || null,
-    stationaryProb: data.stationaryProb || 0,
-    locked: data.locked || false,
-    lockGeneration: data.lockGeneration || null,
-    lockThreshold: data.lockThreshold || 0.25,
-    consecutiveAboveThreshold: data.consecutiveAboveThreshold || 0,
-    lockConsecutiveRequired: data.lockConsecutiveRequired || 3,
-    protectionRadius: data.protectionRadius || 2,
-  });
-  st.stabilityHistory = data.stabilityHistory || [];
-  return st;
+  return SelfTokenState.fromJSON(data);
 }
 
 function serializeTraceBuffer(buf) {
@@ -237,6 +246,7 @@ function serializeTraceBuffer(buf) {
       timestamp: e.timestamp, prediction: e.prediction,
       predictionCorrect: e.predictionCorrect, predictionError: e.predictionError,
       token: e.token,
+      ...(e.surprisal !== undefined ? { surprisal: e.surprisal } : {}),
     });
   }
   return { maxlen: buf.maxlen, events };
@@ -245,14 +255,16 @@ function serializeTraceBuffer(buf) {
 function deserializeTraceBuffer(data) {
   const buf = new TraceBuffer(data.maxlen || 50);
   for (const ed of data.events || []) {
-    buf.append(new TraceEvent(ed.fromState, ed.toState, ed.timestamp, ed.prediction,
-      ed.predictionCorrect, ed.predictionError, ed.token));
+    const e = new TraceEvent(ed.fromState, ed.toState, ed.timestamp, ed.prediction,
+      ed.predictionCorrect, ed.predictionError, ed.token);
+    if (ed.surprisal !== undefined) e.surprisal = ed.surprisal;
+    buf.append(e);
   }
   return buf;
 }
 
 module.exports = {
-  serialize, deserialize, clone, fingerprint,
+  serialize, deserialize, clone, fingerprint, toState, fromState, FORMAT_VERSION,
   saveAgent, loadAgent, loadLatest,
   cloneAgent: clone,
 };

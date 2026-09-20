@@ -1,205 +1,219 @@
 """
-Quantum Signature — Spectral Analysis of Tree-of-Life Combination Run
+Quantum Signature? — Spectral Analysis of Combination, with Classical Controls
 
-Agents interact in a shared network, observing each other's outputs.
-When ripe, they combine via ⊗. Meta-trie transition matrices are
-analyzed for quantum-like signatures.
+The 2.x version of this experiment reported a "quantum-like" collapse of the
+spectral gap at combination levels 1-2. That signal was an artifact:
+  - combined agents carry their constituents' chains as disconnected pieces;
+    a reducible chain has |lambda_2| = 1, so its gap is 0 by definition
+  - unobserved rows were turned into absorbing states
+  - agents only combined because the 2.x "I" lock fired in any world
+and the criterion itself (small gap + detailed-balance violation) is met by
+ordinary classical chains, e.g. a clock.
 
-Expected result:
-  Base agents (level 0):     gap ~1.0, db_err ~0.0  (classical)
-  Combined agents (level 1):  gap collapses < 0.3    (quantum-like)
-  Higher levels (level 2+):   gap recovers            (classical limit)
+This version asks answerable questions:
+  1. Classical controls: what do gap and irreversibility look like for chains
+     that are classical by construction?
+  2. Agents: gap (1 - |lambda_2|), period and irreversibility of each agent's
+     own recurrent meta-state chain (MetaTrie.ergodic_diagnostics).
+  3. Tensor-product prediction: for independent agents A, B the product kernel
+     M_A (x) M_B has |lambda_2| = max(|lambda_2(A)|, |lambda_2(B)|). Does the
+     combined agent's learned chain match that prediction?
+  4. Fusion: does fuse() restore the constituents' chains exactly?
+
+Every quantity here describes a classical Markov chain. Gap measures mixing
+speed and irreversibility measures net probability circulation; neither is
+evidence of quantum behaviour. See ../09_double_slit_analogy for what that
+would require.
+
+Uses the same seeds as the Node example and prints the same numbers.
 """
-from conscious_agent import ConsciousAgent, WorldState, combine
-import numpy as np
 import time
 
+import numpy as np
 
-def extract_meta_matrix(agent):
-    mt = agent.experience.meta_trie
-    if mt.registry_size < 2:
+from conscious_agent import ConsciousAgent, MarkovKernel, WorldState, combine, fuse, markov
+from conscious_agent.combination import meta_kernel, product_kernel
+
+N_BASE = 8
+ISOLATED_STEPS = 400
+ROUNDS = 200
+COMBINE_EVERY = 20
+
+
+# ────────────── measurements ──────────────
+
+def analyse_kernel(P) -> dict:
+    P = np.asarray(P, dtype=np.float64)
+    pi = markov.stationary(P)["pi"]
+    closed = len(markov.closed_classes(P))
+    lambda2 = 1.0 if closed > 1 else markov.second_eigenvalue_modulus(P, pi)
+    return {"n": len(P), "closed": closed, "period": None if closed > 1 else markov.period(P, 0),
+            "gap": 1.0 - lambda2, "irrev": markov.irreversibility(P, pi)}
+
+
+def analyse_agent(agent):
+    """The agent's own recurrent meta-chain. `evidence` uses the same rule as the
+    "I" lock: at least 20 transitions and 2 per state, otherwise the estimate is noise."""
+    K = meta_kernel(agent)
+    if K is None:
         return None
-    all_ids = sorted(mt._registry.keys())
-    active = set()
-    for sid in all_ids:
-        node = mt.trie.lookup([sid])
-        if node and node.children:
-            active.add(sid)
-    if mt.last_meta_state is not None:
-        active.add(mt.last_meta_state)
-    if len(active) < 2:
-        return None
-
-    state_ids = sorted(active)
-    idx = {sid: i for i, sid in enumerate(state_ids)}
-    n = len(state_ids)
-    P = np.zeros((n, n))
-
-    for state_id in state_ids:
-        node = mt.trie.lookup([state_id])
-        if node and node.children:
-            total = sum(c.visit_count for c in node.children.values())
-            if total > 0:
-                for child_state, child_node in node.children.items():
-                    if child_state in idx:
-                        P[idx[state_id], idx[child_state]] = child_node.visit_count / total
-
-    for i in range(n):
-        if P[i].sum() == 0:
-            P[i, i] = 1.0
-    return P
+    d = agent.experience.meta_trie.ergodic_diagnostics()
+    r = analyse_kernel(K.matrix)
+    r["transitions"] = d["n_transitions"]
+    r["evidence"] = d["n_transitions"] >= max(20, 2 * r["n"])
+    return r
 
 
-def spectral_gap(P):
-    eigvals = np.linalg.eigvals(P)
-    mags = sorted(np.abs(eigvals), reverse=True)
-    return 1.0 - mags[1] if len(mags) > 1 else 1.0
+def counts_of(agent):
+    return agent.experience.meta_trie.transition_counts()[1].tolist()
 
 
-def detailed_balance_error(P):
-    n = P.shape[0]
-    pi = np.ones(n) / n
-    for _ in range(500):
-        pi_new = pi @ P
-        if np.max(np.abs(pi_new - pi)) < 1e-10:
-            break
-        pi = pi_new
-    errors = []
-    for i in range(n):
-        for j in range(i + 1, n):
-            if pi[i] > 0 and pi[j] > 0:
-                lhs = pi[i] * P[i, j]
-                rhs = pi[j] * P[j, i]
-                if abs(lhs + rhs) > 1e-12:
-                    errors.append(abs(lhs - rhs) / (lhs + rhs))
-    return np.mean(errors) if errors else 0.0
+def closed_classes_including_inherited(agent) -> int:
+    """What 2.x effectively measured: all transitions, inherited pieces included."""
+    _, counts = agent.experience.meta_trie.transition_counts(include_inherited=True)
+    kept = markov.prune_unobserved_rows(counts)
+    return len(markov.closed_classes(markov.sub_matrix(counts, kept))) if kept else 0
 
 
-def analyze(agents, label):
-    """Analyze meta-trie spectra for all agents at current state."""
-    by_level = {}
-    print(f"\n  {'─' * 50}")
-    print(f"  {label}")
-    print(f"  {'─' * 50}")
-    print(f"  {'Agent':<22s} {'Lvl':<4s} {'States':<7s} {'Gap':<10s} {'DB Err':<10s}")
-    for aid, agent in sorted(agents.items()):
-        P = extract_meta_matrix(agent)
-        if P is not None:
-            gap = spectral_gap(P)
-            dbe = detailed_balance_error(P)
-            gap_str = f"{gap:.4f}"
-            dbe_str = f"{dbe:.4f}"
-            lvl = agent.cycle_level
-            by_level.setdefault(lvl, []).append((gap, dbe))
-        else:
-            gap_str = "N/A"
-            dbe_str = "N/A"
-            lvl = agent.cycle_level
-        print(f"  {aid:<22s} {lvl:<4d} {agent.experience.meta_trie.registry_size:<7d} {gap_str:<10s} {dbe_str:<10s}")
-    return by_level
+def f(x, d=3):
+    return "  -  " if x is None else f"{x:.{d}f}"
 
 
-def run_experiment(n_base=8, n_interaction_rounds=400):
-    np.random.seed(42)
+# ────────────── 1. classical controls ──────────────
+
+def controls():
+    def cycle(n, forward, stay):
+        P = np.zeros((n, n))
+        for i in range(n):
+            P[i, i] += stay
+            P[i, (i + 1) % n] += forward
+            P[i, (i - 1) % n] += 1 - forward - stay
+        return P
+
+    K = MarkovKernel(["a", "b"], [[0.9, 0.1], [0.3, 0.7]])
+    two_pieces = [[0.5, 0.5, 0, 0], [0.5, 0.5, 0, 0], [0, 0, 0.5, 0.5], [0, 0, 0.5, 0.5]]
+    return [
+        ("clock: 10-cycle, forward 0.95", cycle(10, 0.95, 0.05)),
+        ("lazy symmetric walk on 10-cycle", cycle(10, 0.25, 0.5)),
+        ("i.i.d. uniform over 10 states", np.full((10, 10), 0.1)),
+        ("two disconnected coin chains", two_pieces),
+        ("independent product K ⊗ K", K.tensor(K).matrix),
+        ("single coin chain", [[0.5, 0.5], [0.5, 0.5]]),
+    ]
+
+
+# ────────────── 2-4. agents ──────────────
+
+def print_agents(title, agents):
+    print(f"\n  {title}")
+    print(f"  {'agent':<16} lvl  locked  class  trans  period  gap     irrev   closed incl. inherited")
+    for a in agents:
+        r = analyse_agent(a)
+        note = "" if r is None else "  (too little data)" if not r["evidence"] else \
+            "  (periodic: gap 0 by definition)" if (r["period"] or 1) > 1 else ""
+        period = r["period"] if r and r["period"] is not None else "-"
+        print(f"  {a.agent_id:<16} {a.cycle_level:<4} {str(a.is_i_locked).lower():<7} {r['n'] if r else 0:<6} "
+              f"{int(r['transitions']) if r else 0:<6} {period!s:<7} {f(r and r['gap'])}   {f(r and r['irrev'])}   "
+              f"{closed_classes_including_inherited(a)}{note}")
+
+
+def run():
     t0 = time.time()
-    print("=" * 66)
-    print("Quantum Signature — Tree-of-Life Spectral Analysis")
-    print("=" * 66)
-    print(f"\n{n_base} base agents, {n_interaction_rounds} interaction rounds...")
+    print("=" * 78)
+    print("Quantum Signature? — spectral analysis of combination, with classical controls")
+    print("=" * 78)
 
-    # Phase 1: Create isolated agents — each in its own independent world
-    agents = {}
-    for i in range(n_base):
+    print("\n  1. Classical controls (classical by construction)")
+    print(f"  {'chain':<34} states  closed  gap     irrev")
+    for name, P in controls():
+        r = analyse_kernel(P)
+        print(f"  {name:<34} {r['n']:<7} {r['closed']:<7} {f(r['gap'])}   {f(r['irrev'])}")
+    print('  → small gap + irreversibility (the 2.x "quantum" criterion) is a plain clock;')
+    print("    gap 0 is what any chain made of disconnected pieces gives.")
+
+    agents: dict[str, ConsciousAgent] = {}
+    for i in range(N_BASE):
         aid = f"CA_{i:03d}"
-        agent = ConsciousAgent(agent_id=aid)
+        agent = ConsciousAgent(agent_id=aid, seed=i + 1)
+        for t in range(ISOLATED_STEPS):
+            agent.step(WorldState(sequences={"world": [f"s{i}_{t}"]}))
         agents[aid] = agent
-        for t in range(400):
-            ws = WorldState.from_sequence("world", [f"seed_{i}_{t}"])
-            agent.step(ws)
+    print_agents(f"2a. Isolated agents ({ISOLATED_STEPS} steps each)", list(agents.values()))
 
-    # Snapshot: pure base agents before any interaction
-    pre = analyze(agents, "Phase 1: Isolated agents (pure classical baseline)")
-
-    # Interaction rounds: agents observe each other's outputs
-    snapshot_taken = False
-    for rnd in range(n_interaction_rounds):
-        outputs = {}
+    combinations = []
+    available = list(agents)
+    for rnd in range(1, ROUNDS + 1):
+        outputs = {aid: a.get_output() for aid, a in agents.items()}
         for aid, agent in agents.items():
-            outputs[aid] = agent.get_output()
+            for other, seq in outputs.items():
+                if other != aid:
+                    agent.step(WorldState(sequences={other: seq}))
+        # Combination on a fixed schedule. (Gating on the "I" lock, as 2.x did, never
+        # fires here in v3: this world has no dominant experiential attractor.)
+        if rnd % COMBINE_EVERY == 0 and len(available) >= 2:
+            ready = sorted(
+                (aid for aid in available if meta_kernel(agents[aid]) is not None),
+                key=lambda aid: (agents[aid].experience.trace_buffer.prediction_error_mean(window=5), aid),
+            )
+            for i in range(0, len(ready) - 1, 2):
+                x, y = agents[ready[i]], agents[ready[i + 1]]
+                prior = product_kernel(x, y)
+                snapshots = {x.agent_id: counts_of(x), y.agent_id: counts_of(y)}
+                c = combine(x, y)
+                c.agent_id = f"L{c.cycle_level}_{ready[i][-3:]}_{ready[i + 1][-3:]}"
+                agents[c.agent_id] = c
+                available = [a for a in available if a not in (ready[i], ready[i + 1])] + [c.agent_id]
+                combinations.append({"agent": c, "snapshots": snapshots, "round": rnd,
+                                     "prior": analyse_kernel(prior.matrix) if prior is not None else None})
+    print_agents(f"2b. After {ROUNDS} interaction rounds (combined every {COMBINE_EVERY} rounds)", list(agents.values()))
+    print('  "closed incl. inherited" > 1 means a naive analysis of that trie is reducible → gap 0 (the 2.x artifact).')
 
-        for aid, agent in agents.items():
-            for other_aid, other_output in outputs.items():
-                if other_aid != aid:
-                    ws = WorldState(sequences={other_aid: other_output})
-                    agent.step(ws)
+    print("\n  3. Tensor-product prediction vs learned joint dynamics")
+    print(f"  {'combined':<16} round  prior gap  learned gap  |Δ|     prior irrev  learned irrev")
+    deltas = []
+    for c in combinations:
+        learned, prior = analyse_agent(c["agent"]), c["prior"]
+        delta = abs(prior["gap"] - learned["gap"]) if prior and learned else None
+        if delta is not None:
+            deltas.append(delta)
+        print(f"  {c['agent'].agent_id:<16} {c['round']:<6} {f(prior and prior['gap']):<10} {f(learned and learned['gap']):<12} "
+              f"{f(delta):<7} {f(prior and prior['irrev']):<12} {f(learned and learned['irrev'])}")
+    if deltas:
+        print(f"  mean |Δgap| = {f(sum(deltas) / len(deltas))}")
+    print("  The prior is exactly the product of the constituents' kernels (gap 0 if either is periodic).")
+    print("  The learned chain is what the combined agent experiences afterwards in a shared world;")
+    print("  nothing forces the two to agree, and here they do not.")
 
-        # Snapshot RIGHT before first combination: interacting but uncombined
-        if rnd == 19 and not snapshot_taken:
-            pre_combo = analyze(agents, "Phase 2: Interacting, pre-combination")
-            snapshot_taken = True
+    print("\n  4. Fusion restores each constituent's chain as it was at combination time")
+    for c in combinations:
+        parts = fuse(c["agent"])
+        ok = all(c["snapshots"][p.agent_id] == counts_of(p) for p in parts)
+        names = " + ".join(p.agent_id for p in parts)
+        print(f"  fuse({c['agent'].agent_id:<16}) → {names:<28} exact: {'yes' if ok else 'NO'}")
 
-        # Every 20 rounds, try combining ripe agents
-        if rnd > 0 and rnd % 20 == 0:
-            ripe = [aid for aid, ag in agents.items()
-                    if ag.experience.self_token.locked
-                    and not ag._combined]
-            if len(ripe) >= 2:
-                scored = sorted(ripe,
-                    key=lambda aid: agents[aid].experience.trace_buffer.prediction_error_mean(5))
-                for i in range(0, len(scored) - 1, 2):
-                    a_id, b_id = scored[i], scored[i + 1]
-                    a, b = agents[a_id], agents[b_id]
-                    combined = combine(a, b)
-                    cid = f"L{combined.cycle_level}_{a_id[-3:]}_{b_id[-3:]}"
-                    combined.agent_id = cid
-                    combined._agent_id = cid
-                    agents[cid] = combined
-                    a._combined = True
-                    b._combined = True
-
-    # Phase 3: Post-combination analysis
-    post = analyze(agents, "Phase 3: Post-combination hierarchy")
-
-    elapsed = time.time() - t0
-    print(f"\n  Completed in {elapsed:.1f}s\n")
-
-    by_level = post
-
-    # Cross-level summary
-    print(f"\n{'─' * 66}")
-    print("Cross-Level Quantum Signature Summary")
-    print(f"{'─' * 66}")
-
-    prev_gap = None
-    for lvl in sorted(by_level.keys()):
-        gaps = [g for g, _ in by_level[lvl]]
-        dbes = [d for _, d in by_level[lvl]]
-        mean_gap = np.mean(gaps)
-        mean_db = np.mean(dbes)
-
-        change = ""
-        if prev_gap is not None:
-            if mean_gap > prev_gap + 0.05:
-                change = f"  ↑ recovery from {prev_gap:.3f}"
-            elif mean_gap < prev_gap - 0.05:
-                change = f"  ↓ collapse"
-
-        label = "Base" if lvl == 0 else f"Level {lvl}"
-        tag = ""
-        if mean_gap < 0.3 and mean_db > 0.1:
-            tag = "  ← QUANTUM-LIKE"
-        elif mean_gap > 0.85 and mean_db < 0.15:
-            tag = "  ← CLASSICAL"
-        print(f"  {label:<8s} ({len(by_level[lvl]):>2d} agents)  gap={mean_gap:.4f}  db_err={mean_db:.4f}{tag}{change}")
-        prev_gap = mean_gap
-
-    print(f"\n  Interpretation:")
-    print(f"    gap~1.0, db_err~0.0  = classical, reversible (deterministic)")
-    print(f"    gap~0.0, db_err>0.1  = quantum-like (stochastic, irreversible)")
-    print(f"    gap recovery at higher levels = classical limit of quantum systems")
-
-    return by_level
+    print("\n" + "─" * 78)
+    print("Summary by combination level (agents' own recurrent chains)")
+    print("─" * 78)
+    by_level: dict[int, list] = {}
+    excluded = []
+    for a in agents.values():
+        r = analyse_agent(a)
+        if r is None:
+            continue
+        if not r["evidence"] or (r["period"] or 1) > 1:
+            excluded.append(f"{a.agent_id} ({'too little data' if not r['evidence'] else 'period ' + str(r['period'])})")
+            continue
+        by_level.setdefault(a.cycle_level, []).append(r)
+    for lvl in sorted(by_level):
+        rs = by_level[lvl]
+        gap = sum(r["gap"] for r in rs) / len(rs)
+        irrev = sum(r["irrev"] for r in rs) / len(rs)
+        print(f"  level {lvl}  ({len(rs)} agent{'' if len(rs) == 1 else 's'})  gap={f(gap)}  irreversibility={f(irrev)}")
+    if excluded:
+        print(f"  excluded (gap not meaningful): {', '.join(excluded)}")
+    print("\n  All of these are classical Markov chains: gap = mixing speed, irreversibility = net circulation.")
+    print(f"\n  Done in {time.time() - t0:.1f}s\n")
 
 
 if __name__ == "__main__":
-    run_experiment()
+    run()

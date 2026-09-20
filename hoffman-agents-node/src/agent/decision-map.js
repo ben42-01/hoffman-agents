@@ -1,30 +1,50 @@
+const { MarkovKernel } = require('../kernels/markov-kernel');
+const { buildTransitionSignature } = require('../math/signature');
+const legacy = require('../legacy/decision');
+
 const CORE_TOKENS = ['I', 'notice', 'familiar', 'different', 'wait'];
 const SIGNATURE_MATCH_THRESHOLD = 0.3;
 
-function _buildTransitionSignature(prevId, currId, embeddingDim) {
-  const sig = new Float64Array(embeddingDim);
-  if (prevId !== null && prevId !== undefined) {
-    const h = Math.abs(hashCode(`${prevId}->${currId}`));
-    sig[h % embeddingDim] = 1;
-  }
-  sig[currId % embeddingDim] = 1;
-  let norm = 0;
-  for (let i = 0; i < sig.length; i++) norm += sig[i] * sig[i];
-  norm = Math.sqrt(norm);
-  if (norm > 0) for (let i = 0; i < sig.length; i++) sig[i] /= norm;
-  return sig;
-}
-
-function hashCode(str) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = ((hash << 5) - hash) + str.charCodeAt(i);
-    hash |= 0;
-  }
-  return hash;
-}
+// Output (decision) states of the agent. Their dynamics is the Markov kernel D.
+const DECISION_STATES = ['core', 'lexicon', 'explore', 'idle'];
+const DEFAULT_LEXICON_ROW = [0.70, 0.15, 0.10, 0.05];
 
 const _random = () => Math.random();
+
+// Build the decision kernel D over DECISION_STATES.
+//
+//   from core / explore / idle : [pStable, pLexicon, pExplore, 1 - pStable - pLexicon - pExplore]
+//   from lexicon               : lexiconRow (after speaking a word, return to the core
+//                                utterance with high probability)
+//
+// This is the 2.x transition structure written down explicitly, so it can be
+// validated and analysed (stationary distribution, period, mixing time).
+function buildDecisionKernel({ pStable = 0.8, pLexicon = 0.1, pExplore = 0.05, lexiconRow = DEFAULT_LEXICON_ROW } = {}) {
+  for (const [name, v] of Object.entries({ pStable, pLexicon, pExplore })) {
+    if (!(v >= 0 && v <= 1)) throw new Error(`${name} must be in [0, 1], got ${v}`);
+  }
+  const pIdle = 1 - pStable - pLexicon - pExplore;
+  if (pIdle < -1e-9) {
+    throw new Error(`pStable + pLexicon + pExplore must be <= 1, got ${pStable + pLexicon + pExplore}`);
+  }
+  const base = [pStable, pLexicon, pExplore, Math.max(0, pIdle)];
+  return new MarkovKernel({
+    states: DECISION_STATES,
+    matrix: [base, [...lexiconRow], base, base],
+  });
+}
+
+const _kernelCache = new Map();
+function _cachedKernel(params) {
+  const key = `${params.pStable}|${params.pLexicon}|${params.pExplore}|${(params.lexiconRow || DEFAULT_LEXICON_ROW).join(',')}`;
+  let k = _kernelCache.get(key);
+  if (!k) {
+    k = buildDecisionKernel(params);
+    if (_kernelCache.size > 256) _kernelCache.clear();
+    _kernelCache.set(key, k);
+  }
+  return k;
+}
 
 function _sampleLexiconLabel(experience, vocabSize = 5, rng = _random) {
   const entries = experience.lexicon.sortedByIntegration();
@@ -49,7 +69,7 @@ function _sampleLexiconLabel(experience, vocabSize = 5, rng = _random) {
     let prevId = null;
     const recent = experience.traceBuffer.getRecent(2);
     if (recent.length >= 2) prevId = recent[recent.length - 2].toState;
-    const querySig = _buildTransitionSignature(prevId, currId, experience.lexicon._embeddingDim);
+    const querySig = buildTransitionSignature(prevId, currId, experience.lexicon._embeddingDim, experience.mathVersion);
     const [bestLabel, bestDist] = experience.lexicon.nearestLabel(querySig);
     if (bestLabel && bestDist < SIGNATURE_MATCH_THRESHOLD) {
       const entry = experience.lexicon.lookupByLabel(bestLabel);
@@ -78,30 +98,18 @@ function _sampleLexiconLabel(experience, vocabSize = 5, rng = _random) {
   return topN.length > 0 ? topN[topN.length - 1][1].outputToken : null;
 }
 
-function _nextState(current, pStable, pLexicon, pExplore, rng = _random) {
-  const r = rng();
-  if (current === 'lexicon') {
-    if (r < 0.7) return 'core';
-    if (r < 0.85) return 'lexicon';
-    if (r < 0.95) return 'explore';
-    return 'idle';
-  } else {
-    if (r < pStable) return 'core';
-    if (r < pStable + pLexicon) return 'lexicon';
-    if (r < pStable + pLexicon + pExplore) return 'explore';
-    return 'idle';
-  }
-}
-
 function decide(experience, {
-  maxTokens = 8, pStable = 0.8, pLexicon = 0.1, pExplore = 0.05, ergodicState = null, rng = _random
+  maxTokens = 8, pStable = 0.8, pLexicon = 0.1, pExplore = 0.05, ergodicState = null, rng = _random,
+  lexiconRow = DEFAULT_LEXICON_ROW, kernel = null,
 } = {}) {
   if (!experience.selfToken.isLocked()) {
     return [['wait'], 'idle'];
   }
 
   const state = ergodicState || 'core';
-  const next = _nextState(state, pStable, pLexicon, pExplore, rng);
+  const next = experience.mathVersion === 'legacy'
+    ? legacy.nextState(state, pStable, pLexicon, pExplore, rng)
+    : (kernel || _cachedKernel({ pStable, pLexicon, pExplore, lexiconRow })).sample(state, rng);
 
   let tokens;
   if (next === 'core') {
@@ -122,4 +130,7 @@ function decide(experience, {
   return [tokens.slice(0, maxTokens), next];
 }
 
-module.exports = { decide, _sampleLexiconLabel, CORE_TOKENS };
+module.exports = {
+  decide, _sampleLexiconLabel, buildDecisionKernel,
+  CORE_TOKENS, DECISION_STATES, DEFAULT_LEXICON_ROW,
+};

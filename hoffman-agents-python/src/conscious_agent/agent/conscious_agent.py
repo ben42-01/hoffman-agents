@@ -17,7 +17,10 @@ from ..core import (
 from .world_state import WorldState
 from .experience_space import ExperienceSpace
 from .perceptual_map import perceive
-from .decision_map import decide, OutputState
+from .decision_map import decide, OutputState, build_decision_kernel, DEFAULT_LEXICON_ROW
+from ..math import markov
+from ..math.rng import Mulberry32
+from ..kernels.markov_kernel import MarkovKernel, StochasticMatrix
 
 _VALID_MODES = frozenset({"learning", "frozen", "debug"})
 
@@ -65,26 +68,47 @@ class ConsciousAgent:
     p_lexicon: float = 0.10
     p_explore: float = 0.05
     _mode: str = "learning"
-    _rng: Any = field(default_factory=_random.Random)
+    _rng: Any = None
     _allowable_tokens: set[str] | None = None
     _combined: bool = False
     _ergodic_state: OutputState = "idle"
     _last_output: list[str] = field(default_factory=lambda: ["wait"])
+    seed: int | None = None
+    lexicon_row: tuple[float, ...] = DEFAULT_LEXICON_ROW
+    combination_prior: dict | None = None
+    # 'v3' (default) or 'legacy'. Assigned through the property defined below
+    # the class; the experience space holds the value. None keeps its current one.
+    math_version: str | None = None
+
+    def __post_init__(self) -> None:
+        if self._rng is None:
+            self._rng = Mulberry32(self.seed) if self.seed is not None else _random.Random()
+        self.lexicon_row = tuple(self.lexicon_row)
+        if self.math_version != "legacy":
+            self.decision_kernel  # validate p-parameters early
+
+    @property
+    def decision_kernel(self) -> MarkovKernel:
+        """The decision kernel D over ('core', 'lexicon', 'explore', 'idle')."""
+        return build_decision_kernel(self.p_stable, self.p_lexicon, self.p_explore, self.lexicon_row)
 
     @staticmethod
     def from_config(agent_id: str, config: dict) -> ConsciousAgent:
         agent_cfg = config.get("agent", {})
         st_cfg = agent_cfg.get("self_token", {})
-        st = SelfTokenState(
-            lock_threshold=st_cfg.get("lock_threshold", 0.25),
-            lock_consecutive_required=st_cfg.get("lock_consecutive_required", 3),
-        )
+        st = SelfTokenState(**SelfTokenState.lock_options(st_cfg))
         exp = ExperienceSpace(self_token=st)
         return ConsciousAgent(
             agent_id=agent_id,
             experience=exp,
             meta_observation_interval=agent_cfg.get("meta_observation_interval", 20),
             expression_temp=agent_cfg.get("expression_temp", 1.0),
+            p_stable=agent_cfg.get("p_stable", 0.80),
+            p_lexicon=agent_cfg.get("p_lexicon", 0.10),
+            p_explore=agent_cfg.get("p_explore", 0.05),
+            lexicon_row=tuple(agent_cfg.get("lexicon_row", DEFAULT_LEXICON_ROW)),
+            seed=agent_cfg.get("seed"),
+            math_version=agent_cfg.get("math_version", "v3"),
         )
 
     def step(self, world: WorldState | None = None) -> StepOutput:
@@ -106,6 +130,7 @@ class ConsciousAgent:
                 frozen=is_frozen,
                 ergodic_state=self._ergodic_state,
                 rng=self._rng,
+                generation=self.generation,
             )
 
         p_stable = 1.0 if is_frozen else self.p_stable
@@ -119,6 +144,7 @@ class ConsciousAgent:
             p_explore=p_explore,
             ergodic_state=self._ergodic_state,
             rng=self._rng,
+            lexicon_row=self.lexicon_row,
         )
 
         if self._allowable_tokens is not None:
@@ -146,14 +172,15 @@ class ConsciousAgent:
             action_distribution=action_distribution,
             step=self.step_count,
             generation=self.generation,
-            state=self.experience.last_world_state_id or -1,
-            state_label=str(self.experience.last_world_state_id or "?"),
+            state=self.experience.last_world_state_id if self.experience.last_world_state_id is not None else -1,
+            state_label=str(self.experience.last_world_state_id if self.experience.last_world_state_id is not None else "?"),
             prediction_error=self.experience.trace_buffer.prediction_error_mean(window=5),
             sequence=list(output),
             sequence_str=" ".join(output),
             loop_depth=float(_compute_self_reference_score(output)),
             i_locked=self.experience.self_token.locked,
             i_stability=self.experience.self_token.stationary_variance(),
+            interrupt=self.experience.self_token.consume_event(),
         )
 
     def run(self, n_steps: int) -> list[StepOutput]:
@@ -197,6 +224,47 @@ class ConsciousAgent:
             confidence=confidence,
             _top_k=top_k,
         )
+
+    def ergodic_stats(self) -> dict:
+        """Ergodic analysis of the decision kernel D and the meta-state chain."""
+        meta = self.experience.meta_trie.ergodic_diagnostics()
+        st = self.experience.self_token
+        return {
+            "math_version": self.math_version,
+            "decision": self.decision_kernel.diagnostics(),
+            "meta": meta,
+            "lock": {
+                "locked": st.locked,
+                "referent": st.referent_meta_state_id,
+                "criteria": st.lock_criteria(meta)["checks"] if meta["class_size"] > 0 else None,
+                "history": list(st.lock_history),
+            },
+            "combination_prior": self.combination_prior,
+        }
+
+    def to_formal(self) -> dict:
+        """Learned dynamics as explicit kernels (Hoffman & Prakash's X, G, P, D, A, N).
+
+        X: meta-states of the recurrent class; P: empirical world-transition
+        kernel; M: meta-state kernel on X; D: decision kernel; A: meta-state ->
+        emitted-token distribution; N: step counter.
+        """
+        meta = self.experience.meta_trie.ergodic_diagnostics()
+        ids, counts = self.experience.meta_trie.transition_counts()
+        pos = {sid: i for i, sid in enumerate(ids)}
+        M = None
+        if meta["class_size"] > 0:
+            idx = [pos[s] for s in meta["states"]]
+            M = MarkovKernel(meta["states"], markov.normalize_rows(markov.sub_matrix(counts, idx))[0])
+
+        registry = self.experience.meta_trie._token_registry
+        rows = sorted(mid for mid, c in registry.items() if c)
+        cols = sorted({t for mid in rows for t in registry[mid]})
+        A = (StochasticMatrix.from_counts(rows, cols, [[registry[mid].get(t, 0) for t in cols] for mid in rows])
+             if rows else None)
+
+        return {"X": meta["states"], "G": cols, "P": world_kernel(self.experience.trie), "M": M,
+                "D": self.decision_kernel, "A": A, "N": self.step_count, "diagnostics": meta}
 
     def get_output(self) -> list[str]:
         return list(self._last_output)
@@ -274,6 +342,37 @@ class ConsciousAgent:
         self.experience.lexicon.clear()
 
 
+def world_kernel(trie: ExperienceTrie) -> MarkovKernel | None:
+    """Empirical world-state transition kernel from depth-2 trie counts,
+    restricted to states whose outgoing transitions have been observed."""
+    edges = [(frm, to, child.visit_count)
+             for frm, node in trie.root.children.items()
+             for to, child in node.children.items() if child.visit_count > 0]
+    if not edges:
+        return None
+    ids = sorted({e[0] for e in edges} | {e[1] for e in edges})
+    idx = {sid: i for i, sid in enumerate(ids)}
+    counts = np.zeros((len(ids), len(ids)))
+    for frm, to, c in edges:
+        counts[idx[frm], idx[to]] += c
+    kept = markov.prune_unobserved_rows(counts)
+    if not kept:
+        return None
+    return MarkovKernel([ids[i] for i in kept], markov.normalize_rows(markov.sub_matrix(counts, kept))[0])
+
+
+def _get_math_version(self: ConsciousAgent) -> str:
+    return self.experience.math_version
+
+
+def _set_math_version(self: ConsciousAgent, value: str | None) -> None:
+    if value is not None:
+        self.experience.set_math_version(value)
+
+
+ConsciousAgent.math_version = property(_get_math_version, _set_math_version)
+
+
 ConsciousAgent.__init__.__doc__ = """Create a ConsciousAgent.
 
 Args:
@@ -290,4 +389,7 @@ Args:
     p_stable: Probability of remaining in core output state.
     p_lexicon: Probability of transitioning to lexicon output state.
     p_explore: Probability of exploring random tokens.
+    seed: Seed for the deterministic Mulberry32 RNG (identical to the Node library).
+    lexicon_row: Decision-kernel row used after a lexicon utterance.
+    math_version: 'v3' (default) or 'legacy' to reproduce 2.x dynamics.
 """

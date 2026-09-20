@@ -3,7 +3,10 @@
  *
  * Two agents experience the same hidden Markov world through different
  * interfaces: one sees compressed groups (5 groups), the other sees
- * all 20 raw states. The interface agent should predict BETTER.
+ * all 20 raw states. Hypothesis (a predictive analogue of Hoffman's interface
+ * theory): the interface agent predicts better, because it discards irrelevant
+ * within-group variation. Hoffman's fitness-beats-truth theorem itself concerns
+ * evolutionary selection between perceptual strategies, which this does not test.
  */
 const { ConsciousAgent } = require('../../src/index');
 const { WorldBuilder } = require('../../src/index');
@@ -97,7 +100,7 @@ function run() {
   const truth = evaluate('Truth (20 raw states)', seq);
 
   if (iface.improvement > truth.improvement) {
-    console.log(`\n  ✓ Interface dominates — less information → better prediction`);
+    console.log(`\n  ✓ Interface dominates — less information → better prediction (in this world)`);
   } else {
     console.log(`\n  ✗ Expected Interface > Truth`);
   }
