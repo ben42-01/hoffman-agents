@@ -1,5 +1,15 @@
 # conscious-agent Node.js Lib — Agent Skill
 
+## v3.0 changes (read first)
+
+- **Math.** Agents default to `mathVersion: 'v3'`. `{ mathVersion: 'legacy' }` reproduces 2.x exactly. Full spec: `docs/MATHEMATICAL_MODEL.md`.
+- **"I" lock.** It now requires a real attractor in the self-chain: evidence, ergodicity, dominance above uniform, occupancy and stability. It can unlock. Tune it with `lockMargin` (default 0.15), `minTransitions` (20), `minTransitionsPerState` (2), `minOccupancy` (0.6), `unlockMargin` (0.05). `lockThreshold` is used only by `'legacy'`. To disable locking in an ablation, set `lockMargin: 2`. Inspect with `agent.ergodicStats().lock.criteria`.
+- **Earliest lock.** At default settings no lock can happen before step ~460, and structureless worlds never lock.
+- **Reproducibility.** Pass `seed` for mulberry32; seeded runs are identical in Node and Python.
+- **Combination.** `combine` is commutative and associative, and `fuse` restores constituents exactly. `productKernel(a, b)` gives M_a ⊗ M_b.
+- **New modules.** `kernels/` (`MarkovKernel`, `FormalConsciousAgent`), `math/markov.js` (stationary, period, mixing, `spectralDimension`, `irreversibility`, `dobrushin`), `analysis/bell.js` (CHSH, quantum-set test, signalling), `legacy/` (2.x math).
+- **Spectral gap is not a quantum signature.** A small gap means slow mixing; a classical clock has one. See example 02 and `docs/Q_AND_A.md#corrections`.
+
 ## Overview
 
 Zero-dependency Node.js library for building self-referential agents (Hoffman's Conscious Realism). Same architecture as the Python lib but implemented entirely with stdlib (`crypto`, `fs`, `http`, `Float64Array`).
@@ -291,9 +301,9 @@ for (const row of trainingData) {
 | Feature selection | Compare interface vs truth accuracy | Feature engineering | Optimize bin count for current volatility regime |
 | Ensemble diversity | Hash-based state machine predictions | Gradient-based predictions | Decorrelated error modes → better ensemble |
 
-## Self-Awareness (v2.0 — Critical for Agent Understanding)
+## Self-Modelling (v2.0 — Critical for Agent Understanding)
 
-This library has **FOUR self-awareness mechanisms**. If you're exploring self-awareness, check these first:
+This library has **four self-modelling mechanisms** (whether they amount to self-awareness is not something the code establishes). Check these first:
 
 | # | Mechanism | File | What it does |
 |---|-----------|------|-------------|
@@ -446,7 +456,7 @@ for (let step = 0; step < 1000; step++) {
 const ablated = new ConsciousAgent({
   agentId: 'ablated',
   experience: new ExperienceSpace({
-    selfToken: new SelfTokenState({ lockThreshold: 1.5 }), // never locks
+    selfToken: new SelfTokenState({ lockMargin: 2 }), // never locks (dominance <= 1)
   }),
 });
 ```
@@ -587,7 +597,7 @@ if (top[0].confidence > 0.8) {
 ```javascript
 const agent = ConsciousAgent.fromConfig('my_agent', {
   agent: {
-    selfToken: { lockThreshold: 0.3, lockConsecutiveRequired: 5 },
+    selfToken: { lockMargin: 0.2, lockConsecutiveRequired: 5 },
     metaObservationInterval: 15,
     expressionTemp: 0.7,
   },
@@ -637,7 +647,7 @@ agent.run(1000);
 
 ### Custom lock threshold (ablation)
 ```javascript
-const st = new SelfTokenState({ lockThreshold: 1.5 });
+const st = new SelfTokenState({ lockMargin: 2 }); // never locks
 const exp = new ExperienceSpace({ selfToken: st });
 const agent = new ConsciousAgent({ agentId: 'ablated', experience: exp });
 ```
@@ -731,7 +741,7 @@ const metaSize = agent.experience.metaTrie.registrySize;
 const trieStats = agent.experience.trie.getStats();
 console.log({ sp, metaSize, trieStats });
 // Low sp (<0.2) + small metaSize (<10) → world too large or too random
-// Solution: reduce nStates, increase metaObservationInterval, lower lockThreshold
+// Solution: reduce nStates, run longer (the lock needs >= 20 meta-transitions), check ergodicStats().lock.criteria
 // High sp (>0.4) but never locks → lockConsecutiveRequired too high
 // Solution: reduce lockConsecutiveRequired
 ```

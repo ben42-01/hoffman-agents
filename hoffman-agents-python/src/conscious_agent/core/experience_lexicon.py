@@ -55,6 +55,8 @@ class ExperienceLexicon:
             associated_labels=associations,
         )
 
+        if label in self._entries:
+            self._signatures = [(sig, lbl) for sig, lbl in self._signatures if lbl != label]
         self._entries[label] = entry
         self._signatures.append((trace_signature, label))
         return entry
@@ -185,6 +187,9 @@ class ExperienceLexicon:
     def clear(self) -> None:
         self._entries.clear()
         self._signatures.clear()
+
+    def clone(self) -> ExperienceLexicon:
+        return ExperienceLexicon.from_dict(self.to_dict())
 
     def to_dict(self) -> dict:
         entries = []

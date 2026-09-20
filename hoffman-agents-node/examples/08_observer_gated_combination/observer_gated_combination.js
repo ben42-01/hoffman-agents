@@ -1,7 +1,7 @@
 /**
  * Observer-Gated Combination
  *
- * Follow-up to 07_exchange_symmetry. That experiment proved combine() is
+ * Follow-up to 07_exchange_symmetry. That experiment showed combine() is
  * exactly exchange-symmetric — a direct consequence of being built from
  * pure union operations (trie merge, lexicon merge), which are symmetric
  * by algebraic necessity. Union has no vantage point, so it cannot produce

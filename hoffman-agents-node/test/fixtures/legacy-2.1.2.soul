@@ -1,0 +1,9118 @@
+{
+  "caVersion": "1.0",
+  "agentId": "CA_legacy_1",
+  "generation": 15,
+  "step": 300,
+  "components": {
+    "traceBuffer": {
+      "maxlen": 50,
+      "events": [
+        {
+          "fromState": 2771979864,
+          "toState": 3025756346,
+          "timestamp": 250,
+          "prediction": 1750002949,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 3025756346,
+          "toState": 1272482660,
+          "timestamp": 251,
+          "prediction": 3443980672,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 1272482660,
+          "toState": 646993941,
+          "timestamp": 252,
+          "prediction": 577125348,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 646993941,
+          "toState": 92813911,
+          "timestamp": 253,
+          "prediction": 487530558,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 92813911,
+          "toState": 1996467657,
+          "timestamp": 254,
+          "prediction": 646993941,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 1996467657,
+          "toState": 3192741385,
+          "timestamp": 255,
+          "prediction": 324385523,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 3192741385,
+          "toState": 4196109672,
+          "timestamp": 256,
+          "prediction": 3399675921,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 4196109672,
+          "toState": 2225202667,
+          "timestamp": 257,
+          "prediction": 2205575665,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 2225202667,
+          "toState": 2225202667,
+          "timestamp": 258,
+          "prediction": 3739098227,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 2225202667,
+          "toState": 1084670244,
+          "timestamp": 259,
+          "prediction": 2225202667,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 1084670244,
+          "toState": 238289737,
+          "timestamp": 260,
+          "prediction": 1084670244,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 238289737,
+          "toState": 1750002949,
+          "timestamp": 261,
+          "prediction": 254641891,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 1750002949,
+          "toState": 3399675921,
+          "timestamp": 262,
+          "prediction": 577125348,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 3399675921,
+          "toState": 564765158,
+          "timestamp": 263,
+          "prediction": 888699530,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 564765158,
+          "toState": 646993941,
+          "timestamp": 264,
+          "prediction": 1272482660,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 646993941,
+          "toState": 1522327764,
+          "timestamp": 265,
+          "prediction": 487530558,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 1522327764,
+          "toState": 3154679736,
+          "timestamp": 266,
+          "prediction": 3289533897,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 3154679736,
+          "toState": 3399675921,
+          "timestamp": 267,
+          "prediction": 3443980672,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 3399675921,
+          "toState": 92813911,
+          "timestamp": 268,
+          "prediction": 564765158,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 92813911,
+          "toState": 4219860736,
+          "timestamp": 269,
+          "prediction": 646993941,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 4219860736,
+          "toState": 2762596073,
+          "timestamp": 270,
+          "prediction": 324385523,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 2762596073,
+          "toState": 2771979864,
+          "timestamp": 271,
+          "prediction": 577125348,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 2771979864,
+          "toState": 238289737,
+          "timestamp": 272,
+          "prediction": 1750002949,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 238289737,
+          "toState": 3289533897,
+          "timestamp": 273,
+          "prediction": 254641891,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 3289533897,
+          "toState": 766609798,
+          "timestamp": 274,
+          "prediction": 564765158,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 766609798,
+          "toState": 888699530,
+          "timestamp": 275,
+          "prediction": 92813911,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 888699530,
+          "toState": 3154679736,
+          "timestamp": 276,
+          "prediction": 92813911,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 3154679736,
+          "toState": 888699530,
+          "timestamp": 277,
+          "prediction": 3443980672,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 888699530,
+          "toState": 1960022307,
+          "timestamp": 278,
+          "prediction": 92813911,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 1960022307,
+          "toState": 1522327764,
+          "timestamp": 279,
+          "prediction": 2203883878,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 1522327764,
+          "toState": 4219860736,
+          "timestamp": 280,
+          "prediction": 3154679736,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 4219860736,
+          "toState": 254641891,
+          "timestamp": 281,
+          "prediction": 324385523,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 254641891,
+          "toState": 1220477834,
+          "timestamp": 282,
+          "prediction": 564765158,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 1220477834,
+          "toState": 3873509591,
+          "timestamp": 283,
+          "prediction": 2225202667,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 3873509591,
+          "toState": 3916973656,
+          "timestamp": 284,
+          "prediction": 254641891,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 3916973656,
+          "toState": 4196109672,
+          "timestamp": 285,
+          "prediction": 2203883878,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 4196109672,
+          "toState": 3403856274,
+          "timestamp": 286,
+          "prediction": 2205575665,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 3403856274,
+          "toState": 4159141595,
+          "timestamp": 287,
+          "prediction": 1272482660,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 4159141595,
+          "toState": 3443980672,
+          "timestamp": 288,
+          "prediction": 3873509591,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 3443980672,
+          "toState": 3598052893,
+          "timestamp": 289,
+          "prediction": 487530558,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 3598052893,
+          "toState": 3739098227,
+          "timestamp": 290,
+          "prediction": 238289737,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 3739098227,
+          "toState": 3873509591,
+          "timestamp": 291,
+          "prediction": 3289533897,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 3873509591,
+          "toState": 1272482660,
+          "timestamp": 292,
+          "prediction": 254641891,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 1272482660,
+          "toState": 3192741385,
+          "timestamp": 293,
+          "prediction": 577125348,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 3192741385,
+          "toState": 238289737,
+          "timestamp": 294,
+          "prediction": 3399675921,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 238289737,
+          "toState": 3739098227,
+          "timestamp": 295,
+          "prediction": 254641891,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 3739098227,
+          "toState": 4101493267,
+          "timestamp": 296,
+          "prediction": 3289533897,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 4101493267,
+          "toState": 646993941,
+          "timestamp": 297,
+          "prediction": 3598052893,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        },
+        {
+          "fromState": 646993941,
+          "toState": 487530558,
+          "timestamp": 298,
+          "prediction": 487530558,
+          "predictionCorrect": true,
+          "predictionError": 0,
+          "token": null
+        },
+        {
+          "fromState": 487530558,
+          "toState": 3739098227,
+          "timestamp": 299,
+          "prediction": 1996467657,
+          "predictionCorrect": false,
+          "predictionError": 1,
+          "token": null
+        }
+      ]
+    },
+    "experienceTrie": {
+      "maxDepth": 10,
+      "nodes": [
+        {
+          "path": [
+            92813911
+          ],
+          "visitCount": 14,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            92813911,
+            646993941
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            92813911,
+            1220477834
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            92813911,
+            1996467657
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            92813911,
+            2771979864
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            92813911,
+            3383176773
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            92813911,
+            3399675921
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            92813911,
+            4219860736
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            238289737
+          ],
+          "visitCount": 14,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            238289737,
+            254641891
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            238289737,
+            324385523
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            238289737,
+            646993941
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            238289737,
+            1750002949
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            238289737,
+            3289533897
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            238289737,
+            3739098227
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            238289737,
+            4260660245
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            254641891
+          ],
+          "visitCount": 14,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 0.8571428571428571,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            254641891,
+            564765158
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            254641891,
+            1220477834
+          ],
+          "visitCount": 2,
+          "predictionErrors": [
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            254641891,
+            1774477304
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            254641891,
+            2771979864
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            254641891,
+            3769656231
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            254641891,
+            4260660245
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            308067375
+          ],
+          "visitCount": 6,
+          "predictionErrors": [
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            308067375,
+            1856052436
+          ],
+          "visitCount": 2,
+          "predictionErrors": [
+            1,
+            0
+          ],
+          "meanPredictionError": 0.5,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            308067375,
+            3192741385
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            324385523
+          ],
+          "visitCount": 16,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            324385523,
+            254641891
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            324385523,
+            308067375
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            324385523,
+            1960022307
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            324385523,
+            3403856274
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            324385523,
+            3916973656
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            324385523,
+            4260660245
+          ],
+          "visitCount": 2,
+          "predictionErrors": [
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            324385523,
+            4287404245
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            375227408
+          ],
+          "visitCount": 4,
+          "predictionErrors": [
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            375227408,
+            577125348
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            375227408,
+            1750002949
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            487530558
+          ],
+          "visitCount": 10,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          "meanPredictionError": 0.8,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            487530558,
+            1996467657
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            487530558,
+            2205575665
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            487530558,
+            3739098227
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            487530558,
+            4219860736
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            487530558,
+            4287404245
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            564765158
+          ],
+          "visitCount": 12,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            564765158,
+            646993941
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            564765158,
+            1272482660
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            564765158,
+            2232411284
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            564765158,
+            3383176773
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            564765158,
+            3748148117
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            564765158,
+            3769656231
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            577125348
+          ],
+          "visitCount": 14,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          "meanPredictionError": 0.8571428571428571,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            577125348,
+            92813911
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            577125348,
+            646993941
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            577125348,
+            766609798
+          ],
+          "visitCount": 2,
+          "predictionErrors": [
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            577125348,
+            1774477304
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            577125348,
+            3399675921
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            577125348,
+            3598052893
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            646993941
+          ],
+          "visitCount": 22,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            646993941,
+            92813911
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            646993941,
+            254641891
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            646993941,
+            308067375
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            646993941,
+            487530558
+          ],
+          "visitCount": 3,
+          "predictionErrors": [
+            1,
+            1,
+            0
+          ],
+          "meanPredictionError": 0.6666666666666666,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            646993941,
+            564765158
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            646993941,
+            577125348
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            646993941,
+            1084670244
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            646993941,
+            1522327764
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            646993941,
+            2205575665
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            766609798
+          ],
+          "visitCount": 10,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            766609798,
+            92813911
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            766609798,
+            888699530
+          ],
+          "visitCount": 2,
+          "predictionErrors": [
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            766609798,
+            3025756346
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            766609798,
+            4101493267
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            888699530
+          ],
+          "visitCount": 12,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            888699530,
+            92813911
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            888699530,
+            1218929900
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            888699530,
+            1522327764
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            888699530,
+            1960022307
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            888699530,
+            3154679736
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            888699530,
+            4159141595
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1084670244
+          ],
+          "visitCount": 12,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1084670244,
+            238289737
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1084670244,
+            1084670244
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1084670244,
+            1167990968
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1084670244,
+            3873509591
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1084670244,
+            4196109672
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1084670244,
+            4287404245
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1167990968
+          ],
+          "visitCount": 12,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1167990968,
+            324385523
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1167990968,
+            646993941
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1167990968,
+            2205575665
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1167990968,
+            2771979864
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1167990968,
+            3154679736
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1167990968,
+            3403856274
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1218929900
+          ],
+          "visitCount": 8,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1218929900,
+            487530558
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1218929900,
+            2205575665
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1218929900,
+            3399675921
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1218929900,
+            3916973656
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1220477834
+          ],
+          "visitCount": 12,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1220477834,
+            2225202667
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1220477834,
+            3154679736
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1220477834,
+            3598052893
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1220477834,
+            3873509591
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1220477834,
+            4159141595
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1220477834,
+            4219860736
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1272482660
+          ],
+          "visitCount": 14,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1272482660,
+            577125348
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1272482660,
+            646993941
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1272482660,
+            1750002949
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1272482660,
+            3192741385
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1272482660,
+            3383176773
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1272482660,
+            3748148117
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1272482660,
+            4260660245
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1522327764
+          ],
+          "visitCount": 12,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1522327764,
+            3154679736
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1522327764,
+            3289533897
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1522327764,
+            3383176773
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1522327764,
+            3916973656
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1522327764,
+            4219860736
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1522327764,
+            4287404245
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1750002949
+          ],
+          "visitCount": 12,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1750002949,
+            577125348
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1750002949,
+            1167990968
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1750002949,
+            1218929900
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1750002949,
+            1272482660
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1750002949,
+            2203883878
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1750002949,
+            3399675921
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1774477304
+          ],
+          "visitCount": 8,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1774477304,
+            1167990968
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1774477304,
+            1220477834
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1774477304,
+            2232411284
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1774477304,
+            4287404245
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1856052436
+          ],
+          "visitCount": 10,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            0,
+            1
+          ],
+          "meanPredictionError": 0.8,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1856052436,
+            1084670244
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1856052436,
+            1167990968
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1856052436,
+            1220477834
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1856052436,
+            2225202667
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1856052436,
+            4159141595
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1960022307
+          ],
+          "visitCount": 6,
+          "predictionErrors": [
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1960022307,
+            1522327764
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1960022307,
+            2203883878
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1960022307,
+            2205575665
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1996467657
+          ],
+          "visitCount": 4,
+          "predictionErrors": [
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1996467657,
+            324385523
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            1996467657,
+            3192741385
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2044727164
+          ],
+          "visitCount": 4,
+          "predictionErrors": [
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2044727164,
+            1750002949
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2044727164,
+            4287404245
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2203883878
+          ],
+          "visitCount": 12,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            0,
+            1,
+            1
+          ],
+          "meanPredictionError": 0.8333333333333334,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2203883878,
+            324385523
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2203883878,
+            564765158
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2203883878,
+            888699530
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2203883878,
+            2771979864
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2203883878,
+            4159141595
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2203883878,
+            4287404245
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2205575665
+          ],
+          "visitCount": 16,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2205575665,
+            324385523
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2205575665,
+            564765158
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2205575665,
+            646993941
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2205575665,
+            1960022307
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2205575665,
+            2232411284
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2205575665,
+            2762596073
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2205575665,
+            3154679736
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2205575665,
+            3399675921
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2225202667
+          ],
+          "visitCount": 8,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2225202667,
+            1084670244
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2225202667,
+            2225202667
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2225202667,
+            3739098227
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2225202667,
+            4287404245
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2232411284
+          ],
+          "visitCount": 10,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2232411284,
+            308067375
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2232411284,
+            1220477834
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2232411284,
+            3598052893
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2232411284,
+            3748148117
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2232411284,
+            3873509591
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2762596073
+          ],
+          "visitCount": 8,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2762596073,
+            577125348
+          ],
+          "visitCount": 2,
+          "predictionErrors": [
+            1,
+            0
+          ],
+          "meanPredictionError": 0.5,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2762596073,
+            2771979864
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2762596073,
+            3443980672
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2771979864
+          ],
+          "visitCount": 14,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2771979864,
+            238289737
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2771979864,
+            1750002949
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2771979864,
+            3025756346
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2771979864,
+            3289533897
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2771979864,
+            3598052893
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2771979864,
+            3873509591
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            2771979864,
+            4260660245
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3025756346
+          ],
+          "visitCount": 6,
+          "predictionErrors": [
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3025756346,
+            1272482660
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3025756346,
+            3443980672
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3025756346,
+            4101493267
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3154679736
+          ],
+          "visitCount": 18,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 0.8888888888888888,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3154679736,
+            238289737
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3154679736,
+            888699530
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3154679736,
+            2205575665
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3154679736,
+            2232411284
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3154679736,
+            2771979864
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3154679736,
+            3399675921
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3154679736,
+            3443980672
+          ],
+          "visitCount": 2,
+          "predictionErrors": [
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3154679736,
+            4287404245
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3192741385
+          ],
+          "visitCount": 8,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3192741385,
+            238289737
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3192741385,
+            3399675921
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3192741385,
+            3748148117
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3192741385,
+            4196109672
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3289533897
+          ],
+          "visitCount": 10,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3289533897,
+            564765158
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3289533897,
+            766609798
+          ],
+          "visitCount": 2,
+          "predictionErrors": [
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3289533897,
+            3598052893
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3289533897,
+            3769656231
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3383176773
+          ],
+          "visitCount": 16,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3383176773,
+            238289737
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3383176773,
+            324385523
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3383176773,
+            1084670244
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3383176773,
+            1272482660
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3383176773,
+            1856052436
+          ],
+          "visitCount": 2,
+          "predictionErrors": [
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3383176773,
+            2044727164
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3383176773,
+            2762596073
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3399675921
+          ],
+          "visitCount": 20,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3399675921,
+            92813911
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3399675921,
+            564765158
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3399675921,
+            888699530
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3399675921,
+            1084670244
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3399675921,
+            2044727164
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3399675921,
+            3154679736
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3399675921,
+            3289533897
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3399675921,
+            3383176773
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3399675921,
+            3873509591
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3399675921,
+            4287404245
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3403856274
+          ],
+          "visitCount": 8,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3403856274,
+            1272482660
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3403856274,
+            3025756346
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3403856274,
+            4159141595
+          ],
+          "visitCount": 2,
+          "predictionErrors": [
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3443980672
+          ],
+          "visitCount": 18,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3443980672,
+            487530558
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3443980672,
+            888699530
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3443980672,
+            1272482660
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3443980672,
+            1856052436
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3443980672,
+            2203883878
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3443980672,
+            3443980672
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3443980672,
+            3598052893
+          ],
+          "visitCount": 2,
+          "predictionErrors": [
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3443980672,
+            3873509591
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3598052893
+          ],
+          "visitCount": 18,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3598052893,
+            238289737
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3598052893,
+            1167990968
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3598052893,
+            1218929900
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3598052893,
+            1522327764
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3598052893,
+            3154679736
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3598052893,
+            3739098227
+          ],
+          "visitCount": 2,
+          "predictionErrors": [
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3598052893,
+            3769656231
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3598052893,
+            4260660245
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3739098227
+          ],
+          "visitCount": 9,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3739098227,
+            3289533897
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3739098227,
+            3748148117
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3739098227,
+            3873509591
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3739098227,
+            4101493267
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3748148117
+          ],
+          "visitCount": 14,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3748148117,
+            92813911
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3748148117,
+            577125348
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3748148117,
+            646993941
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3748148117,
+            3748148117
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3748148117,
+            3769656231
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3748148117,
+            4159141595
+          ],
+          "visitCount": 2,
+          "predictionErrors": [
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3769656231
+          ],
+          "visitCount": 10,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3769656231,
+            324385523
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3769656231,
+            1218929900
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3769656231,
+            3154679736
+          ],
+          "visitCount": 2,
+          "predictionErrors": [
+            1,
+            0
+          ],
+          "meanPredictionError": 0.5,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3769656231,
+            3399675921
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3873509591
+          ],
+          "visitCount": 22,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3873509591,
+            254641891
+          ],
+          "visitCount": 2,
+          "predictionErrors": [
+            1,
+            0
+          ],
+          "meanPredictionError": 0.5,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3873509591,
+            766609798
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3873509591,
+            1272482660
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3873509591,
+            1750002949
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3873509591,
+            1774477304
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3873509591,
+            2762596073
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3873509591,
+            3916973656
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3873509591,
+            4196109672
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3873509591,
+            4219860736
+          ],
+          "visitCount": 2,
+          "predictionErrors": [
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3916973656
+          ],
+          "visitCount": 8,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3916973656,
+            2203883878
+          ],
+          "visitCount": 2,
+          "predictionErrors": [
+            1,
+            0
+          ],
+          "meanPredictionError": 0.5,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3916973656,
+            3443980672
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            3916973656,
+            4196109672
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4101493267
+          ],
+          "visitCount": 6,
+          "predictionErrors": [
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4101493267,
+            646993941
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4101493267,
+            3598052893
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4101493267,
+            3873509591
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4159141595
+          ],
+          "visitCount": 16,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4159141595,
+            2771979864
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4159141595,
+            3383176773
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4159141595,
+            3443980672
+          ],
+          "visitCount": 2,
+          "predictionErrors": [
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4159141595,
+            3748148117
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4159141595,
+            3873509591
+          ],
+          "visitCount": 2,
+          "predictionErrors": [
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4159141595,
+            4287404245
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4196109672
+          ],
+          "visitCount": 8,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4196109672,
+            2205575665
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4196109672,
+            2225202667
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4196109672,
+            3399675921
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4196109672,
+            3403856274
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4219860736
+          ],
+          "visitCount": 14,
+          "predictionErrors": [
+            0.5,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 0.9285714285714286,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4219860736,
+            254641891
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4219860736,
+            324385523
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4219860736,
+            1167990968
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4219860736,
+            2203883878
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4219860736,
+            2232411284
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4219860736,
+            2762596073
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4219860736,
+            3383176773
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4260660245
+          ],
+          "visitCount": 16,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4260660245,
+            238289737
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4260660245,
+            375227408
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4260660245,
+            646993941
+          ],
+          "visitCount": 2,
+          "predictionErrors": [
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4260660245,
+            1522327764
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4260660245,
+            1774477304
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4260660245,
+            3383176773
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4260660245,
+            4260660245
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4287404245
+          ],
+          "visitCount": 24,
+          "predictionErrors": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4287404245,
+            92813911
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4287404245,
+            254641891
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4287404245,
+            375227408
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4287404245,
+            1522327764
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4287404245,
+            2205575665
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4287404245,
+            3192741385
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4287404245,
+            3399675921
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4287404245,
+            3403856274
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4287404245,
+            3443980672
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4287404245,
+            3598052893
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4287404245,
+            3873509591
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        },
+        {
+          "path": [
+            4287404245,
+            4287404245
+          ],
+          "visitCount": 1,
+          "predictionErrors": [
+            1
+          ],
+          "meanPredictionError": 1,
+          "wordBinding": null
+        }
+      ]
+    },
+    "metaTrie": {
+      "trie": {
+        "maxDepth": 10,
+        "nodes": [
+          {
+            "path": [
+              5801531
+            ],
+            "visitCount": 1,
+            "predictionErrors": [],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          },
+          {
+            "path": [
+              5801531,
+              110478081
+            ],
+            "visitCount": 1,
+            "predictionErrors": [
+              0
+            ],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          },
+          {
+            "path": [
+              8123968
+            ],
+            "visitCount": 1,
+            "predictionErrors": [],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          },
+          {
+            "path": [
+              8123968,
+              88358828
+            ],
+            "visitCount": 1,
+            "predictionErrors": [
+              0
+            ],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          },
+          {
+            "path": [
+              88358828
+            ],
+            "visitCount": 1,
+            "predictionErrors": [],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          },
+          {
+            "path": [
+              88358828,
+              103118994
+            ],
+            "visitCount": 1,
+            "predictionErrors": [
+              0
+            ],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          },
+          {
+            "path": [
+              103118994
+            ],
+            "visitCount": 1,
+            "predictionErrors": [],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          },
+          {
+            "path": [
+              103118994,
+              23748575
+            ],
+            "visitCount": 1,
+            "predictionErrors": [
+              0
+            ],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          },
+          {
+            "path": [
+              106884589
+            ],
+            "visitCount": 1,
+            "predictionErrors": [],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          },
+          {
+            "path": [
+              106884589,
+              116875631
+            ],
+            "visitCount": 1,
+            "predictionErrors": [
+              0
+            ],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          },
+          {
+            "path": [
+              110478081
+            ],
+            "visitCount": 1,
+            "predictionErrors": [],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          },
+          {
+            "path": [
+              110478081,
+              264994329
+            ],
+            "visitCount": 1,
+            "predictionErrors": [
+              0
+            ],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          },
+          {
+            "path": [
+              116875631
+            ],
+            "visitCount": 1,
+            "predictionErrors": [],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          },
+          {
+            "path": [
+              116875631,
+              204416562
+            ],
+            "visitCount": 1,
+            "predictionErrors": [
+              0
+            ],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          },
+          {
+            "path": [
+              133437984
+            ],
+            "visitCount": 1,
+            "predictionErrors": [],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          },
+          {
+            "path": [
+              133437984,
+              220500673
+            ],
+            "visitCount": 1,
+            "predictionErrors": [
+              0
+            ],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          },
+          {
+            "path": [
+              149869618
+            ],
+            "visitCount": 1,
+            "predictionErrors": [],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          },
+          {
+            "path": [
+              149869618,
+              133437984
+            ],
+            "visitCount": 1,
+            "predictionErrors": [
+              0
+            ],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          },
+          {
+            "path": [
+              174091017
+            ],
+            "visitCount": 1,
+            "predictionErrors": [],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          },
+          {
+            "path": [
+              174091017,
+              5801531
+            ],
+            "visitCount": 1,
+            "predictionErrors": [
+              0
+            ],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          },
+          {
+            "path": [
+              204416562
+            ],
+            "visitCount": 1,
+            "predictionErrors": [],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          },
+          {
+            "path": [
+              204416562,
+              8123968
+            ],
+            "visitCount": 1,
+            "predictionErrors": [
+              0
+            ],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          },
+          {
+            "path": [
+              220500673
+            ],
+            "visitCount": 1,
+            "predictionErrors": [],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          },
+          {
+            "path": [
+              220500673,
+              106884589
+            ],
+            "visitCount": 1,
+            "predictionErrors": [
+              0
+            ],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          },
+          {
+            "path": [
+              264994329
+            ],
+            "visitCount": 1,
+            "predictionErrors": [],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          },
+          {
+            "path": [
+              264994329,
+              149869618
+            ],
+            "visitCount": 1,
+            "predictionErrors": [
+              0
+            ],
+            "meanPredictionError": 0,
+            "wordBinding": null
+          }
+        ]
+      },
+      "registry": {
+        "5801531": {
+          "stateIds": [
+            92813911,
+            3383176773,
+            1084670244,
+            4196109672,
+            3399675921,
+            2044727164,
+            1750002949,
+            2203883878,
+            4287404245,
+            92813911
+          ],
+          "meanPredictionError": 1,
+          "timestamp": 40
+        },
+        "8123968": {
+          "stateIds": [
+            2771979864,
+            3289533897,
+            564765158,
+            3383176773,
+            1856052436,
+            2225202667,
+            3739098227,
+            3748148117,
+            577125348,
+            92813911
+          ],
+          "meanPredictionError": 1,
+          "timestamp": 220
+        },
+        "23748575": {
+          "stateIds": [
+            2771979864,
+            238289737,
+            3289533897,
+            766609798,
+            888699530,
+            3154679736,
+            888699530,
+            1960022307,
+            1522327764,
+            4219860736
+          ],
+          "meanPredictionError": 1,
+          "timestamp": 280
+        },
+        "88358828": {
+          "stateIds": [
+            577125348,
+            3598052893,
+            4260660245,
+            238289737,
+            324385523,
+            4287404245,
+            4287404245,
+            1522327764,
+            3383176773,
+            2044727164
+          ],
+          "meanPredictionError": 0.9,
+          "timestamp": 240
+        },
+        "103118994": {
+          "stateIds": [
+            1272482660,
+            646993941,
+            92813911,
+            1996467657,
+            3192741385,
+            4196109672,
+            2225202667,
+            2225202667,
+            1084670244,
+            238289737
+          ],
+          "meanPredictionError": 1,
+          "timestamp": 260
+        },
+        "106884589": {
+          "stateIds": [
+            3399675921,
+            1084670244,
+            4287404245,
+            3598052893,
+            238289737,
+            254641891,
+            1220477834,
+            4219860736,
+            1167990968,
+            324385523
+          ],
+          "meanPredictionError": 1,
+          "timestamp": 160
+        },
+        "110478081": {
+          "stateIds": [
+            4159141595,
+            3443980672,
+            3598052893,
+            1218929900,
+            2205575665,
+            2762596073,
+            577125348,
+            3399675921,
+            3154679736,
+            2205575665
+          ],
+          "meanPredictionError": 1,
+          "timestamp": 60
+        },
+        "116875631": {
+          "stateIds": [
+            646993941,
+            308067375,
+            3192741385,
+            3399675921,
+            3873509591,
+            254641891,
+            3769656231,
+            324385523,
+            4260660245,
+            646993941
+          ],
+          "meanPredictionError": 0.9,
+          "timestamp": 180
+        },
+        "133437984": {
+          "stateIds": [
+            1750002949,
+            577125348,
+            1774477304,
+            1220477834,
+            4159141595,
+            3748148117,
+            92813911,
+            2771979864,
+            4260660245,
+            375227408
+          ],
+          "meanPredictionError": 1,
+          "timestamp": 120
+        },
+        "149869618": {
+          "stateIds": [
+            646993941,
+            2205575665,
+            1960022307,
+            2205575665,
+            2232411284,
+            1220477834,
+            3154679736,
+            3443980672,
+            487530558,
+            1996467657
+          ],
+          "meanPredictionError": 1,
+          "timestamp": 100
+        },
+        "174091017": {
+          "stateIds": [
+            4287404245,
+            3192741385,
+            3748148117,
+            3769656231,
+            3154679736,
+            2232411284,
+            3598052893,
+            1167990968,
+            2205575665,
+            564765158
+          ],
+          "meanPredictionError": 1,
+          "timestamp": 20
+        },
+        "204416562": {
+          "stateIds": [
+            3598052893,
+            1522327764,
+            3916973656,
+            3443980672,
+            888699530,
+            1218929900,
+            3916973656,
+            2203883878,
+            888699530,
+            4159141595
+          ],
+          "meanPredictionError": 0.9,
+          "timestamp": 200
+        },
+        "220500673": {
+          "stateIds": [
+            4260660245,
+            1522327764,
+            4287404245,
+            3873509591,
+            254641891,
+            564765158,
+            1272482660,
+            3383176773,
+            1272482660,
+            3748148117
+          ],
+          "meanPredictionError": 1,
+          "timestamp": 140
+        },
+        "264994329": {
+          "stateIds": [
+            4287404245,
+            3403856274,
+            3025756346,
+            4101493267,
+            3873509591,
+            766609798,
+            4101493267,
+            3598052893,
+            3739098227,
+            3289533897
+          ],
+          "meanPredictionError": 1,
+          "timestamp": 80
+        }
+      },
+      "lastMetaState": 23748575,
+      "snapshotWindow": 10,
+      "maxDepth": 10,
+      "tokenRegistry": {
+        "5801531": {
+          "wait": 20
+        },
+        "8123968": {
+          "I": 33,
+          "notice": 17,
+          "different": 16,
+          "familiar": 1,
+          "wait": 1
+        },
+        "23748575": {
+          "I": 34,
+          "notice": 17,
+          "different": 17,
+          "wait": 2,
+          "familiar": 1
+        },
+        "88358828": {
+          "I": 37,
+          "notice": 19,
+          "different": 18,
+          "jur": 1,
+          "wait": 1
+        },
+        "103118994": {
+          "I": 40,
+          "notice": 20,
+          "different": 20
+        },
+        "106884589": {
+          "I": 32,
+          "notice": 16,
+          "different": 17,
+          "wait": 3
+        },
+        "110478081": {
+          "I": 33,
+          "notice": 18,
+          "different": 15,
+          "wait": 2,
+          "hoh": 1,
+          "xah": 1,
+          "faj": 1
+        },
+        "116875631": {
+          "I": 34,
+          "notice": 19,
+          "different": 15,
+          "wait": 1,
+          "sad": 1,
+          "lef": 2,
+          "wuk": 1
+        },
+        "133437984": {
+          "I": 37,
+          "notice": 19,
+          "different": 18,
+          "wait": 1,
+          "net": 1
+        },
+        "149869618": {
+          "I": 34,
+          "notice": 18,
+          "sad": 1,
+          "different": 16,
+          "wait": 2,
+          "xah": 1
+        },
+        "174091017": {
+          "wait": 20
+        },
+        "204416562": {
+          "wait": 1,
+          "I": 36,
+          "notice": 19,
+          "different": 18
+        },
+        "220500673": {
+          "I": 36,
+          "notice": 20,
+          "sad": 2,
+          "different": 16,
+          "xah": 1,
+          "jur": 1
+        },
+        "264994329": {
+          "I": 36,
+          "notice": 19,
+          "different": 17,
+          "lef": 1,
+          "juz": 1,
+          "familiar": 1
+        }
+      }
+    },
+    "selfToken": {
+      "token": "I",
+      "referentMetaStateId": 23748575,
+      "stationaryProb": 0.9999999999999997,
+      "locked": true,
+      "lockGeneration": 60,
+      "lockThreshold": 0.25,
+      "consecutiveAboveThreshold": 3,
+      "lockConsecutiveRequired": 3,
+      "stabilityHistory": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        0.9999999999999999,
+        0.9999999999999998,
+        1,
+        1,
+        0.9999999999999999,
+        1,
+        1,
+        0.9999999999999998,
+        0.9999999999999997
+      ],
+      "protectionRadius": 2
+    },
+    "lexicon": {
+      "embeddingDim": 64,
+      "associationThreshold": 0.15,
+      "entries": [
+        {
+          "label": "p:fb85f700",
+          "outputToken": "rap",
+          "traceSignature": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 0.5,
+          "integrationDepth": 0.22243454419102102,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 0,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:850fe494",
+          "outputToken": "zuj",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.22265720139241343,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 1,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:df683395",
+          "outputToken": "rom",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.22288008147388733,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 2,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:26905815",
+          "outputToken": "zin",
+          "traceSignature": [
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.22310318465854587,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 3,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:1d0f203e",
+          "outputToken": "fih",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.22332651116971558,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 4,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:835c9966",
+          "outputToken": "fid",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.22377383506601253,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 6,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:21a9a1e6",
+          "outputToken": "loj",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.22399783289891145,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 7,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:f7e776db",
+          "outputToken": "gam",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.22467117262794858,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 10,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:ff8c98d5",
+          "outputToken": "roj",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.22489606869664522,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 11,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:be4d5e09",
+          "outputToken": "gop",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.22512118988653176,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 12,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:e0b063a7",
+          "outputToken": "vat",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.2255721085314862,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 14,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:bc0897b8",
+          "outputToken": "moz",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.22579790643792413,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 15,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:d675ee1d",
+          "outputToken": "hof",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.22625018054884127,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 17,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:459e20b8",
+          "outputToken": "kih",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.22647665720604732,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 18,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:837669f1",
+          "outputToken": "fop",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.22670336056661394,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 19,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:caa2f011",
+          "outputToken": "feb",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.2273848331389161,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 22,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:c4124dc9",
+          "outputToken": "ruh",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.2276124455845006,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 23,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:165d8410",
+          "outputToken": "zol",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.22852517605152256,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 27,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:22663be4",
+          "outputToken": "joz",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.22875392998150407,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 28,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:2db18986",
+          "outputToken": "yoy",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.22898291289439845,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 29,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:34f87a8a",
+          "outputToken": "wuf",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.22921212501941787,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 30,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:05883a57",
+          "outputToken": "buj",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.22944156658600387,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 31,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:c9a72e45",
+          "outputToken": "xiy",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.2296712378238277,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 32,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:40a6c124",
+          "outputToken": "tas",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.2299011389627905,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 33,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:fa1b8d68",
+          "outputToken": "zaz",
+          "traceSignature": [
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.23013127023302352,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 34,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:79e00f7c",
+          "outputToken": "gef",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.23059222408897737,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 36,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:684eed05",
+          "outputToken": "les",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.23082304713611349,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 37,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:0e340349",
+          "outputToken": "nid",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.23221284565815264,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 43,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:e6e110d7",
+          "outputToken": "wuj",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.2331440238216392,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 47,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:6ea11cd4",
+          "outputToken": "gex",
+          "traceSignature": [
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.23384485709218936,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 50,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:cd46f980",
+          "outputToken": "jas",
+          "traceSignature": [
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.23431324927749508,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 52,
+          "labelingSource": "proto",
+          "associatedLabels": [
+            "p:26905815"
+          ]
+        },
+        {
+          "label": "p:48a764ec",
+          "outputToken": "pef",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.2347825796542239,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 54,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:a4a9dee9",
+          "outputToken": "faj",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.23525285010157693,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 56,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:5abce0d4",
+          "outputToken": "hoh",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.2373807510642196,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 65,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:48bf038a",
+          "outputToken": "buk",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.23833265263192377,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 69,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:84a1e5eb",
+          "outputToken": "xah",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.32,
+          "encounterCount": 1,
+          "generationBound": 0,
+          "stepBound": 70,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:cae2b992",
+          "outputToken": "haf",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.23904908297264188,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 72,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:b45960ba",
+          "outputToken": "pex",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.23928837134398587,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 73,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:f477d213",
+          "outputToken": "yus",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.2395278992432291,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 74,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:dede1c73",
+          "outputToken": "juz",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.24072914005820756,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 79,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:4bd88b64",
+          "outputToken": "lef",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.32,
+          "encounterCount": 1,
+          "generationBound": 0,
+          "stepBound": 84,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:0f2d86e3",
+          "outputToken": "mok",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.24266366839484382,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 87,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:69c45ff8",
+          "outputToken": "pow",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.24290657496981363,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 88,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:74d39123",
+          "outputToken": "kix",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.2441247599620515,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 93,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:76ffadc9",
+          "outputToken": "sad",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.32,
+          "encounterCount": 1,
+          "generationBound": 0,
+          "stepBound": 100,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:1355baf3",
+          "outputToken": "foj",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.24608657590883265,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 101,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:125cbc2f",
+          "outputToken": "jiy",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.2463329088176503,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 102,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:a5390e58",
+          "outputToken": "net",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.25030793860060435,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 118,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:fdf48415",
+          "outputToken": "jur",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.25055849709770206,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 119,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        },
+        {
+          "label": "p:e9784658",
+          "outputToken": "wuk",
+          "traceSignature": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.7071067811865476,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "predictionErrorPeak": 1,
+          "integrationDepth": 0.2613115643735464,
+          "encounterCount": 0,
+          "generationBound": 0,
+          "stepBound": 161,
+          "labelingSource": "proto",
+          "associatedLabels": []
+        }
+      ]
+    },
+    "lastWorldStateId": 3739098227
+  },
+  "config": {
+    "traceBufferLength": 50,
+    "trieMaxDepth": 10,
+    "metaObservationInterval": 20,
+    "lockThreshold": 0.25,
+    "lockConsecutiveRequired": 3,
+    "protectionRadius": 2
+  },
+  "metadata": {
+    "cycleLevel": 0,
+    "constituentIds": [],
+    "leafConstituentIds": [],
+    "combined": false
+  }
+}

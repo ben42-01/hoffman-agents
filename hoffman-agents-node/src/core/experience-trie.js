@@ -38,6 +38,42 @@ class ExperienceTrie {
     node.addPredictionError(predictionError);
   }
 
+  // Record one observed transition from -> to without re-counting a visit to
+  // `from` (insert([from, to]) increments both nodes, which double-counts the
+  // depth-1 visit when insert([to]) is also called every step).
+  insertTransition(from, to, predictionError = 0) {
+    let parent = this._root.children[from];
+    if (!parent) parent = this._root.children[from] = new TrieNode(from, 1);
+    let child = parent.children[to];
+    if (!child) child = parent.children[to] = new TrieNode(to, 2);
+    child.visitCount++;
+    child.addPredictionError(predictionError);
+  }
+
+  // Witten-Bell estimate of P(to | from) from depth-2 counts.
+  //   seen successor:   c(to) / (N + u)
+  //   unseen successor: u / (N + u) shared equally by the K - u unseen states
+  // with N the transitions out of `from`, u its distinct successors and K the
+  // number of possible successors (known states plus one for "never seen").
+  // Unlike add-alpha smoothing it does not dilute a deterministic successor
+  // as the state space grows: after n identical transitions p = n / (n + 1).
+  transitionProbability(from, to, nStates = null) {
+    const k = Math.max(nStates ?? Object.keys(this._root.children).length + 1, 1);
+    const parent = this._root.children[from];
+    let total = 0, distinct = 0, hit = 0;
+    if (parent) {
+      for (const [cs, child] of Object.entries(parent.children)) {
+        if (child.visitCount <= 0) continue;
+        total += child.visitCount;
+        distinct++;
+        if (parseInt(cs) === to) hit = child.visitCount;
+      }
+    }
+    if (total === 0) return 1 / k;
+    if (hit > 0) return hit / (total + distinct);
+    return distinct / (total + distinct) / Math.max(k - distinct, 1);
+  }
+
   lookup(path) {
     let node = this._root;
     for (const stateId of path) {

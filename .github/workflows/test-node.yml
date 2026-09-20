@@ -23,6 +23,10 @@ jobs:
           node hoffman-agents-node/examples/01_fitness_beats_truth/fitness_beats_truth.js
           node hoffman-agents-node/examples/02_quantum_signature/quantum_signature.js
           node hoffman-agents-node/examples/05_self_ref_ablation/self_ref_ablation.js
+          node hoffman-agents-node/examples/13_bell_through_the_headset/bell_through_the_headset.js
+          node hoffman-agents-node/examples/16_trace_logic_and_decorated_permutations/trace_logic.js
+          node hoffman-agents-node/examples/17_quantum_agents/quantum_agents.js
+          node hoffman-agents-node/examples/18_relativity_at_infinity/relativity_at_infinity.js
 
   pack-check:
     runs-on: ubuntu-latest

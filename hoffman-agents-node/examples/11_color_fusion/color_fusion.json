@@ -1,0 +1,138 @@
+{
+  "experiment": "Color Fusion — Consciousness Merger",
+  "description": "Primary agents (R, G, B) perceive individual color bands. Combined agents perceive merged colors via additive mixing. Invisible-spectrum agents (UV, IR) represent consciousness outside human perceptual range.",
+  "agents": [
+    {
+      "id": "Red",
+      "hex": "#FF0000",
+      "level": 0,
+      "parentage": "Red",
+      "band": "visible",
+      "locked": true,
+      "trieSize": 27,
+      "metaStates": 14,
+      "predError": "0.560"
+    },
+    {
+      "id": "Green",
+      "hex": "#00FF00",
+      "level": 0,
+      "parentage": "Green",
+      "band": "visible",
+      "locked": true,
+      "trieSize": 28,
+      "metaStates": 9,
+      "predError": "0.540"
+    },
+    {
+      "id": "Blue",
+      "hex": "#0000FF",
+      "level": 0,
+      "parentage": "Blue",
+      "band": "visible",
+      "locked": true,
+      "trieSize": 25,
+      "metaStates": 12,
+      "predError": "0.540"
+    },
+    {
+      "id": "UV",
+      "hex": "#8800FF",
+      "level": 0,
+      "parentage": "UV",
+      "band": "invisible",
+      "locked": true,
+      "trieSize": 23,
+      "metaStates": 8,
+      "predError": "0.580"
+    },
+    {
+      "id": "IR",
+      "hex": "#FF0088",
+      "level": 0,
+      "parentage": "IR",
+      "band": "invisible",
+      "locked": true,
+      "trieSize": 25,
+      "metaStates": 12,
+      "predError": "0.540"
+    },
+    {
+      "id": "Yellow",
+      "hex": "#FFFF00",
+      "level": 1,
+      "parentage": "Red+Green",
+      "band": "visible",
+      "locked": true,
+      "trieSize": 31,
+      "metaStates": 20,
+      "predError": "0.700"
+    },
+    {
+      "id": "Magenta",
+      "hex": "#FF00FF",
+      "level": 1,
+      "parentage": "Red+Blue",
+      "band": "visible",
+      "locked": true,
+      "trieSize": 28,
+      "metaStates": 23,
+      "predError": "0.700"
+    },
+    {
+      "id": "Cyan",
+      "hex": "#00FFFF",
+      "level": 1,
+      "parentage": "Green+Blue",
+      "band": "visible",
+      "locked": true,
+      "trieSize": 30,
+      "metaStates": 19,
+      "predError": "0.733"
+    },
+    {
+      "id": "White",
+      "hex": "#FFFFFF",
+      "level": 2,
+      "parentage": "Red+Green+Blue",
+      "band": "visible",
+      "locked": true,
+      "trieSize": 32,
+      "metaStates": 31,
+      "predError": "0.700"
+    },
+    {
+      "id": "UV+Red",
+      "hex": "#C40080",
+      "level": 1,
+      "parentage": "UV+Red",
+      "band": "hybrid",
+      "locked": true,
+      "trieSize": 26,
+      "metaStates": 18,
+      "predError": "0.667"
+    },
+    {
+      "id": "IR+Green",
+      "hex": "#8000C4",
+      "level": 1,
+      "parentage": "IR+Green",
+      "band": "hybrid",
+      "locked": true,
+      "trieSize": 29,
+      "metaStates": 18,
+      "predError": "0.667"
+    },
+    {
+      "id": "Omni",
+      "hex": "#C0C0FF",
+      "level": 3,
+      "parentage": "Full Spectrum",
+      "band": "omni",
+      "locked": true,
+      "trieSize": 33,
+      "metaStates": 37,
+      "predError": "0.700"
+    }
+  ]
+}

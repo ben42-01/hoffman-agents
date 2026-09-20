@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Color Fusion — Full-RGB Perceptual Domains</title>
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',-apple-system,'Segoe UI',sans-serif;background:#080c16;color:#e2e8f0;overflow-x:hidden}
+  h1{font-size:1.3rem;font-weight:600}
+  h2{font-size:.75rem;font-weight:500;color:#64748b;letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px}
+  .c{max-width:1100px;margin:0 auto;padding:32px 24px}
+  .hdr{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:20px;flex-wrap:wrap;gap:8px}
+  .hdr h1{background:linear-gradient(135deg,#f97316,#ef4444,#a855f7,#3b82f6,#22c55e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .hdr .sub{font-size:.72rem;color:#475569}
+  .bar{display:flex;gap:16px;flex-wrap:wrap;font-size:.68rem;color:#64748b;margin-bottom:16px}
+  .bar span{color:#e2e8f0;font-weight:500}
+  .sec{margin-bottom:20px}
+
+  .world-panel{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding:12px 16px;background:#111827;border:1px solid #1e293b;border-radius:10px}
+  .world-panel .dot{width:48px;height:48px;border-radius:50%;flex-shrink:0;border:2px solid #1e293b;transition:background .3s}
+  .world-panel .info{font-size:.78rem}
+  .world-panel .info .nm{color:#e2e8f0;font-weight:500}
+  .world-panel .info .hex{color:#64748b;font-family:monospace;font-size:.65rem;margin-top:2px}
+
+  .domain-bar{display:flex;height:28px;border-radius:14px;overflow:hidden;border:1px solid #1e293b;margin-bottom:20px}
+  .domain-bar .seg{flex:1;text-align:center;font-size:.55rem;line-height:28px;color:rgba(255,255,255,.6);transition:opacity .3s}
+  .domain-bar .seg.on{opacity:1;box-shadow:inset 0 0 16px rgba(255,255,255,.1)}
+  .domain-bar .seg.off{opacity:.15}
+
+  .grid{display:grid;gap:8px}
+  .g5{grid-template-columns:repeat(5,1fr)}
+  .g7{grid-template-columns:repeat(7,1fr)}
+  .g2{grid-template-columns:repeat(2,1fr)}
+
+  .card{background:#111827;border:1px solid #1e293b;border-radius:10px;padding:12px;text-align:center}
+  .card .dot{width:44px;height:44px;border-radius:50%;margin:0 auto 6px;transition:background .4s,box-shadow .3s}
+  .card .dot.g{box-shadow:0 0 18px var(--c)}
+  .card .nm{font-size:.78rem;font-weight:600;color:#f1f5f9}
+  .card .pa{font-size:.6rem;color:#64748b;margin-top:1px}
+  .card .tg{display:flex;justify-content:center;gap:3px;flex-wrap:wrap;margin-top:3px}
+  .card .tg .b{font-size:.5rem;padding:1px 5px;border-radius:5px}
+  .b.lv{background:#1e293b;color:#94a3b8}.b.lk{background:rgba(34,197,94,.12);color:#22c55e}.b.ul{background:rgba(239,68,68,.12);color:#ef4444}
+  .b.in{background:rgba(168,85,247,.12);color:#a78bfa}.b.hy{background:rgba(234,179,8,.12);color:#eab308}.b.om{background:rgba(255,255,255,.06);color:#94a3b8}
+  .card .bx{font-size:.55rem;color:#475569;margin-top:4px;line-height:1.3}
+  .card .pb{height:2px;border-radius:1px;margin-top:6px;transition:width .5s}
+
+  .lg{display:flex;gap:12px;flex-wrap:wrap;font-size:.65rem;color:#64748b;margin-bottom:14px;padding:8px 12px;background:#111827;border-radius:8px;border:1px solid #1e293b}
+  .lg .it{display:flex;align-items:center;gap:5px}
+  .lg .d{width:7px;height:7px;border-radius:50%;flex-shrink:0;border:1px solid rgba(255,255,255,.08)}
+
+  .ft{margin-top:28px;padding-top:16px;border-top:1px solid #1e293b;font-size:.65rem;color:#475569;line-height:1.5}
+
+  @media(max-width:700px){.g5,.g7{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<div class="c">
+  <div class="hdr">
+    <div><h1>Color Fusion</h1><div class="sub">Full RGB · Perceptual Domains · combine() · fuse()</div></div>
+    <div id="step" style="font-size:.68rem;color:#475569;font-family:monospace">step —</div>
+  </div>
+
+  <div class="lg">
+    <div class="it"><span class="d" style="background:#22c55e"></span> I-Locked</div>
+    <div class="it"><span class="d" style="background:#a78bfa"></span> Invisible domain</div>
+    <div class="it"><span class="d" style="background:#eab308"></span> Hybrid domain</div>
+    <div class="it"><span class="d" style="background:#888;border:1px solid #3b82f6"></span> Domain filter active</div>
+  </div>
+
+  <div class="world-panel" id="worldPanel">
+    <div class="dot" id="worldDot" style="background:#888"></div>
+    <div class="info">
+      <div class="nm">World is generating <span id="worldDomain">—</span></div>
+      <div class="hex" id="worldHex">—</div>
+    </div>
+  </div>
+
+  <div class="domain-bar" id="domainBar"></div>
+  <div class="bar" id="stats"></div>
+
+  <div class="sec"><h2>Primary Agents</h2><div class="grid g5" id="g0"></div></div>
+  <div class="sec"><h2>Fused (combine)</h2><div class="grid g5" id="g1"></div></div>
+  <div class="sec"><h2>Higher-Order</h2><div class="grid g2" id="g2"></div></div>
+  <div class="sec"><h2>Fused &amp; Reclaimed (fuse)</h2><div class="grid g2" id="gr"></div></div>
+
+  <div class="ft">
+    Each agent has a perceptual domain — a region of RGB space it can perceive.
+    The world generates colors across the full RGB cube. The agent only learns from
+    colors within its domain; everything else is outside its interface.
+    <code>combine()</code> merges domains. <code>fuse()</code> splits them back.
+  </div>
+</div>
+
+<script>
+async function poll() {
+  try { const r=await fetch('/state'); render(await r.json()); } catch(e) {}
+}
+
+function render(d) {
+  document.getElementById('step').textContent = 'step '+d.step;
+  document.getElementById('worldDot').style.background = d.currentColor;
+  document.getElementById('worldDomain').textContent = d.currentDomain;
+  document.getElementById('worldHex').textContent = d.currentColor;
+
+  const nL = d.agents.filter(a=>a.locked).length;
+  const aP = d.agents.reduce((s,a)=>s+a.pe,0)/d.agents.length;
+  document.getElementById('stats').innerHTML = `
+    <span>Locked ${nL}/${d.agents.length}</span>
+    <span>Avg PE ${aP.toFixed(2)}</span>
+    <span>Domains ${d.spectrum.length}</span>
+  `;
+
+  const bar = document.getElementById('domainBar');
+  bar.innerHTML = d.spectrum.map(s =>
+    `<div class="seg ${s.name===d.currentDomain?'on':'off'}" style="background:${s.hex};color:${s.name==='White'?'#000':'rgba(255,255,255,.7)'}">${s.name}</div>`
+  ).join('');
+
+  const buckets = { 0:[], 1:[], '2+':[], r:[] };
+  d.agents.forEach(a => {
+    if (a.id.includes('reclaimed')) buckets.r.push(a);
+    else if (a.level<=0) buckets[0].push(a);
+    else if (a.level===1) buckets[1].push(a);
+    else buckets['2+'].push(a);
+  });
+
+  const gids = {0:'g0',1:'g1','2+':'g2',r:'gr'};
+  Object.entries(buckets).forEach(([k,aa]) => {
+    const el = document.getElementById(gids[k]);
+    if (!el) return;
+    el.innerHTML = aa.map(a => {
+      const gl = a.pe < 0.5;
+      const t = [];
+      t.push(`<span class="b lv">L${a.level}</span>`);
+      t.push(a.locked?'<span class="b lk">I</span>':'<span class="b ul">·</span>');
+      if (a.band==='invisible') t.push('<span class="b in">invis</span>');
+      else if (a.band==='hybrid') t.push('<span class="b hy">hybrid</span>');
+      else if (a.band==='omni') t.push('<span class="b om">omni</span>');
+      const active = a.active ? ' <span style="font-size:.5rem;color:#3b82f6">◉</span>' : '';
+      return `<div class="card" style="${a.active?'border-color:#3b82f6':''}"><div class="dot${gl?' g':''}" style="--c:${a.hex};background:${a.hex}"></div>
+        <div class="nm">${a.id}${active}</div><div class="pa">${a.parentage}</div>
+        <div class="tg">${t.join('')}</div>
+        <div class="bx">PE ${a.pe.toFixed(2)} · trie ${a.trie}</div>
+        <div class="pb" style="width:${Math.round(a.learning*100)}%;background:${a.locked?'#22c55e':'#3b82f6'}"></div></div>`;
+    }).join('');
+  });
+}
+
+setInterval(poll, 330);
+poll();
+</script>
+</body>
+</html>

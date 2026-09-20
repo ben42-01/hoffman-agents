@@ -1,187 +1,193 @@
-const { ConsciousAgent, WorldState, combine, fuse } = require('../../src/index');
+/**
+ * Quantum Signature? — Spectral Analysis of Combination, with Classical Controls
+ *
+ * 2.x version of this experiment reported a "quantum-like" collapse of the
+ * spectral gap at combination levels 1-2. That signal was an artifact:
+ *   - combined agents carry their constituents' chains as disconnected pieces;
+ *     a reducible chain has |λ₂| = 1, so its gap is 0 by definition
+ *   - unobserved rows were turned into absorbing states
+ *   - agents only combined because the 2.x "I" lock fired in any world
+ * and the criterion itself (small gap + detailed-balance violation) is met by
+ * ordinary classical chains, e.g. a clock.
+ *
+ * This version asks answerable questions:
+ *   1. Classical controls: what do gap and irreversibility look like for
+ *      chains that are classical by construction?
+ *   2. Agents: gap (1 − |λ₂|), period and irreversibility of each agent's own
+ *      recurrent meta-state chain (MetaTrie.ergodicDiagnostics).
+ *   3. Tensor-product prediction: for independent agents A, B the product
+ *      kernel M_A ⊗ M_B has |λ₂| = max(|λ₂(A)|, |λ₂(B)|). Does the combined
+ *      agent's learned chain match that prediction?
+ *   4. Fusion: does fuse() restore the constituents' chains exactly?
+ *
+ * Every quantity here describes a classical Markov chain. Gap measures mixing
+ * speed and irreversibility measures net probability circulation; neither is
+ * evidence of quantum behaviour. See ../09_double_slit_analogy for what that
+ * would require.
+ */
+const {
+  ConsciousAgent, WorldState, combine, fuse, productKernel, metaKernel, MarkovKernel, markov,
+} = require('../../src/index');
 
-function extractMetaMatrix(agent) {
-  const mt = agent.experience.metaTrie;
-  if (mt.registrySize < 2) return null;
-  const allIds = [...mt._registry.keys()].sort((a, b) => a - b);
-  const active = new Set();
-  for (const sid of allIds) {
-    const node = mt.trie.lookup([sid]);
-    if (node && Object.keys(node.children).length > 0) active.add(sid);
-  }
-  if (mt.lastMetaState !== null) active.add(mt.lastMetaState);
-  if (active.size < 2) return null;
-  const stateIds = [...active].sort((a, b) => a - b);
-  const idx = new Map(stateIds.map((id, i) => [id, i]));
-  const n = stateIds.length;
-  const P = Array.from({ length: n }, () => new Float64Array(n));
-  for (const stateId of stateIds) {
-    const node = mt.trie.lookup([stateId]);
-    if (node && Object.keys(node.children).length > 0) {
-      let total = 0;
-      for (const child of Object.values(node.children)) total += child.visitCount;
-      if (total > 0) {
-        for (const [cs, cn] of Object.entries(node.children)) {
-          const ci = idx.get(parseInt(cs));
-          if (ci !== undefined) P[idx.get(stateId)][ci] = cn.visitCount / total;
-        }
-      }
-    }
-  }
-  for (let i = 0; i < n; i++) { let s = 0; for (let j = 0; j < n; j++) s += P[i][j]; if (s === 0) P[i][i] = 1; }
-  return P;
+const N_BASE = 8;
+const ISOLATED_STEPS = 400;
+const ROUNDS = 200;
+const COMBINE_EVERY = 20;
+
+/* ────────────── measurements ────────────── */
+
+function analyseKernel(P) {
+  const { pi } = markov.stationary(P);
+  const closed = markov.closedClasses(P).length;
+  const lambda2 = closed > 1 ? 1 : markov.secondEigenvalueModulus(P, pi);
+  return { n: P.length, closed, period: closed > 1 ? null : markov.period(P, 0), gap: 1 - lambda2, irrev: markov.irreversibility(P, pi) };
 }
 
-function spectralGap(P) {
-  const n = P.length;
-  if (n < 2) return 1;
-
-  // Stationary distribution via power iteration
-  let pi = new Float64Array(n).fill(1 / n);
-  for (let iter = 0; iter < 1000; iter++) {
-    const piNew = new Float64Array(n);
-    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) piNew[j] += pi[i] * P[i][j];
-    let diff = 0;
-    for (let i = 0; i < n; i++) diff += Math.abs(piNew[i] - pi[i]);
-    pi = piNew;
-    if (diff < 1e-12) break;
-  }
-
-  // Deflate: B = P - 1 * pi^T  (removes eigenvalue 1)
-  const B = Array.from({ length: n }, () => new Float64Array(n));
-  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) B[i][j] = P[i][j] - pi[j];
-
-  // Power iteration on B to find dominant (second) eigenvalue
-  let v = new Float64Array(n);
-  for (let i = 0; i < n; i++) v[i] = 1 / Math.sqrt(n);
-  for (let iter = 0; iter < 1000; iter++) {
-    const vNew = new Float64Array(n);
-    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) vNew[i] += B[i][j] * v[j];
-    let norm = 0;
-    for (let i = 0; i < n; i++) norm += vNew[i] * vNew[i];
-    norm = Math.sqrt(norm);
-    if (norm < 1e-15) return 1;
-    for (let i = 0; i < n; i++) vNew[i] /= norm;
-    let diff = 0;
-    for (let i = 0; i < n; i++) diff += Math.abs(vNew[i] - v[i]);
-    v = vNew;
-    if (diff < 1e-10) break;
-  }
-
-  // Rayleigh quotient: λ₂ ≈ v^T B v
-  let Bv = new Float64Array(n);
-  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) Bv[i] += B[i][j] * v[j];
-  let lambda2 = 0;
-  for (let i = 0; i < n; i++) lambda2 += v[i] * Bv[i];
-
-  return 1 - Math.abs(lambda2);
+// The agent's own recurrent meta-chain. `evidence` uses the same rule as the
+// "I" lock: at least 20 transitions and 2 per state, otherwise the estimate is noise.
+function analyseAgent(agent) {
+  const K = metaKernel(agent);
+  if (!K) return null;
+  const d = agent.experience.metaTrie.ergodicDiagnostics();
+  const r = analyseKernel(K.matrix);
+  return { ...r, transitions: d.nTransitions, evidence: d.nTransitions >= Math.max(20, 2 * r.n) };
 }
 
-function detailedBalanceError(P) {
-  const n = P.length;
-  let pi = new Float64Array(n).fill(1 / n);
-  for (let iter = 0; iter < 200; iter++) {
-    const pn = new Float64Array(n);
-    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) pn[j] += pi[i] * P[i][j];
-    pi = pn;
-  }
-  const errs = [];
-  for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) {
-    if (pi[i] > 0 && pi[j] > 0) {
-      const l = pi[i] * P[i][j], r = pi[j] * P[j][i];
-      if (Math.abs(l + r) > 1e-12) errs.push(Math.abs(l - r) / (l + r));
-    }
-  }
-  return errs.length > 0 ? errs.reduce((a, b) => a + b, 0) / errs.length : 0;
+const countsOf = (agent) => JSON.stringify(agent.experience.metaTrie.transitionCounts().counts.map(r => Array.from(r)));
+
+// What 2.x effectively measured: all transitions, inherited pieces included.
+function closedClassesIncludingInherited(agent) {
+  const { counts } = agent.experience.metaTrie.transitionCounts({ includeInherited: true });
+  const kept = markov.pruneUnobservedRows(counts);
+  return kept.length ? markov.closedClasses(markov.subMatrix(counts, kept)).length : 0;
 }
 
-function analyze(agents, label) {
-  const byLevel = {};
-  console.log(`\n  ${'─'.repeat(50)}`);
-  console.log(`  ${label}`);
-  console.log(`  ${'─'.repeat(50)}`);
-  console.log(`  ${'Agent'.padEnd(22)} ${'Lvl'.padEnd(4)} ${'States'.padEnd(7)} ${'Gap'.padEnd(10)} ${'DB Err'.padEnd(10)}`);
-  for (const [aid, agent] of Object.entries(agents).sort()) {
-    const P = extractMetaMatrix(agent);
-    let gap = null, dbe = null, gs = 'N/A', ds = 'N/A';
-    if (P) { gap = spectralGap(P); dbe = detailedBalanceError(P); gs = gap.toFixed(4); ds = dbe.toFixed(4); }
-    const lvl = agent.cycleLevel;
-    console.log(`  ${aid.padEnd(22)} ${String(lvl).padEnd(4)} ${String(agent.experience.metaTrie.registrySize).padEnd(7)} ${gs.padEnd(10)} ${ds.padEnd(10)}`);
-    if (gap !== null) { if (!byLevel[lvl]) byLevel[lvl] = []; byLevel[lvl].push({ gap, dbe }); }
+const f = (x, d = 3) => (x === null || x === undefined ? '  -  ' : x.toFixed(d));
+
+/* ────────────── 1. classical controls ────────────── */
+
+function controls() {
+  const cycle = (n, forward, stay) => Array.from({ length: n }, (_, i) => {
+    const r = new Array(n).fill(0); r[i] += stay; r[(i + 1) % n] += forward; r[(i + n - 1) % n] += 1 - forward - stay; return r;
+  });
+  const uniform = (n) => Array.from({ length: n }, () => new Array(n).fill(1 / n));
+  const coin = [[0.5, 0.5], [0.5, 0.5]];
+  const twoPieces = [[0.5, 0.5, 0, 0], [0.5, 0.5, 0, 0], [0, 0, 0.5, 0.5], [0, 0, 0.5, 0.5]];
+  const K = new MarkovKernel({ states: ['a', 'b'], matrix: [[0.9, 0.1], [0.3, 0.7]] });
+  return [
+    ['clock: 10-cycle, forward 0.95', cycle(10, 0.95, 0.05)],
+    ['lazy symmetric walk on 10-cycle', cycle(10, 0.25, 0.5)],
+    ['i.i.d. uniform over 10 states', uniform(10)],
+    ['two disconnected coin chains', twoPieces],
+    ['independent product K ⊗ K', K.tensor(K).matrix],
+    ['single coin chain', coin],
+  ].map(([name, P]) => [name, analyseKernel(P)]);
+}
+
+/* ────────────── 2-4. agents ────────────── */
+
+function printAgents(title, agents) {
+  console.log(`\n  ${title}`);
+  console.log(`  ${'agent'.padEnd(16)} lvl  locked  class  trans  period  gap     irrev   closed incl. inherited`);
+  for (const a of agents) {
+    const r = analyseAgent(a);
+    const note = !r ? '' : !r.evidence ? '  (too little data)' : r.period > 1 ? '  (periodic: gap 0 by definition)' : '';
+    console.log(`  ${a.agentId.padEnd(16)} ${String(a.cycleLevel).padEnd(4)} ${String(a.isILocked).padEnd(7)} ${String(r ? r.n : 0).padEnd(6)} ${String(r ? r.transitions : 0).padEnd(6)} ${String(r && r.period !== null ? r.period : '-').padEnd(7)} ${f(r && r.gap)}   ${f(r && r.irrev)}   ${closedClassesIncludingInherited(a)}${note}`);
   }
-  return byLevel;
 }
 
 function run() {
-  const nBase = 8, nRounds = 400;
   const t0 = Date.now();
-  console.log('='.repeat(66));
-  console.log('Quantum Signature — Tree-of-Life Spectral Analysis');
-  console.log('='.repeat(66));
-  console.log(`\n${nBase} base agents, ${nRounds} rounds...`);
+  console.log('='.repeat(78));
+  console.log('Quantum Signature? — spectral analysis of combination, with classical controls');
+  console.log('='.repeat(78));
 
-  // Phase 1: isolated agents — enough steps for meta-states to cycle
-  const agents = {};
-  for (let i = 0; i < nBase; i++) {
-    const aid = `CA_${String(i).padStart(3, '0')}`;
-    agents[aid] = new ConsciousAgent({ agentId: aid });
-    for (let t = 0; t < 400; t++) agents[aid].step(new WorldState({ world: [`s${i}_${t}`] }));
+  console.log('\n  1. Classical controls (classical by construction)');
+  console.log(`  ${'chain'.padEnd(34)} states  closed  gap     irrev`);
+  for (const [name, r] of controls()) {
+    console.log(`  ${name.padEnd(34)} ${String(r.n).padEnd(7)} ${String(r.closed).padEnd(7)} ${f(r.gap)}   ${f(r.irrev)}`);
   }
-  analyze(agents, 'Phase 1: Isolated agents');
+  console.log('  → small gap + irreversibility (the 2.x "quantum" criterion) is a plain clock;');
+  console.log('    gap 0 is what any chain made of disconnected pieces gives.');
 
-  // Phase 2 + 3: interaction then combination
-  let snapTaken = false;
-  for (let rnd = 0; rnd < nRounds; rnd++) {
-    const outputs = {};
-    for (const [aid, ag] of Object.entries(agents)) outputs[aid] = ag.getOutput();
-    for (const [aid, ag] of Object.entries(agents)) {
-      for (const [oa, o] of Object.entries(outputs)) if (oa !== aid) ag.step(new WorldState({ [oa]: o }));
+  const agents = new Map();
+  for (let i = 0; i < N_BASE; i++) {
+    const id = `CA_${String(i).padStart(3, '0')}`;
+    const agent = new ConsciousAgent({ agentId: id, seed: i + 1 });
+    for (let t = 0; t < ISOLATED_STEPS; t++) agent.step(new WorldState({ world: [`s${i}_${t}`] }));
+    agents.set(id, agent);
+  }
+  printAgents(`2a. Isolated agents (${ISOLATED_STEPS} steps each)`, [...agents.values()]);
+
+  const combinations = [];
+  const available = new Set(agents.keys());
+  for (let rnd = 1; rnd <= ROUNDS; rnd++) {
+    const outputs = new Map([...agents].map(([id, a]) => [id, a.getOutput()]));
+    for (const [id, agent] of agents) {
+      for (const [other, seq] of outputs) if (other !== id) agent.step(new WorldState({ [other]: seq }));
     }
-    if (rnd === 39 && !snapTaken) { analyze(agents, 'Phase 2: Interacting (40 rounds)'); snapTaken = true; }
-    if (rnd > 0 && rnd % 20 === 0) {
-      const ripe = Object.entries(agents).filter(([, a]) => a.experience.selfToken.locked && !a._combined).map(([id]) => id);
-      if (ripe.length >= 2) {
-        const scored = ripe.sort((a, b) => agents[a].experience.traceBuffer.predictionErrorMean(5) - agents[b].experience.traceBuffer.predictionErrorMean(5));
-        for (let i = 0; i < scored.length - 1; i += 2) {
-          const c = combine(agents[scored[i]], agents[scored[i + 1]]);
-          c.agentId = `L${c.cycleLevel}_${scored[i].slice(-3)}_${scored[i + 1].slice(-3)}`;
-          agents[c.agentId] = c;
-          agents[scored[i]]._combined = true;
-          agents[scored[i + 1]]._combined = true;
-        }
+    // Combination on a fixed schedule. (Gating on the "I" lock, as 2.x did, never
+    // fires here in v3: this world has no dominant experiential attractor.)
+    if (rnd % COMBINE_EVERY === 0 && available.size >= 2) {
+      const ready = [...available]
+        .filter(id => metaKernel(agents.get(id)))
+        .sort((a, b) => agents.get(a).experience.traceBuffer.predictionErrorMean(5) - agents.get(b).experience.traceBuffer.predictionErrorMean(5) || (a < b ? -1 : 1));
+      for (let i = 0; i + 1 < ready.length; i += 2) {
+        const [x, y] = [agents.get(ready[i]), agents.get(ready[i + 1])];
+        const prior = productKernel(x, y);
+        const c = combine(x, y);
+        c.agentId = `L${c.cycleLevel}_${ready[i].slice(-3)}_${ready[i + 1].slice(-3)}`;
+        agents.set(c.agentId, c);
+        available.delete(ready[i]); available.delete(ready[i + 1]); available.add(c.agentId);
+        combinations.push({ agent: c, snapshots: new Map([[x.agentId, countsOf(x)], [y.agentId, countsOf(y)]]), round: rnd, prior: prior ? analyseKernel(prior.matrix) : null });
       }
     }
   }
+  printAgents(`2b. After ${ROUNDS} interaction rounds (combined every ${COMBINE_EVERY} rounds)`, [...agents.values()]);
+  console.log('  "closed incl. inherited" > 1 means a naive analysis of that trie is reducible → gap 0 (the 2.x artifact).');
 
-  const post = analyze(agents, 'Phase 3: Post-combination');
+  console.log('\n  3. Tensor-product prediction vs learned joint dynamics');
+  console.log(`  ${'combined'.padEnd(16)} round  prior gap  learned gap  |Δ|     prior irrev  learned irrev`);
+  const deltas = [];
+  for (const { agent, round, prior } of combinations) {
+    const learned = analyseAgent(agent);
+    const delta = prior && learned ? Math.abs(prior.gap - learned.gap) : null;
+    if (delta !== null) deltas.push(delta);
+    console.log(`  ${agent.agentId.padEnd(16)} ${String(round).padEnd(6)} ${f(prior && prior.gap).padEnd(10)} ${f(learned && learned.gap).padEnd(12)} ${f(delta).padEnd(7)} ${f(prior && prior.irrev).padEnd(12)} ${f(learned && learned.irrev)}`);
+  }
+  if (deltas.length) {
+    console.log(`  mean |Δgap| = ${f(deltas.reduce((a, b) => a + b, 0) / deltas.length)}`);
+  }
+  console.log('  The prior is exactly the product of the constituents\' kernels (gap 0 if either is periodic).');
+  console.log('  The learned chain is what the combined agent experiences afterwards in a shared world;');
+  console.log('  nothing forces the two to agree, and here they do not.');
 
-  // Phase 4: Fuse the highest-level agent back into its constituents
-  const topAgents = Object.entries(agents).filter(([aid]) => aid.startsWith('L')).sort();
-  if (topAgents.length > 0) {
-    const highest = topAgents[topAgents.length - 1][1];
-    const fused = fuse(highest);
-    const fusedMap = {};
-    for (const f of fused) { fusedMap[f.agentId] = f; }
-    analyze(fusedMap, `Phase 4: Fusion of ${highest.agentId}`);
+  console.log('\n  4. Fusion restores each constituent\'s chain as it was at combination time');
+  for (const { agent, snapshots } of combinations) {
+    const parts = fuse(agent);
+    const ok = parts.every(p => snapshots.get(p.agentId) === countsOf(p));
+    console.log(`  fuse(${agent.agentId.padEnd(16)}) → ${parts.map(p => p.agentId).join(' + ').padEnd(28)} exact: ${ok ? 'yes' : 'NO'}`);
   }
 
+  console.log('\n' + '─'.repeat(78));
+  console.log('Summary by combination level (agents\' own recurrent chains)');
+  console.log('─'.repeat(78));
+  const byLevel = new Map();
+  const excluded = [];
+  for (const a of agents.values()) {
+    const r = analyseAgent(a);
+    if (!r) continue;
+    if (!r.evidence || r.period > 1) { excluded.push(`${a.agentId} (${!r.evidence ? 'too little data' : `period ${r.period}`})`); continue; }
+    if (!byLevel.has(a.cycleLevel)) byLevel.set(a.cycleLevel, []);
+    byLevel.get(a.cycleLevel).push(r);
+  }
+  for (const [lvl, rs] of [...byLevel].sort((a, b) => a[0] - b[0])) {
+    const mean = (k) => rs.reduce((s, r) => s + r[k], 0) / rs.length;
+    console.log(`  level ${lvl}  (${rs.length} agent${rs.length === 1 ? '' : 's'})  gap=${f(mean('gap'))}  irreversibility=${f(mean('irrev'))}`);
+  }
+  if (excluded.length) console.log(`  excluded (gap not meaningful): ${excluded.join(', ')}`);
+  console.log('\n  All of these are classical Markov chains: gap = mixing speed, irreversibility = net circulation.');
   console.log(`\n  Done in ${((Date.now() - t0) / 1000).toFixed(1)}s\n`);
-
-  // Cross-level summary
-  console.log(`${'─'.repeat(66)}`);
-  console.log('Cross-Level Quantum Signature Summary');
-  console.log(`${'─'.repeat(66)}`);
-  let pg = null;
-  for (const lvl of Object.keys(post).sort((a, b) => a - b)) {
-    const items = post[lvl];
-    const gs = items.map(x => x.gap), ds = items.map(x => x.dbe);
-    const mg = gs.reduce((a, b) => a + b, 0) / gs.length, md = ds.reduce((a, b) => a + b, 0) / ds.length;
-    let tag = mg < 0.3 && md > 0.1 ? '  ← QUANTUM-LIKE' : mg > 0.85 && md < 0.15 ? '  ← CLASSICAL' : '';
-    let ch = pg !== null ? (mg > pg + 0.05 ? ' ↑ recovery' : mg < pg - 0.05 ? ' ↓ collapse' : '') : '';
-    console.log(`  ${(lvl === '0' ? 'Base' : `Level ${lvl}`).padEnd(8)} (${items.length} agents)  gap=${mg.toFixed(4)}  db_err=${md.toFixed(4)}${tag}${ch}`);
-    pg = mg;
-  }
-  console.log(`\n  gap~1.0, db_err~0.0 = classical | gap~0.0, db_err>0.1 = quantum-like`);
 }
 
 run();

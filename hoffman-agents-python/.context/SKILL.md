@@ -1,5 +1,15 @@
 # conscious-agent Python Lib — Agent Skill
 
+## v3.0 changes (read first)
+
+- **Math.** Agents default to `math_version="v3"`. `math_version="legacy"` reproduces 2.x exactly. Full spec: `docs/MATHEMATICAL_MODEL.md`.
+- **"I" lock.** It now requires a real attractor in the self-chain: evidence, ergodicity, dominance above uniform, occupancy and stability. It can unlock. Tune it with `lock_margin` (default 0.15), `min_transitions` (20), `min_transitions_per_state` (2), `min_occupancy` (0.6), `unlock_margin` (0.05). `lock_threshold` is used only by `"legacy"`. To disable locking in an ablation, set `lock_margin=2`. Inspect with `agent.ergodic_stats()["lock"]["criteria"]`.
+- **Earliest lock.** At default settings no lock can happen before step ~460, and structureless worlds never lock.
+- **Reproducibility.** Pass `seed` for mulberry32; seeded runs are identical in Node and Python.
+- **Combination.** `combine` is commutative and associative, and `fuse` restores constituents exactly. `product_kernel(a, b)` gives M_a ⊗ M_b.
+- **New modules.** `kernels/` (`MarkovKernel`, `FormalConsciousAgent`), `math/markov.py` (stationary, period, mixing, `spectral_dimension`, `irreversibility`, `dobrushin`), `analysis/bell.py` (CHSH, quantum-set test, signalling), `legacy/` (2.x math).
+- **Spectral gap is not a quantum signature.** A small gap means slow mixing; a classical clock has one. See example 02 and `docs/Q_AND_A.md#corrections`.
+
 ## Overview
 
 Minimal-dependency Python library for building self-referential agents (Hoffman's Conscious Realism). Agents learn by *inhabiting* Markov worlds — building compressed tries over state sequences and meta-tries over their own trace buffers.
@@ -281,9 +291,9 @@ for row in training_data:
 | Feature selection | Compare interface vs truth accuracy | Feature engineering | Optimize bin count for current volatility regime |
 | Ensemble diversity | Hash-based state machine predictions | Gradient-based predictions | Decorrelated error modes → better ensemble |
 
-## Self-Awareness (v2.0 — Critical for Agent Understanding)
+## Self-Modelling (v2.0 — Critical for Agent Understanding)
 
-This library has **FOUR self-awareness mechanisms**:
+This library has **four self-modelling mechanisms** (whether they amount to self-awareness is not something the code establishes):
 
 | # | Mechanism | Module | What it does |
 |---|-----------|--------|-------------|
@@ -330,7 +340,7 @@ External world → SelfWorld (injects agent metrics into W)
    - `agent.memory_space.trace_buffer` → `agent.experience.trace_buffer`
    - `agent.memory_space.lexicon` → `agent.experience.lexicon`
 
-3. **No numpy/scipy fallback**: Required for spectral decomposition (quantum analysis). Node.js port uses row-concentration proxy instead.
+3. **No numpy/scipy fallback**: Required for the Markov analysis (stationary distributions, spectral estimates). The Node.js port implements the same algorithms without dependencies.
 
 ## Commands
 
@@ -417,7 +427,7 @@ from conscious_agent import SelfTokenState, ExperienceSpace
 ablated = ConsciousAgent(
     agent_id="ablated",
     experience=ExperienceSpace(
-        self_token=SelfTokenState(lock_threshold=1.5),  # never locks
+        self_token=SelfTokenState(lock_margin=2),  # never locks (dominance <= 1)
     ),
 )
 ```
@@ -569,7 +579,7 @@ agent.run(n_steps=1000)
 
 ### Set custom lock threshold (ablation)
 ```python
-st = SelfTokenState(lock_threshold=1.5)  # never locks
+st = SelfTokenState(lock_margin=2)  # never locks
 exp = ExperienceSpace(self_token=st)
 agent = ConsciousAgent(agent_id="ablated", experience=exp)
 ```
@@ -590,8 +600,10 @@ cloned = clone_agent(agent, "clone_id")
 
 ### Analyze meta-trie spectral gap
 ```python
-P = extract_meta_matrix(agent)
-gap = spectral_gap(P)  # 1.0 = classical, ~0.0 = quantum-like
+from conscious_agent import markov
+from conscious_agent.combination import meta_kernel
+P = meta_kernel(agent).matrix  # the agent's own recurrent self-chain
+gap = 1 - markov.second_eigenvalue_modulus(P)  # mixing speed; NOT a quantum signature
 ```
 
 ### Multi-agent network

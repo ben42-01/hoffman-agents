@@ -1,0 +1,26 @@
+[
+  {
+    "seed": 1,
+    "lockStep": 61,
+    "outputHash": "bfd76cc51b35a3ca3b5a3301c8677a7174e03f3dbc84d307f22158864eac0085",
+    "registrySize": 12,
+    "stationaryProb": 0.9999999056259791,
+    "lexiconSize": 49
+  },
+  {
+    "seed": 2,
+    "lockStep": 61,
+    "outputHash": "3e7053a5d2f2a9a7dda788c8ed5572edea48fbf80bd3101bd7a05db7c45f9b8d",
+    "registrySize": 13,
+    "stationaryProb": 0.15384615384615385,
+    "lexiconSize": 48
+  },
+  {
+    "seed": 3,
+    "lockStep": 61,
+    "outputHash": "3d8ef34b537ad8e85aaefe37f3d9c39b8e7d43b68d183b7ed30b5e13ef1003c3",
+    "registrySize": 11,
+    "stationaryProb": 0.99999992203409,
+    "lexiconSize": 49
+  }
+]

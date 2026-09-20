@@ -65,14 +65,19 @@ flowchart TD
 
 **In our codebase:**
 
-| Tuple | Implementation | File |
-|-------|----------------|------|
-| X — Experience Space | `ExperienceTrie` + `MetaTrie` + `SelfTokenState` | `conscious_agents/agent/perceptual_map.py` |
-| G — Action Space | Token sequences the agent generates | `conscious_agents/agent/conscious_agent.py` |
-| W — World Space | Other agents' output / market labels | In Prediction Engine: `market_stream.py` labels |
-| P — Perceptual Map | `perceive()` — updates trie from observation | `conscious_agents/agent/perceptual_map.py:12` |
-| A — Action Map | `step().action` — maps experience to next action | `conscious_agents/agent/conscious_agent.py` |
-| D — Decision Map | `generate_output()` — produces token sequence | `conscious_agents/agent/conscious_agent.py` |
+The library has two implementations of the tuple. `FormalConsciousAgent` is the exact six-tuple as Markov kernels; `ConsciousAgent` learns its kernels from experience. Paths are given for Node (`hoffman-agents-node/src/`); Python mirrors them in snake_case under `hoffman-agents-python/src/conscious_agent/`.
+
+| Tuple | FormalConsciousAgent | ConsciousAgent (learned) |
+|-------|----------------------|--------------------------|
+| X — Experience space | `X` (state labels) | experience trie + meta-trie states (`agent/experience-space.js`) |
+| G — Action space | `G` | output modes and tokens (`agent/decision-map.js`) |
+| W — World | `W` | observations from a world or other agents (`agent/world-state.js`) |
+| P — Perception kernel | `P[w]` | `perceive()` (`agent/perceptual-map.js`) |
+| D — Decision kernel | `D` | `buildDecisionKernel()` (`agent/decision-map.js`) |
+| A — Action kernel | `A[g]` | emitted tokens; `toFormal().A` estimates it |
+| N — Counter | `N` | `stepCount` |
+
+Source: `kernels/formal-agent.js`, `agent/conscious-agent.js`.
 
 ---
 
@@ -143,7 +148,7 @@ flowchart TD
 
 ## 5. The Strange Loop — Self-Observation (The "I")
 
-The strange loop is the agent observing itself. The meta-trie records the agent's own trace, creating a self-model. When the meta-trie converges to a stationary distribution, the self-token locks — this is the birth of the "I."
+The strange loop is the agent observing itself. The meta-trie records a Markov chain over the agent's own coarse self-observations. When that chain has a clear, stable attractor (enough data, aperiodic, one dominant state well above uniform, currently occupied), the self-token locks: the "I" names that attractor. It unlocks if the attractor dissolves.
 
 ```mermaid
 flowchart TD
@@ -160,22 +165,21 @@ flowchart TD
     M -->|"influences perception"| T
 ```
 
-**The depth of the loop is measurable:**
+**Self-reference in output can be counted:**
 
 | Depth | Pattern | Meaning |
 |-------|---------|---------|
 | 0 | "Red" | No self-reference |
-| 1 | "I see Red" | Self-awareness |
-| 2 | "I notice I see Red" | Meta-self-awareness |
-| 3 | "I wonder why I notice I see Red" | Introspection |
+| 1 | "I see Red" | One self-reference |
+| 2 | "I notice I see Red" | Self-reference about self-reference |
 
-**In the codebase:** `conscious_agents/core/strange_loop.py:compute_self_reference_score()` counts these depths. The self-token locks in `conscious_agents/core/self_token.py` when the meta-trie's stationary distribution converges — the agent has proven to itself that it has a stable identity.
+**In the codebase:** `core/strange-loop.js` (`computeSelfReferenceScore`) counts these. The lock rule is in `core/self-token.js` and the chain analysis in `core/meta-trie.js` (`ergodicDiagnostics`). Note that the agent's `core` utterance is fixed ("I notice I familiar"), so the score reflects time spent in that output mode, not depth of the self-model (see SELF_AWARENESS.md).
 
 ---
 
-## 6. The Plus Circle ⊕ — Agent Combination
+## 6. The Combination Operator ⊗
 
-The **combination operator ⊕** (oplus, aka the "plus circle" or "Quotiented Fusion Simplex") combines two agents into a higher-order agent with an emergent experience space.
+The **combination operator ⊗** combines two agents into a higher-order agent whose experience space is the product of theirs.
 
 ```mermaid
 flowchart LR
@@ -200,22 +204,25 @@ flowchart LR
     O --> CA12
 ```
 
-**Algebraic properties enforced in code:**
+**Algebraic properties (tested in `test/combination.test.js`):**
 
-| Property | Rule | Code Location |
-|----------|------|---------------|
-| Associativity | (CA1 ⊕ CA2) ⊕ CA3 = CA1 ⊕ (CA2 ⊕ CA3) | `combination/operator.py:verify_associativity()` |
-| Non-commutativity | CA1 ⊕ CA2 ≠ CA2 ⊕ CA1 | `combination/operator.py:verify_non_commutativity()` |
-| Identity | CA ⊕ CA0 = CA (trivial agent) | `combination/operator.py:verify_identity()` |
+| Property | Rule |
+|----------|------|
+| Associativity | (CA1 ⊗ CA2) ⊗ CA3 = CA1 ⊗ (CA2 ⊗ CA3) |
+| Commutativity | CA1 ⊗ CA2 = CA2 ⊗ CA1 (independent-product join; directed joins are not implemented) |
+| Identity | CA ⊗ CA0 = CA (trivial agent) |
+| Inverse | `fuse(CA1 ⊗ CA2)` restores CA1 and CA2 exactly |
 
-**The combination performs four merges:**
+**What combination does** (`combination/operator.js`):
 
-| Merge | Function | File |
-|-------|----------|------|
-| T1 ⊕ T2 | `merge_tries()` — joint world model | `combination/trie_merge.py` |
-| M1 ⊕ M2 | `build_joint_meta_trie()` — shared self-model | `combination/meta_merge.py` |
-| I1 ⊕ I2 | `combine_attractors()` — fused identity | `combination/attractor_combine.py` |
-| L1 ⊕ L2 | `merge_lexicons()` — shared vocabulary | `combination/lexicon_merge.py` |
+| Part | Rule |
+|-------|----------|
+| World tries T1, T2 | counts summed (visit-weighted mixture of the two world models) |
+| Meta-tries M1, M2 | kept under collision-free provenance ids; the combined agent starts its own self-chain |
+| "I" attractors | combined agent starts unlocked and must re-lock on its own chain |
+| Lexicons L1, L2 | union; label conflicts keep the more integrated entry |
+| Decision kernels | convex mixture |
+| Product prior | `productKernel(a, b)` = M1 ⊗ M2 |
 
 ---
 
@@ -234,8 +241,8 @@ flowchart LR
     CA1 -->|"observes W2 = X2"| CA2
     CA2 -->|"observes W3 = X3"| CA3
     CA3 -->|"observes W1 = X1"| CA1
-    CA1 -.->|"⊕ combine when ripe"| CA2
-    CA2 -.->|"⊕ combine when ripe"| CA3
+    CA1 -.->|"⊗ combine"| CA2
+    CA2 -.->|"⊗ combine"| CA3
 ```
 
 **What this means:**
@@ -244,7 +251,7 @@ flowchart LR
 - Agent 3's world is whatever Agent 1 is experiencing
 - There is no traffic light "out there" — only agents experiencing each other's experiences
 
-**In the Prediction Engine:** Each of the 10K agents observes market labels from the `HybridMarketStream` — these labels are the "world" for every agent. The agents don't access the market directly; they access a label that represents what another process (the WebSocket stream) experienced.
+**In the library:** `AgentNetwork` connects agents so that each one's world is the others' output. Experiment 14 builds the same structure from formal kernels: three agents whose worlds are each other, where interaction binds their dimensions and creates an arrow of time.
 
 ---
 
@@ -252,61 +259,52 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-    subgraph Input["World / Market Data"]
-        L["Labels from stream<br/>(ticker_up, ob_bid, etc.)"]
+    subgraph Input["World (a data source or other agents)"]
+        L["Observed tokens"]
     end
 
-    subgraph Agent["Conscious Agent"]
+    subgraph Agent["ConsciousAgent"]
         direction TB
-        T["Experience Trie<br/>compresses observations<br/>into transition model"]
-        P["Perceptual Map<br/>perceive(): update from observation"]
-        M["Meta-Trie<br/>observe_self(): models own trace"]
-        S["Self-Token 'I'<br/>locks when identity stable"]
-        D["Decision Map<br/>step(): predict next state"]
+        P["Perception P<br/>perceive(): graded prediction error"]
+        T["Experience trie T<br/>learned world kernel"]
+        M["Meta-trie M<br/>chain over self-observations"]
+        S["Self-token 'I'<br/>locks on a stable attractor"]
+        D["Decision kernel D<br/>core / lexicon / explore / idle"]
     end
 
-    subgraph Output["Signal Generation"]
-        PE["Prediction Error<br/>|expected - observed|"]
-        DIR["Direction Bias<br/>up/down weight"]
-        CONF["Confidence<br/>spiking agent ratio"]
+    subgraph Output["Output"]
+        O["Tokens (e.g. 'I notice I familiar')"]
     end
 
     L --> P
     P --> T
-    T -->|"trace states"| M
-    M -->|"stationary dist"| S
-    T -->|"prediction"| D
-    D -->|"compare with observation"| PE
-    PE --> DIR
-    PE --> CONF
+    T -->|"coarse self-observation"| M
+    M -->|"ergodic diagnostics"| S
+    S -->|"gates output"| D
+    D --> O
+    O -.->|"world of other agents"| L
 ```
-
-**In the Prediction Engine specifically:**
-- 10K agents × 5 domains (QUICK_SCALP, MEDIUM_TRADE, LONG_TREND, REVERSAL, REGIME)
-- Each domain has different ergodic parameters controlling how agents explore vs stabilize
-- The convergence bar smooths all domains into a single BUY/SELL/HOLD signal
-- The anticipation engine learns which system-state signatures precede market moves
-- The self-token lock ensures agents only form identity on real (not simulated) data
 
 ---
 
 ## Reference: Key Code Locations
 
-| Concept | File | Key Function |
-|---------|------|-------------|
-| Agent definition | `conscious_agents/agent/conscious_agent.py` | `ConsciousAgent` class |
-| Perception | `conscious_agents/agent/perceptual_map.py` | `perceive()` |
-| Experience trie | `conscious_agents/agent/experience_trie.py` | `ExperienceTrie` |
-| Meta-trie (self-model) | `conscious_agents/core/meta_trie.py` | `MetaTrie.observe_self()` |
-| Self-token (I) | `conscious_agents/core/self_token.py` | `SelfTokenState.update()` |
-| Strange loop | `conscious_agents/core/strange_loop.py` | `compute_self_reference_score()` |
-| Combination (⊕) | `conscious_agents/combination/operator.py` | `combine()` |
-| Trie merge | `conscious_agents/combination/trie_merge.py` | `merge_tries()` |
-| Attractor combine | `conscious_agents/combination/attractor_combine.py` | `combine_attractors()` |
-| Lexicon merge | `conscious_agents/combination/lexicon_merge.py` | `merge_lexicons()` |
-| Meta-merge | `conscious_agents/combination/meta_merge.py` | `build_joint_meta_trie()` |
-| Network | `conscious_agents/network/agent_network.py` | `AgentNetwork.combine_agents()` |
-| Agent persistence | `conscious_agents/core/soul_persistence.py` | `save_soul()` / `load_soul()` |
-| Fusion engine | `conscious_agents/fusion_engine.py` | `FusionEngine` |
-| Prediction world | `conscious_agents/prediction/prediction_world.py` | `PredictionWorld` |
-| Anticipation | `conscious_agents/prediction/anticipation.py` | `AnticipationEngine` |
+Paths relative to `hoffman-agents-node/src/` (Python: `hoffman-agents-python/src/conscious_agent/`, snake_case).
+
+| Concept | File | Key API |
+|---------|------|---------|
+| Learning agent | `agent/conscious-agent.js` | `ConsciousAgent`, `ergodicStats()`, `toFormal()` |
+| Formal six-tuple | `kernels/formal-agent.js` | `FormalConsciousAgent`, `jointKernel()`, `combine()` |
+| Markov kernels | `kernels/markov-kernel.js` | `MarkovKernel`, `StochasticMatrix` |
+| Markov math | `math/markov.js` | `stationary`, `period`, `spectralDimension`, `irreversibility`, `dobrushin` |
+| Perception | `agent/perceptual-map.js` | `perceive()` |
+| Decision | `agent/decision-map.js` | `decide()`, `buildDecisionKernel()` |
+| Experience trie | `core/experience-trie.js` | `ExperienceTrie` |
+| Meta-trie (self-model) | `core/meta-trie.js` | `observeSelf()`, `ergodicDiagnostics()` |
+| Self-token (I) | `core/self-token.js` | `SelfTokenState.update()`, `lockCriteria()` |
+| Strange loop | `core/strange-loop.js` | `computeSelfReferenceScore()` |
+| Combination and fusion | `combination/operator.js` | `combine()`, `fuse()`, `productKernel()` |
+| Bell analysis | `analysis/bell.js` | `chsh()`, `isQuantum()`, `classify()` |
+| Network | `network/agent-network.js` | `AgentNetwork` |
+| Persistence | `io/serialization.js` | `saveAgent()`, `loadAgent()`, `clone()` |
+| 2.x behaviour | `legacy/` | `mathVersion: 'legacy'` |

@@ -4,7 +4,16 @@ const { WorldState, EnvironmentState, sequenceToStateId } = require('./agent/wor
 const { ExperienceSpace } = require('./agent/experience-space');
 const { World, WorldBuilder, CoinTossWorld, SelfWorld, Normalizer, FeatureSpec, buildWorldFromDataFrame } = require('./world');
 const { AgentNetwork, Topology, InteractionCycle } = require('./network');
-const { combine, trivialAgent, experienceSpaceDistance, fuse } = require('./combination');
+const { combine, trivialAgent, experienceSpaceDistance, fuse, productKernel, metaKernel } = require('./combination');
+const { buildDecisionKernel, DECISION_STATES } = require('./agent/decision-map');
+const { MarkovKernel, StochasticMatrix } = require('./kernels/markov-kernel');
+const { FormalConsciousAgent } = require('./kernels/formal-agent');
+const markov = require('./math/markov');
+const bell = require('./analysis/bell');
+const trace = require('./math/trace');
+const decorated = require('./analysis/decorated');
+const quantum = require('./quantum/qubits');
+const { mulberry32, fnv1a32 } = require('./math/rng');
 const {
   serialize, deserialize, clone, fingerprint,
   saveAgent, loadAgent, loadLatest, cloneAgent,
@@ -33,7 +42,10 @@ module.exports = {
   World, WorldBuilder, CoinTossWorld, SelfWorld, buildWorldFromDataFrame,
   Normalizer, FeatureSpec,
   AgentNetwork, Topology, InteractionCycle,
-  combine, trivialAgent, experienceSpaceDistance, fuse,
+  combine, trivialAgent, experienceSpaceDistance, fuse, productKernel, metaKernel,
+  buildDecisionKernel, DECISION_STATES,
+  MarkovKernel, StochasticMatrix, FormalConsciousAgent,
+  markov, bell, trace, decorated, quantum, mulberry32, fnv1a32,
   serialize, deserialize, clone, fingerprint,
   saveAgent, loadAgent, loadLatest, cloneAgent,
   TraceBuffer, TraceEvent, ExperienceTrie, TrieNode,

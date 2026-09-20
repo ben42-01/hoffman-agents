@@ -78,6 +78,7 @@ class ExperienceLexicon {
       associatedLabels: associations,
     });
 
+    if (this._entries.has(label)) this._signatures = this._signatures.filter(([, l]) => l !== label);
     this._entries.set(label, entry);
     this._signatures.push([traceSignature, label]);
     return entry;
@@ -192,11 +193,15 @@ class ExperienceLexicon {
       });
       const entry = lex._entries.get(ed.label);
       if (entry) {
-        entry.integrationDepth = ed.integrationDepth || 0.5;
-        entry.encounterCount = ed.encounterCount || 0;
+        entry.integrationDepth = ed.integrationDepth ?? 0.5;
+        entry.encounterCount = ed.encounterCount ?? 0;
       }
     }
     return lex;
+  }
+
+  clone() {
+    return ExperienceLexicon.fromDict(this.toDict());
   }
 
   get embeddingDim() { return this._embeddingDim; }

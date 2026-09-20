@@ -1,142 +1,80 @@
 """
-Self-Reference ON/OFF Contrast — The Cleanest Causal Result
+Self-Reference Ablation: does the "I" lock track structure?
 
-In the same architecture, with the same world, same topology, same
-everything — one parameter changes everything:
+Three conditions, 8 seeded agents each, 1000 steps:
 
-  Self-Reference ON:  lock_threshold=0.25  → 100% agents lock, ~gen 60
-  Self-Reference OFF: lock_threshold=1.5   →   0% agents ever lock
+  A. structured world, lock ON    - a repeating 10-state cycle
+  B. structured world, lock OFF   - lock_margin = 2, so dominance (<= 1) can never qualify
+  C. structureless world, lock ON - a fresh random state from 10 each step
 
-Without the "I" attractor mechanism, agents do not develop stable
-identities. This demonstrates that self-reference is causally
-necessary for conscious-agent-like behavior.
+B is an ablation by construction: without the lock the agent only ever says
+"wait", so B cannot fail. It shows that the lock gates expression, nothing more.
+The informative comparison is A vs C: if the lock also fired in C, it would not
+be tracking anything about the agent's experience.
 
-Expected:
-  ON:  attractor_lock_rate=1.0, mean_strange_loop≈1.0
-  OFF: attractor_lock_rate=0.0, mean_strange_loop≈0.0
-  Invariant to network size (N=2..32)
+The v3 rule needs evidence (>= 20 meta-transitions, i.e. >= 400 steps at the
+default observation interval) before it can lock. 2.x behaviour is available
+with math_version="legacy"; under it condition C locks too (at step 61).
+
+Port of the Node example; prints the same numbers.
 """
-from conscious_agent import ConsciousAgent, WorldState, SelfTokenState, ExperienceSpace
-import numpy as np
 import time
 
+from conscious_agent import ConsciousAgent, ExperienceSpace, SelfTokenState, WorldState, mulberry32
 
-def strange_loop_score(tokens):
-    """Simple self-reference score from token list."""
-    n_i = sum(1 for t in tokens if t == "I")
-    if n_i == 0:
-        return 0.0
-    return min(0.5 * n_i, 2.0)
+N_AGENTS = 8
+N_STEPS = 1000
 
 
-def run_condition(name, lock_threshold, n_agents=8, n_steps=500):
-    """Run agents in a shared world with given lock_threshold."""
-    print(f"\n  ── {name} ──")
-    agents = []
-    for i in range(n_agents):
-        st = SelfTokenState(lock_threshold=lock_threshold)
-        exp = ExperienceSpace(self_token=st)
-        agent = ConsciousAgent(agent_id=f"Agent_{i:02d}", experience=exp)
-        agents.append(agent)
+def run_condition(name, lock_margin, structured):
+    agents = [ConsciousAgent(agent_id=f"Agent_{i:02d}", seed=i + 1,
+                             experience=ExperienceSpace(self_token=SelfTokenState(lock_margin=lock_margin)))
+              for i in range(N_AGENTS)]
+    world_rng = mulberry32(99)
+    locked = set()
+    non_trivial = loop = counted = 0
 
-    lock_generations = []
-    outputs_log = {f"Agent_{i:02d}": [] for i in range(n_agents)}
-
-    for step in range(n_steps):
-        for i, agent in enumerate(agents):
-            ws = WorldState.from_sequence("world", [f"state_{step % 10}"])
+    for step in range(N_STEPS):
+        state = step % 10 if structured else int(world_rng.random() * 10)
+        ws = WorldState.from_sequence("world", [f"state_{state}"])
+        for agent in agents:
             out = agent.step(ws)
-            outputs_log[agent.agent_id].append(out.sequence_str)
+            if out.i_locked:
+                locked.add(agent.agent_id)
+            if step >= N_STEPS - 100:
+                counted += 1
+                non_trivial += out.sequence_str != "wait"
+                loop += out.loop_depth
 
-            if out.i_locked and agent.agent_id not in lock_generations:
-                lock_generations.append(agent.agent_id)
-
-    # Metrics
-    lock_rate = len(lock_generations) / n_agents
-    loop_scores = []
-    for aid in sorted(outputs_log.keys()):
-        seq = outputs_log[aid]
-        # Mean strange loop over last 100 outputs
-        recent = seq[-100:]
-        score = sum(strange_loop_score(s.split()) for s in recent) / max(len(recent), 1)
-        loop_scores.append(score)
-    mean_loop = np.mean(loop_scores)
-
-    # Count non-trivial outputs
-    non_trivial = 0
-    total = 0
-    for aid, seqs in outputs_log.items():
-        for s in seqs[-100:]:
-            total += 1
-            if s != "wait":
-                non_trivial += 1
-    output_sync = non_trivial / max(total, 1)
-
-    locked_list = [aid for aid in sorted(outputs_log.keys())
-                   if aid in lock_generations]
-    unlocked_list = [aid for aid in sorted(outputs_log.keys())
-                     if aid not in lock_generations]
-
-    print(f"    Agents:          {n_agents}")
-    print(f"    Lock threshold:  {lock_threshold}")
-    print(f"    Lock rate:       {lock_rate:.0%}")
-    print(f"    Mean loop depth: {mean_loop:.3f}")
-    print(f"    Non-trivial out: {output_sync:.1%}")
-    if locked_list:
-        print(f"    Locked:          {', '.join(locked_list)}")
-    if unlocked_list:
-        print(f"    Unlocked:        {', '.join(unlocked_list)}")
-
-    return {
-        "condition": name,
-        "lock_rate": lock_rate,
-        "mean_loop_depth": mean_loop,
-        "output_sync_ratio": output_sync,
-        "locked": len(lock_generations),
-        "unlocked": n_agents - len(lock_generations),
-        "non_trivial_output_pct": output_sync,
-    }
+    r = {"lock_rate": len(locked) / N_AGENTS, "non_trivial": non_trivial / counted, "loop": loop / counted}
+    print(f"\n  ── {name} ──")
+    print(f"    lock rate:          {r['lock_rate'] * 100:.0f}%")
+    print(f"    non-\"wait\" output:  {r['non_trivial'] * 100:.1f}% of the last 100 steps")
+    print(f"    mean loop score:    {r['loop']:.3f}")
+    return r
 
 
 def main():
-    np.random.seed(42)
     t0 = time.time()
+    print("=" * 66)
+    print('Self-reference ablation: does the "I" lock track structure?')
+    print("=" * 66)
 
-    print("=" * 62)
-    print("Self-Reference ON/OFF Contrast")
-    print("=" * 62)
-    print()
-    print("The same world, same topology, same agent architecture.")
-    print("One parameter — lock_threshold — changes everything.\n")
+    a = run_condition("A. structured world, lock ON", 0.15, True)
+    b = run_condition("B. structured world, lock OFF (by construction)", 2, True)
+    c = run_condition("C. structureless world, lock ON", 0.15, False)
 
-    on = run_condition("Self-Reference ON  (threshold=0.25)", lock_threshold=0.25)
-    off = run_condition("Self-Reference OFF (threshold=1.5)",  lock_threshold=1.5)
-
-    elapsed = time.time() - t0
-    print(f"\n  Completed in {elapsed:.1f}s\n")
-
-    print("=" * 62)
-    print("Result Summary")
-    print("=" * 62)
-    print(f"  {'Metric':<30s} {'ON':<15s} {'OFF':<15s}")
-    print(f"  {'─'*58}")
-    print(f"  {'Lock rate':<30s} {on['lock_rate']:.0%}          {off['lock_rate']:.0%}")
-    print(f"  {'Mean loop depth':<30s} {on['mean_loop_depth']:<15.3f} {off['mean_loop_depth']:<15.3f}")
-    print(f"  {'Non-trivial output':<30s} {on['output_sync_ratio']:.0%}          {off['output_sync_ratio']:.0%}")
-    print(f"  {'Agents locked':<30s} {on['locked']:<15d} {off['unlocked']:<15d}")
-    print()
-
-    if on["lock_rate"] == 1.0 and off["lock_rate"] == 0.0:
-        print("  ✓ RESULT: Absolute contrast — self-reference is causally")
-        print("    necessary for stable identity formation.")
-    elif on["lock_rate"] > off["lock_rate"]:
-        print(f"  ~ RESULT: Partial contrast ({on['lock_rate']:.0%} vs {off['lock_rate']:.0%})")
+    print("\n" + "=" * 66)
+    print("Summary")
+    print("=" * 66)
+    print(f"  lock rate:  A {a['lock_rate'] * 100:.0f}%   B {b['lock_rate'] * 100:.0f}%   C {c['lock_rate'] * 100:.0f}%")
+    if a["lock_rate"] == 1 and c["lock_rate"] == 0:
+        print("\n  The lock fires where the agent's experience has a stable attractor (A) and not where it has")
+        print("  none (C): it tracks structure. B confirms only that the lock gates output, which is true by")
+        print("  construction and says nothing about whether self-reference matters for anything else.")
     else:
-        print(f"  ✗ Expected ON > OFF, got the inverse")
-
-    print()
-    print("  Reference: archive/hoffman_experiments/03_self_ref_ablation/")
-    print("  Original result: ON 100% lock, OFF 0% lock (invariant to N=2..32)")
+        print(f"\n  Mixed result: A {a['lock_rate'] * 100:.0f}% vs C {c['lock_rate'] * 100:.0f}%.")
+    print(f"\n  Done in {time.time() - t0:.1f}s\n")
 
 
 if __name__ == "__main__":
